@@ -1,0 +1,14 @@
+# User-specific stuff
+/workspace.xml
+/tasks.xml
+/usage.statistics.xml
+/compiler.xml
+/dictionaries
+/shelf/
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# AWS User-specific
+/aws.xml
