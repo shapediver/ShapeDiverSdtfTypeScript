@@ -53,7 +53,7 @@ json -q -I -f $LIB_PATH'package.json' -e 'this.directories={}'
 json -q -I -f $LIB_PATH'package.json' -e 'this.directories.test="__tests__"'
 json -q -I -f $LIB_PATH'package.json' -e 'this.devDependencies={}'
 json -q -I -f $LIB_PATH'package.json' -e 'this.devDependencies["jest"]="^26.6.3"'
-json -q -I -f $LIB_PATH'package.json' -e 'this.devDependencies["lerna"]="^3.22.1"'
+json -q -I -f $LIB_PATH'package.json' -e 'this.devDependencies["lerna"]="3.22.1"'
 json -q -I -f $LIB_PATH'package.json' -e 'this.devDependencies["typescript"]="^4.1.2"'
 
 npm run bootstrap
