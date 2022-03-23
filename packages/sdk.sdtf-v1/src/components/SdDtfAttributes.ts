@@ -1,7 +1,4 @@
-import { ISdDtfAttribute } from "@shapediver/sdk.sdtf-core"
-import { ISdDtfAccessor } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfAccessor"
-import { ISdDtfAttributes } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfAttributes"
-import { ISdDtfTypeHint } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfTypeHint"
+import { ISdDtfAccessor, ISdDtfAttribute, ISdDtfAttributes, ISdDtfTypeHint } from "@shapediver/sdk.sdtf-core"
 
 export class SdDtfAttributes implements ISdDtfAttributes {
 
@@ -14,5 +11,11 @@ export class SdDtfAttribute implements ISdDtfAttribute {
     accessor?: ISdDtfAccessor
     typeHint?: ISdDtfTypeHint
     value?: unknown
+
+    async getContent (): Promise<unknown> {
+        if (this.value !== undefined) return this.value // Value precedes
+        if (this.accessor) return this.accessor.getContent()
+        return undefined    // No value and no accessor
+    }
 
 }

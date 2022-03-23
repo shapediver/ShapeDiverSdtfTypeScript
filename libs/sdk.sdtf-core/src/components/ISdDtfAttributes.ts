@@ -20,4 +20,14 @@ export interface ISdDtfAttribute {
     /** Embedded representation of the data item, used for primitive values. */
     value?: unknown
 
+    /**
+     * Returns the data value.
+     *
+     * When the data is linked via {@link accessor}, than the respective buffer is loaded and the corresponding value is
+     * extracted and returned.
+     *
+     * When both, {@link value} and {@link accessor}, are defined than {@link value} precedes.
+     */
+    getContent (): Promise<unknown>
+
 }

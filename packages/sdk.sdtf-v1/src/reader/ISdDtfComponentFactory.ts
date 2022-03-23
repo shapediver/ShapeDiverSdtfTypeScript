@@ -9,6 +9,7 @@ import {
     ISdDtfNode,
     ISdDtfTypeHint,
 } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfBufferCache } from "../buffer_cache/ISdDtfBufferCache"
 
 /**
  * Creates instances of individual sdTF components.
@@ -34,7 +35,7 @@ export interface ISdDtfComponentFactory {
      * Validates the given data object and instantiates a new sdTF buffer object.
      * @throws {@link SdDtfError} when validation fails or references could not get linked.
      */
-    createBuffer (bufferData: Record<string, unknown>): ISdDtfBuffer
+    createBuffer (bufferData: Record<string, unknown>, bufferCache: ISdDtfBufferCache): ISdDtfBuffer
 
     /**
      * Validates the given data object, instantiates a new sdTF buffer view object and links references to other sdTF
@@ -86,6 +87,6 @@ export interface ISdDtfComponentFactory {
      * Assumes {@link createNode}(...) has been executed for each `nodeData` item.
      * @throws {@link SdDtfError} when the `nodeData` and `nodes` have not the same number of items.
      */
-    setNodeReferences(nodeData: Record<string, unknown>[], nodes: ISdDtfNode[]): void
+    setNodeReferences (nodeData: Record<string, unknown>[], nodes: ISdDtfNode[]): void
 
 }

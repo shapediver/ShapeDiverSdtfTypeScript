@@ -1,3 +1,4 @@
+import { SdDtfBinaryBufferCache } from "../../src/buffer_cache/SdDtfBinaryBufferCache"
 import { SdDtfAccessor } from "../../src/components/SdDtfAccessor"
 import { SdDtfAttributes } from "../../src/components/SdDtfAttributes"
 import { SdDtfBuffer } from "../../src/components/SdDtfBuffer"
@@ -9,6 +10,8 @@ import { SdDtfNode } from "../../src/components/SdDtfNode"
 import { SdDtfTypeHint } from "../../src/components/SdDtfTypeHint"
 import { SdDtfAssetBuilder } from "../../src/reader/SdDtfAssetBuilder"
 import { SdDtfComponentFactory } from "../../src/reader/SdDtfComponentFactory"
+
+const bufferCache = new SdDtfBinaryBufferCache()
 
 describe("buildAccessor", function () {
 
@@ -27,7 +30,7 @@ describe("buildAccessor", function () {
     })
 
     test("happy path; should add one accessor to asset", () => {
-        const builder = new SdDtfAssetBuilder({ accessors: [ {} ] })
+        const builder = new SdDtfAssetBuilder({ accessors: [ {} ] }, bufferCache)
         builder.buildAccessor()
         expect(builder.asset.accessors.length).toBe(1)
     })
@@ -48,7 +51,7 @@ describe("buildAttribute", function () {
     })
 
     test("happy path; should add one attribute to asset", () => {
-        const builder = new SdDtfAssetBuilder({ attributes: [ {} ] })
+        const builder = new SdDtfAssetBuilder({ attributes: [ {} ] }, bufferCache)
         builder.buildAttributes()
         expect(builder.asset.attributes.length).toBe(1)
     })
@@ -61,7 +64,7 @@ describe("buildBuffer", function () {
 
     beforeAll(() => {
         origCreateBuffer = SdDtfComponentFactory.prototype.createBuffer
-        SdDtfComponentFactory.prototype.createBuffer = jest.fn(() => new SdDtfBuffer(666))
+        SdDtfComponentFactory.prototype.createBuffer = jest.fn(() => new SdDtfBuffer(666, bufferCache))
     })
 
     afterAll(() => {
@@ -69,7 +72,7 @@ describe("buildBuffer", function () {
     })
 
     test("happy path; should add one buffer to asset", () => {
-        const builder = new SdDtfAssetBuilder({ buffers: [ {} ] })
+        const builder = new SdDtfAssetBuilder({ buffers: [ {} ] }, bufferCache)
         builder.buildBuffer()
         expect(builder.asset.buffers.length).toBe(1)
     })
@@ -93,7 +96,7 @@ describe("buildBufferView", function () {
     })
 
     test("happy path; should add one buffer view to asset", () => {
-        const builder = new SdDtfAssetBuilder({ bufferViews: [ {} ] })
+        const builder = new SdDtfAssetBuilder({ bufferViews: [ {} ] }, bufferCache)
         builder.buildBufferView()
         expect(builder.asset.bufferViews.length).toBe(1)
     })
@@ -117,7 +120,7 @@ describe("buildChunks", function () {
     })
 
     test("happy path; should add one buffer view to asset", () => {
-        const builder = new SdDtfAssetBuilder({ chunks: [ {} ] })
+        const builder = new SdDtfAssetBuilder({ chunks: [ {} ] }, bufferCache)
         builder.buildChunks()
         expect(builder.asset.chunks.length).toBe(1)
     })
@@ -138,7 +141,7 @@ describe("buildDataItem", function () {
     })
 
     test("happy path; should add one buffer view to asset", () => {
-        const builder = new SdDtfAssetBuilder({ items: [ {} ] })
+        const builder = new SdDtfAssetBuilder({ items: [ {} ] }, bufferCache)
         builder.buildDataItem()
         expect(builder.asset.items.length).toBe(1)
     })
@@ -159,19 +162,19 @@ describe("buildFileInfo", function () {
     })
 
     test("content contains no type hints; should not call create-fn", () => {
-        const builder = new SdDtfAssetBuilder({})
+        const builder = new SdDtfAssetBuilder({}, bufferCache)
         builder.buildFileInfo()
         expect(builder.asset.fileInfo).toBeUndefined()
     })
 
     test("content contains multiple type hints; should create all type hints", () => {
-        const builder = new SdDtfAssetBuilder({ asset: { version: "test" } })
+        const builder = new SdDtfAssetBuilder({ asset: { version: "test" } }, bufferCache)
         builder.buildFileInfo()
         expect(builder.asset.fileInfo).toBeDefined()
     })
 
     test("type hint item not an object; should throw", () => {
-        const builder = new SdDtfAssetBuilder({ asset: [ {} ] })
+        const builder = new SdDtfAssetBuilder({ asset: [ {} ] }, bufferCache)
         expect(() => builder.buildFileInfo()).toThrow(/Property must be an object/)
     })
 
@@ -191,7 +194,7 @@ describe("buildNode", function () {
     })
 
     test("happy path; should add one buffer view to asset", () => {
-        const builder = new SdDtfAssetBuilder({ nodes: [ {} ] })
+        const builder = new SdDtfAssetBuilder({ nodes: [ {} ] }, bufferCache)
         builder.buildNode()
         expect(builder.asset.nodes.length).toBe(1)
     })
@@ -212,7 +215,7 @@ describe("buildTypeHint", function () {
     })
 
     test("happy path; should add one buffer view to asset", () => {
-        const builder = new SdDtfAssetBuilder({ typeHints: [ {} ] })
+        const builder = new SdDtfAssetBuilder({ typeHints: [ {} ] }, bufferCache)
         builder.buildTypeHint()
         expect(builder.asset.typeHints.length).toBe(1)
     })
@@ -240,7 +243,7 @@ describe("buildComponent", function () {
     })
 
     test("content contains no type hints; should not call create-fn", () => {
-        const builder = new SdDtfAssetBuilder({})
+        const builder = new SdDtfAssetBuilder({}, bufferCache)
         builder.buildComponent(builder.PROPERTY_NAME_TYPEHINTS, createFn)
         expect(spyCreateFn).toBe(0)
     })
@@ -251,18 +254,18 @@ describe("buildComponent", function () {
                 { name: "rhino.mesh" },
                 { name: "image" },
             ],
-        })
+        }, bufferCache)
         builder.buildComponent(builder.PROPERTY_NAME_TYPEHINTS, createFn)
         expect(spyCreateFn).toBe(2)
     })
 
     test("type hints not an array; should throw", () => {
-        const builder = new SdDtfAssetBuilder({ typeHints: { name: "rhino.mesh" } })
+        const builder = new SdDtfAssetBuilder({ typeHints: { name: "rhino.mesh" } }, bufferCache)
         expect(() => builder.buildComponent(builder.PROPERTY_NAME_TYPEHINTS, createFn)).toThrow(/'typeHints' must be an array/)
     })
 
     test("type hint item not an object; should throw", () => {
-        const builder = new SdDtfAssetBuilder({ typeHints: [ "rhino.mesh" ] })
+        const builder = new SdDtfAssetBuilder({ typeHints: [ "rhino.mesh" ] }, bufferCache)
         expect(() => builder.buildComponent(builder.PROPERTY_NAME_TYPEHINTS, createFn)).toThrow(/Item must be an object/)
     })
 

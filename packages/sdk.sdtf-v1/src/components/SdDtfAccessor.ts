@@ -1,5 +1,4 @@
-import { ISdDtfAccessor } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfAccessor"
-import { ISdDtfBufferView } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfBufferView"
+import { ISdDtfAccessor, ISdDtfBufferView } from "@shapediver/sdk.sdtf-core"
 
 export class SdDtfAccessor implements ISdDtfAccessor {
 
@@ -9,6 +8,13 @@ export class SdDtfAccessor implements ISdDtfAccessor {
     constructor (
         public bufferView: ISdDtfBufferView,
     ) {
+    }
+
+    async getContent (): Promise<{ id?: string, data: DataView }> {
+        return {
+            id: this.id,
+            data: await this.bufferView.getContent()
+        }
     }
 
 }

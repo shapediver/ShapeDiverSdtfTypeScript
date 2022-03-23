@@ -15,4 +15,12 @@ export interface ISdDtfBuffer {
     /** Additional properties are allowed. */
     [custom: string]: unknown
 
+    /**
+     * Returns the specified part of the buffer.
+     * @param offset - Zero-based byte index at which to begin (inclusive).
+     * @param length - Length of the buffer.
+     * @throws {@link SdDtfError} when the requested part is out of bounds.
+     */
+    getContent (offset: number, length: number): Promise<DataView>
+
 }

@@ -10,3 +10,5 @@ export * from "./components/ISdDtfNode"
 export * from "./components/ISdDtfTypeHint"
 
 export * from "./reader/ISdDtfParser"
+
+export * from "./SdDtfError"

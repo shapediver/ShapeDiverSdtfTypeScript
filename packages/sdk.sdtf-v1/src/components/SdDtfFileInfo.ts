@@ -1,4 +1,4 @@
-import { ISdDtfFileInfo } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfFileInfo"
+import { ISdDtfFileInfo } from "@shapediver/sdk.sdtf-core"
 
 export class SdDtfFileInfo implements ISdDtfFileInfo {
 

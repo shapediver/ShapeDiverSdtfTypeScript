@@ -1,10 +1,10 @@
-import { ISdDtfBuffer } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfBuffer"
-import { ISdDtfBufferView } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfBufferView"
+import { ISdDtfBuffer, ISdDtfBufferView } from "@shapediver/sdk.sdtf-core"
 
 export class SdDtfBufferView implements ISdDtfBufferView {
 
     contentEncoding?: string
     name?: string
+
     [custom: string]: unknown
 
     constructor (
@@ -13,6 +13,10 @@ export class SdDtfBufferView implements ISdDtfBufferView {
         public byteOffset: number,
         public contentType: string,
     ) {
+    }
+
+    async getContent (): Promise<DataView> {
+        return this.buffer.getContent(this.byteOffset, this.byteLength)
     }
 
 }

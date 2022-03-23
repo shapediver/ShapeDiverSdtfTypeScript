@@ -1,74 +1,78 @@
-import { ISdDtfAsset, ISdDtfParser } from "@shapediver/sdk.sdtf-core"
-import axios from "axios"
+import { ISdDtfAsset, ISdDtfParser, SdDtfError } from "@shapediver/sdk.sdtf-core"
 import { isBrowser } from "browser-or-node"
 import { ISdDtfBinarySdtf } from "../binary_sdtf/ISdDtfBinarySdtf"
 import { SdDtfBinarySdtf } from "../binary_sdtf/SdDtfBinarySdtf"
-import { SdDtfError } from "../SdDtfError"
+import { ISdDtfBufferCache } from "../buffer_cache/ISdDtfBufferCache"
+import { SdDtfBinaryBufferCache } from "../buffer_cache/SdDtfBinaryBufferCache"
+import { SdDtfFileBufferCache } from "../buffer_cache/SdDtfFileBufferCache"
+import { SdDtfHttpBufferCache } from "../buffer_cache/SdDtfHttpBufferCache"
+import { ISdDtfHttpClient } from "../http/ISdDtfHttpClient"
+import { SdDtfHttpClient } from "../http/SdDtfHttpClient"
+import { SdDtfFileUtils } from "../utils/SdDtfFileUtils"
 import { SdDtfAssetBuilder } from "./SdDtfAssetBuilder"
 
 export class SdDtfParser implements ISdDtfParser {
 
     private readonly binarySdtfParser: ISdDtfBinarySdtf
+    private readonly fileUtils: SdDtfFileUtils
 
     constructor () {
         this.binarySdtfParser = new SdDtfBinarySdtf()
+        this.fileUtils = new SdDtfFileUtils()
     }
 
     readFromFile (path: string): ISdDtfAsset {
         // Quick check to make sure we are in NodeJs
-        if (isBrowser) {
-            throw new SdDtfError("Reading from file is only supported in Node.js.")
+        if (isBrowser) throw new SdDtfError("Reading from file is only supported in Node.js.")
+
+        let absolutePath, buffer
+        try {
+            absolutePath = this.fileUtils.toAbsolutePath(path)
+            buffer = this.fileUtils.readFile(absolutePath)
+        } catch (e) {
+            throw new SdDtfError(`Error reading sdTF-file: ${ e.message }`)
         }
 
-        const resolve = require("path").resolve
-        const fs = require("fs")
+        const [ contentBuffer, binaryBuffer ] = this.binarySdtfParser.parseBinarySdtf(buffer)
+        const jsonContent = this.binarySdtfParser.readJsonContent(contentBuffer)
 
-        // Convert relative path to absolute path
-        const absolutePath = resolve(path)
+        const bufferCache = new SdDtfFileBufferCache(absolutePath)
+        bufferCache.setBinaryBody(binaryBuffer)
+        // TODO add bufferCache to context
 
-        if (!fs.existsSync(absolutePath)) {
-            throw new SdDtfError(`Error reading sdTF-file: Cannot find file at location '${ absolutePath }'`)
-        }
-
-        const buffer = fs.readFileSync(path)
-        return this.readFromBuffer(buffer.buffer)
+        return this.createSdtfAsset(jsonContent, bufferCache)
     }
 
     async readFromUrl (url: string): Promise<ISdDtfAsset> {
-        let response
-        try {
-            response = await axios.get(url, { responseType: "arraybuffer" })
-        } catch (e) {
-            throw new SdDtfError(`Could not fetch from URL: ${ e.message }`)
-        }
+        const httpClient: ISdDtfHttpClient = new SdDtfHttpClient(url)
+        const [ contentBuffer, binaryBuffer ] = await httpClient.getJsonContent()
+        const jsonContent = this.binarySdtfParser.readJsonContent(contentBuffer)
 
-        if (response.status !== 200) {
-            throw new SdDtfError(`Could not fetch from URL: Response status is ${ response.status }.`)
-        }
+        const bufferCache = new SdDtfHttpBufferCache(httpClient)
+        bufferCache.setBinaryBody(binaryBuffer)
+        // TODO add bufferCache to context
 
-        if (!(response.headers["content-type"] && response.headers["content-type"] === "model/vnd.sdtf")) {
-            throw new SdDtfError("Unsupported file type: Non-binary sdTF encoding not implemented.")
-        }
-
-        let buffer: ArrayBuffer = (response.data instanceof ArrayBuffer) ?
-            response.data :
-            (<Uint8Array>response.data).buffer
-
-        return this.readFromBuffer(buffer)
+        return this.createSdtfAsset(jsonContent, bufferCache)
     }
 
-    readFromBuffer (buffer: ArrayBuffer): ISdDtfAsset {
-        const [ content, _ ] = this.binarySdtfParser.parseBinarySdtf(buffer)
-        return this.createSdtfAsset(content)
+    readFromBuffer (sdtf: ArrayBuffer): ISdDtfAsset {
+        const [ contentBuffer, binaryBuffer ] = this.binarySdtfParser.parseBinarySdtf(sdtf)
+        const jsonContent = this.binarySdtfParser.readJsonContent(contentBuffer)
+
+        const bufferCache = new SdDtfBinaryBufferCache()
+        bufferCache.setBinaryBody(binaryBuffer)
+        // TODO add bufferCache to context
+
+        return this.createSdtfAsset(jsonContent, bufferCache)
     }
 
     /** Instantiates a sdTF asset that represents the given content. */
-    createSdtfAsset (content: Record<string, unknown>): ISdDtfAsset {
+    createSdtfAsset (content: Record<string, unknown>, bufferCache: ISdDtfBufferCache): ISdDtfAsset {
         // NOTE:
         //  Object references between components are set during individual build
         //  sets as well. Thus, the order in which the build steps are executed
         //  is crucial! Otherwise, runtime errors will occur.
-        return new SdDtfAssetBuilder(content)
+        return new SdDtfAssetBuilder(content, bufferCache)
             .buildTypeHint()
             .buildBuffer()
             .buildBufferView()

@@ -1,6 +1,6 @@
 import { ISdDtfAsset } from "../components/ISdDtfAsset"
 
-/** Parser for sdTF assets */
+/** Parser for sdTF assets. */
 export interface ISdDtfParser {
 
     /**

@@ -1,45 +1,42 @@
-import { SdDtfError } from "../SdDtfError"
+import { SdDtfError } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfBinarySdtf } from "./ISdDtfBinarySdtf"
 
 export class SdDtfBinarySdtf implements ISdDtfBinarySdtf {
 
-    private readonly BINARY_HEADER_LENGTH = 20
+    /** Number of bytes of the sdTF header. */
+    readonly binaryHeaderLength = 20
 
     constructBinarySdtf (content: Record<string, unknown>, body: ArrayBuffer): ArrayBuffer {
         throw new Error("Not yet implemented!")
     }
 
-    parseBinarySdtf (sdtf: ArrayBuffer): [ Record<string, unknown>, ArrayBuffer ] {
-        const [ contentLength, totalLength ] = this.readHeader(sdtf)
-        const content = this.readJsonContent(sdtf, contentLength)
-        const body = this.readBinaryBody(sdtf, contentLength, totalLength)
+    parseBinarySdtf (sdtf: ArrayBuffer): [ DataView, DataView ] {
+        const header = new DataView(sdtf, 0, this.binaryHeaderLength)
+        const [ contentLength, totalLength ] = this.readHeader(header)
 
-        return [ content, body ]
+        const jsonContent = new DataView(sdtf, this.binaryHeaderLength, contentLength)
+        const binaryBody = new DataView(sdtf, this.binaryHeaderLength + contentLength, totalLength - this.binaryHeaderLength - contentLength)
+
+        return [ jsonContent, binaryBody ]
     }
 
-    /**
-     * Parses the header of the given sdTF file and validates its parts.
-     * @private
-     * @returns - [ content length, total length ]
-     * @throws {@link SdDtfError} when the validation fails.
-     */
-    readHeader (sdtf: ArrayBuffer): [ number, number ] {
-        const headerDataView = new DataView(sdtf, 0, this.BINARY_HEADER_LENGTH)
+    readHeader (header: DataView | ArrayBuffer): [ number, number ] {
+        if (header instanceof ArrayBuffer) header = new DataView(header)
 
         const magic =
-            String.fromCharCode(headerDataView.getUint8(0)) +
-            String.fromCharCode(headerDataView.getUint8(1)) +
-            String.fromCharCode(headerDataView.getUint8(2)) +
-            String.fromCharCode(headerDataView.getUint8(3))
+            String.fromCharCode(header.getUint8(0)) +
+            String.fromCharCode(header.getUint8(1)) +
+            String.fromCharCode(header.getUint8(2)) +
+            String.fromCharCode(header.getUint8(3))
         if (magic !== "sdtf") throw new SdDtfError(`Invalid identifier: Unknown file type for identifier '${ magic }'.`)
 
-        const version = headerDataView.getUint32(4, true)
+        const version = header.getUint32(4, true)
         if (version !== 1) throw new SdDtfError(`Invalid version: Unsupported sdTF version '${ version }'.`)
 
-        const totalLength = headerDataView.getUint32(8, true)
-        const contentLength = headerDataView.getUint32(12, true)
+        const totalLength = header.getUint32(8, true)
+        const contentLength = header.getUint32(12, true)
 
-        const contentFormat = headerDataView.getUint32(16, true)
+        const contentFormat = header.getUint32(16, true)
         if (contentFormat !== 0) throw new SdDtfError(`Invalid content: Unsupported content format '${ contentFormat }'.`)
 
         return [ contentLength, totalLength ]
@@ -62,7 +59,7 @@ export class SdDtfBinarySdtf implements ISdDtfBinarySdtf {
         headerDataView.setUint32(4, version, true)
 
         // Write total length of file
-        const totalLength = this.BINARY_HEADER_LENGTH + contentLength + bodyLength
+        const totalLength = this.binaryHeaderLength + contentLength + bodyLength
         headerDataView.setUint32(8, totalLength, true)
 
         // Write length of content string
@@ -75,29 +72,14 @@ export class SdDtfBinarySdtf implements ISdDtfBinarySdtf {
         return headerDataView.buffer
     }
 
-    /**
-     * Extracts the content string of the given sdTF file and parses it as a JSON object.
-     * @private
-     * @throws {@link SdDtfError} when parsing of the content fails.
-     */
-    readJsonContent (sdtf: ArrayBuffer, contentLength: number): Record<string, unknown> {
+    readJsonContent (jsonContent: DataView | ArrayBuffer): Record<string, unknown> {
+        if (jsonContent instanceof ArrayBuffer) jsonContent = new DataView(jsonContent)
+
         try {
-            return JSON.parse(new TextDecoder().decode(new DataView(sdtf, this.BINARY_HEADER_LENGTH, contentLength)))
+            return JSON.parse(new TextDecoder().decode(jsonContent))
         } catch (e) {
             throw new SdDtfError(`Invalid content: Cannot parse JSON content. ${ e.message }`)
         }
-    }
-
-    /**
-     * Extracts the binary body of the given sdTF file.
-     * @private
-     * @throws {@link SdDtfError}
-     */
-    readBinaryBody (sdtf: ArrayBuffer, contentLength: number, totalLength: number): ArrayBuffer {
-        // NOTE:
-        //  `slice` does not care about the overall length! When the buffer is shorter or longer, the result gets
-        //  truncated accordingly.
-        return sdtf.slice(this.BINARY_HEADER_LENGTH + contentLength, totalLength)
     }
 
 }

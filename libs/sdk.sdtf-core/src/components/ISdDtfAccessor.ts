@@ -24,4 +24,7 @@ export interface ISdDtfAccessor {
     /** Additional properties are allowed. */
     [custom: string]: unknown
 
+    /** Returns the content. */
+    getContent (): Promise<{ id?: string, data: DataView }>
+
 }

@@ -36,4 +36,7 @@ export interface ISdDtfBufferView {
     /** Additional properties are allowed. */
     [custom: string]: unknown
 
+    /** Returns the buffer content. */
+    getContent (): Promise<DataView>
+
 }

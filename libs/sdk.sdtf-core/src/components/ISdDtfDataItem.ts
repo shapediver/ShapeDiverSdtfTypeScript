@@ -24,4 +24,14 @@ export interface ISdDtfDataItem {
     /** Additional properties are allowed. */
     [custom: string]: unknown
 
+    /**
+     * Returns the data value of this data item.
+     *
+     * When the data is linked via {@link accessor}, than the respective buffer is loaded and the corresponding value is
+     * extracted and returned.
+     *
+     * When both, {@link value} and {@link accessor}, are defined than {@link value} precedes.
+     */
+    getContent (): Promise<unknown>
+
 }

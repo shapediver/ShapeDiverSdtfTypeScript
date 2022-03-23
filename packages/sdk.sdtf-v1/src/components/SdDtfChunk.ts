@@ -1,4 +1,4 @@
-import { ISdDtfChunk } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfChunk"
+import { ISdDtfChunk } from "@shapediver/sdk.sdtf-core"
 import { SdDtfNode } from "./SdDtfNode"
 
 export class SdDtfChunk extends SdDtfNode implements ISdDtfChunk {

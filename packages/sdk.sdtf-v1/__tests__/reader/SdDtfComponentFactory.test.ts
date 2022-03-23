@@ -1,6 +1,7 @@
 import { ISdDtfNode } from "@shapediver/sdk.sdtf-core"
+import { SdDtfBinaryBufferCache } from "../../src/buffer_cache/SdDtfBinaryBufferCache"
 import { SdDtfAccessor } from "../../src/components/SdDtfAccessor"
-import { SdDtfAttributes } from "../../src/components/SdDtfAttributes"
+import { SdDtfAttribute, SdDtfAttributes } from "../../src/components/SdDtfAttributes"
 import { SdDtfBuffer } from "../../src/components/SdDtfBuffer"
 import { SdDtfBufferView } from "../../src/components/SdDtfBufferView"
 import { SdDtfDataItem } from "../../src/components/SdDtfDataItem"
@@ -9,10 +10,11 @@ import { SdDtfTypeHint } from "../../src/components/SdDtfTypeHint"
 import { SdDtfComponentFactory } from "../../src/reader/SdDtfComponentFactory"
 
 const factory = new SdDtfComponentFactory()
+const bufferCache = new SdDtfBinaryBufferCache()
 
 describe("createAccessor", function () {
 
-    const buffer = new SdDtfBuffer(1),
+    const buffer = new SdDtfBuffer(1, bufferCache),
         bufferView = new SdDtfBufferView(buffer, 1, 0, "text"),
         bufferViews = [ bufferView ]
 
@@ -59,7 +61,7 @@ describe("createAccessor", function () {
 
 describe("createAttribute", function () {
 
-    const buffer = new SdDtfBuffer(1),
+    const buffer = new SdDtfBuffer(1, bufferCache),
         bufferView = new SdDtfBufferView(buffer, 1, 0, "text"),
         accessor = new SdDtfAccessor(bufferView),
         accessors = [ accessor ],
@@ -126,20 +128,20 @@ describe("createAttribute", function () {
 describe("createBuffer", function () {
 
     test("minimal buffer data; should return buffer instance", () => {
-        const buffer = factory.createBuffer({ byteLength: 666 })
+        const buffer = factory.createBuffer({ byteLength: 666 }, bufferCache)
         expect(buffer).toBeDefined()
         expect(buffer.byteLength).toBe(666)
     })
 
     test("full buffer data; should return buffer instance", () => {
-        const buffer = factory.createBuffer({ byteLength: 666, uri: "data:,foobar" })
+        const buffer = factory.createBuffer({ byteLength: 666, uri: "data:,foobar" }, bufferCache)
         expect(buffer).toBeDefined()
         expect(buffer.byteLength).toBe(666)
         expect(buffer.uri).toBe("data:,foobar")
     })
 
     test("buffer with additional properties; should add additional properties to buffer", () => {
-        const buffer = factory.createBuffer({ byteLength: 666, foo: "bar" })
+        const buffer = factory.createBuffer({ byteLength: 666, foo: "bar" }, bufferCache)
         expect(buffer).toBeDefined()
         expect(buffer.byteLength).toBe(666)
         expect(buffer.foo).toBe("bar")
@@ -147,10 +149,11 @@ describe("createBuffer", function () {
 
     test("invalid byteLength property; should throw", () => {
         // property missing
-        expect(() => factory.createBuffer({})).toThrow(/Required property 'byteLength' must be an unsigned integer/)
+        expect(() => factory.createBuffer({}, bufferCache)).toThrow(/Required property 'byteLength' must be an unsigned integer/)
 
         // invalid property value
-        expect(() => factory.createBuffer({ byteLength: "666" })).toThrow(/Required property 'byteLength' must be an unsigned integer/)
+        expect(() => factory.createBuffer({ byteLength: "666" }, bufferCache))
+            .toThrow(/Required property 'byteLength' must be an unsigned integer/)
     })
 
     test("invalid uri property; should throw", () => {
@@ -158,14 +161,14 @@ describe("createBuffer", function () {
         expect(() => factory.createBuffer({
             byteLength: 666,
             uri: 0,
-        })).toThrow(/Optional property 'uri' must be a string/)
+        }, bufferCache)).toThrow(/Optional property 'uri' must be a string/)
     })
 
 })
 
 describe("createBufferView", function () {
 
-    const buffer = new SdDtfBuffer(1),
+    const buffer = new SdDtfBuffer(1, bufferCache),
         buffers = [ buffer ]
 
     test("minimal buffer view data; should return buffer view instance", () => {
@@ -328,7 +331,7 @@ describe("createChunk", function () {
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = { value: "value" }
+    attribute["name"] = new SdDtfAttribute()
     dataItem.value = "value"
     node.name = "[0]"
 
@@ -429,7 +432,7 @@ describe("createChunk", function () {
 
 describe("createDataItem", function () {
 
-    const buffer = new SdDtfBuffer(1),
+    const buffer = new SdDtfBuffer(1, bufferCache),
         bufferView = new SdDtfBufferView(buffer, 1, 0, "text"),
         accessor = new SdDtfAccessor(bufferView),
         accessors = [ accessor ],
@@ -439,7 +442,7 @@ describe("createDataItem", function () {
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = { value: "value" }
+    attribute["name"] = new SdDtfAttribute()
 
     test("minimal data item data; should return data item instance", () => {
         const dataItem = factory.createDataItem({}, accessors, attributes, typeHints)
@@ -555,7 +558,7 @@ describe("createNode", function () {
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = { value: "value" }
+    attribute["name"] = new SdDtfAttribute()
     dataItem.value = "value"
 
     test("minimal node data; should return node instance", () => {
@@ -649,7 +652,7 @@ describe("setNodeReferences", function () {
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = { value: "value" }
+    attribute["name"] = new SdDtfAttribute()
     dataItem.value = "value"
 
     const nodeData = [

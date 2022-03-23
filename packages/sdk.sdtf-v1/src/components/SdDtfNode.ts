@@ -1,7 +1,4 @@
-import { ISdDtfAttributes } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfAttributes"
-import { ISdDtfDataItem } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfDataItem"
-import { ISdDtfNode } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfNode"
-import { ISdDtfTypeHint } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfTypeHint"
+import { ISdDtfAttributes, ISdDtfDataItem, ISdDtfNode, ISdDtfTypeHint } from "@shapediver/sdk.sdtf-core"
 
 export class SdDtfNode implements ISdDtfNode {
 
@@ -10,6 +7,7 @@ export class SdDtfNode implements ISdDtfNode {
     name?: string
     nodes: ISdDtfNode[] = []
     typeHint?: ISdDtfTypeHint
+
     [custom: string]: unknown
 
 }

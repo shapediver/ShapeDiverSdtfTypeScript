@@ -1,4 +1,4 @@
-import { ISdDtfTypeHint, SdDtfTypeHintName } from "@shapediver/sdk.sdtf-core/dist/components/ISdDtfTypeHint"
+import { ISdDtfTypeHint, SdDtfTypeHintName } from "@shapediver/sdk.sdtf-core"
 
 export class SdDtfTypeHint implements ISdDtfTypeHint {
 

@@ -8,7 +8,9 @@ import {
     ISdDtfFileInfo,
     ISdDtfNode,
     ISdDtfTypeHint,
+    SdDtfError,
 } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfBufferCache } from "../buffer_cache/ISdDtfBufferCache"
 import { SdDtfAccessor } from "../components/SdDtfAccessor"
 import { SdDtfAttribute, SdDtfAttributes } from "../components/SdDtfAttributes"
 import { SdDtfBuffer } from "../components/SdDtfBuffer"
@@ -17,7 +19,6 @@ import { SdDtfDataItem } from "../components/SdDtfDataItem"
 import { SdDtfFileInfo } from "../components/SdDtfFileInfo"
 import { SdDtfNode } from "../components/SdDtfNode"
 import { SdDtfTypeHint } from "../components/SdDtfTypeHint"
-import { SdDtfError } from "../SdDtfError"
 import { isDataObject, isNil, isNonEmptyString, isUint, isUintArray } from "../typeGuards"
 import { ISdDtfComponentFactory } from "./ISdDtfComponentFactory"
 
@@ -82,12 +83,12 @@ export class SdDtfComponentFactory implements ISdDtfComponentFactory {
         return attributes
     }
 
-    createBuffer (bufferData: Record<string, unknown>): ISdDtfBuffer {
+    createBuffer (bufferData: Record<string, unknown>, bufferCache: ISdDtfBufferCache): ISdDtfBuffer {
         // Validate required properties
         if (!isUint(bufferData.byteLength)) throw new SdDtfError("Invalid buffer data: Required property 'byteLength' must be an unsigned integer.")
 
         // Instantiate object
-        const buffer = new SdDtfBuffer(Number(bufferData.byteLength))
+        const buffer = new SdDtfBuffer(Number(bufferData.byteLength), bufferCache)
 
         // Add additional properties
         Object
