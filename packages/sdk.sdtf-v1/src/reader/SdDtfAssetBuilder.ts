@@ -1,9 +1,9 @@
-import { ISdDtfAsset, SdDtfError } from "@shapediver/sdk.sdtf-core"
+import { isDataObject, ISdDtfAsset, SdDtfError } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfBufferCache } from "../buffer_cache/ISdDtfBufferCache"
 import { SdDtfAsset } from "../components/SdDtfAsset"
-import { isDataObject } from "../typeGuards"
 import { ISdDtfAssetBuilder } from "./ISdDtfAssetBuilder"
 import { ISdDtfComponentFactory } from "./ISdDtfComponentFactory"
+import { ISdDtfDataParser } from "./ISdDtfDataParser"
 import { SdDtfComponentFactory } from "./SdDtfComponentFactory"
 
 export class SdDtfAssetBuilder implements ISdDtfAssetBuilder {
@@ -24,9 +24,10 @@ export class SdDtfAssetBuilder implements ISdDtfAssetBuilder {
     constructor (
         private readonly content: Record<string, unknown>,
         private readonly bufferCache: ISdDtfBufferCache,
+        dataParser: ISdDtfDataParser,
     ) {
         this.asset = new SdDtfAsset()
-        this.factory = new SdDtfComponentFactory()
+        this.factory = new SdDtfComponentFactory(dataParser)
     }
 
     buildAccessor (): this {

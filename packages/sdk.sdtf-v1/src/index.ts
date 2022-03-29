@@ -1,3 +1,3 @@
 export * from "@shapediver/sdk.sdtf-core"
 
-export { create, SdDtfSdk } from "./SdDtfSdk"
+export { create, ISdDtfConfig, SdDtfSdk } from "./SdDtfSdk"

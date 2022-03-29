@@ -1,3 +1,4 @@
+import { ISdDtfBufferValue } from "../reader/ISdDtfBufferValue"
 import { ISdDtfBufferView } from "./ISdDtfBufferView"
 
 /**
@@ -25,6 +26,6 @@ export interface ISdDtfAccessor {
     [custom: string]: unknown
 
     /** Returns the content. */
-    getContent (): Promise<{ id?: string, data: DataView }>
+    getContent (): Promise<ISdDtfBufferValue>
 
 }

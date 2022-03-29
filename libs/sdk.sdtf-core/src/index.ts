@@ -9,6 +9,12 @@ export * from "./components/ISdDtfFileInfo"
 export * from "./components/ISdDtfNode"
 export * from "./components/ISdDtfTypeHint"
 
+export * from "./reader/ISdDtfBufferValue"
 export * from "./reader/ISdDtfParser"
+export * from "./reader/ISdDtfReader"
 
+export * from "./utils/SdDtfTypeGuards"
+export * from "./utils/SdDtfUtils"
+
+export * from "./ISdDtfIntegration"
 export * from "./SdDtfError"

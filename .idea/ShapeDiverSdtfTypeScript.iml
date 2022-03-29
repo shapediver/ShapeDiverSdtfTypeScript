@@ -4,7 +4,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/libs/sdk.sdtf-core/dist" />
       <excludeFolder url="file://$MODULE_DIR$/libs/sdk.sdtf-geometry/dist" />
-      <excludeFolder url="file://$MODULE_DIR$/libs/sdk.sdtf-primitive/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/sdk.sdtf-primitives/dist" />
       <excludeFolder url="file://$MODULE_DIR$/packages/sdk.sdtf-v1/dist" />
     </content>
     <orderEntry type="inheritedJdk" />

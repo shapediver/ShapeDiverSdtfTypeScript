@@ -16,7 +16,7 @@ const command_jsonContent = {
 
 (async () => {
     try {
-        const parser = create().createParser()
+        const parser = create({}).createParser()
 
         if (
             process.argv.length < 3 ||
@@ -43,7 +43,7 @@ const command_jsonContent = {
             errExit(`Invalid command '${ process.argv[2] }.'`)
         }
     } catch (e) {
-        errExit(e.msg)
+        errExit(e.message)
     }
 })()
 

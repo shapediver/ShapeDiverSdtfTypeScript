@@ -2,7 +2,7 @@ import * as fs from "fs"
 import * as path from "path"
 import { SdDtfParser } from "../../src/reader/SdDtfParser"
 
-const parser = new SdDtfParser()
+const parser = new SdDtfParser([])
 
 describe("readFromFile", function () {
 

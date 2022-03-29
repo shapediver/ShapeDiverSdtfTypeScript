@@ -1,4 +1,5 @@
 import { ISdDtfAccessor, ISdDtfAttribute, ISdDtfAttributes, ISdDtfTypeHint } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfDataParser } from "../reader/ISdDtfDataParser"
 
 export class SdDtfAttributes implements ISdDtfAttributes {
 
@@ -12,10 +13,13 @@ export class SdDtfAttribute implements ISdDtfAttribute {
     typeHint?: ISdDtfTypeHint
     value?: unknown
 
+    constructor (
+        private readonly dataParser: ISdDtfDataParser,
+    ) {
+    }
+
     async getContent (): Promise<unknown> {
-        if (this.value !== undefined) return this.value // Value precedes
-        if (this.accessor) return this.accessor.getContent()
-        return undefined    // No value and no accessor
+        return this.dataParser.parseContent(this.value, this.accessor, this.typeHint)
     }
 
 }

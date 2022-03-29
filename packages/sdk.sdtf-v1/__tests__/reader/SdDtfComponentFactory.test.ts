@@ -8,8 +8,10 @@ import { SdDtfDataItem } from "../../src/components/SdDtfDataItem"
 import { SdDtfNode } from "../../src/components/SdDtfNode"
 import { SdDtfTypeHint } from "../../src/components/SdDtfTypeHint"
 import { SdDtfComponentFactory } from "../../src/reader/SdDtfComponentFactory"
+import { SdDtfDataParser } from "../../src/reader/SdDtfDataParser"
 
-const factory = new SdDtfComponentFactory()
+const dataParser = new SdDtfDataParser([])
+const factory = new SdDtfComponentFactory(dataParser)
 const bufferCache = new SdDtfBinaryBufferCache()
 
 describe("createAccessor", function () {
@@ -323,7 +325,7 @@ describe("createChunk", function () {
 
     const attribute = new SdDtfAttributes(),
         attributes = [ attribute ],
-        dataItem = new SdDtfDataItem(),
+        dataItem = new SdDtfDataItem(dataParser),
         dataItems = [ dataItem ],
         node = new SdDtfNode(),
         nodes = [ node ],
@@ -331,7 +333,7 @@ describe("createChunk", function () {
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = new SdDtfAttribute()
+    attribute["name"] = new SdDtfAttribute(dataParser)
     dataItem.value = "value"
     node.name = "[0]"
 
@@ -442,7 +444,7 @@ describe("createDataItem", function () {
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = new SdDtfAttribute()
+    attribute["name"] = new SdDtfAttribute(dataParser)
 
     test("minimal data item data; should return data item instance", () => {
         const dataItem = factory.createDataItem({}, accessors, attributes, typeHints)
@@ -552,13 +554,13 @@ describe("createNode", function () {
 
     const attribute = new SdDtfAttributes(),
         attributes = [ attribute ],
-        dataItem = new SdDtfDataItem(),
+        dataItem = new SdDtfDataItem(dataParser),
         dataItems = [ dataItem ],
         typeHint = new SdDtfTypeHint("rhino.mesh"),
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = new SdDtfAttribute()
+    attribute["name"] = new SdDtfAttribute(dataParser)
     dataItem.value = "value"
 
     test("minimal node data; should return node instance", () => {
@@ -646,13 +648,13 @@ describe("setNodeReferences", function () {
 
     const attribute = new SdDtfAttributes(),
         attributes = [ attribute ],
-        dataItem = new SdDtfDataItem(),
+        dataItem = new SdDtfDataItem(dataParser),
         dataItems = [ dataItem ],
         typeHint = new SdDtfTypeHint("rhino.mesh"),
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = new SdDtfAttribute()
+    attribute["name"] = new SdDtfAttribute(dataParser)
     dataItem.value = "value"
 
     const nodeData = [

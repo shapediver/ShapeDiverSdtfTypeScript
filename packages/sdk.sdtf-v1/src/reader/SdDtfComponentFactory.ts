@@ -1,4 +1,5 @@
 import {
+    isDataObject,
     ISdDtfAccessor,
     ISdDtfAttributes,
     ISdDtfBuffer,
@@ -8,6 +9,10 @@ import {
     ISdDtfFileInfo,
     ISdDtfNode,
     ISdDtfTypeHint,
+    isNil,
+    isNonEmptyString,
+    isUint,
+    isUintArray,
     SdDtfError,
 } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfBufferCache } from "../buffer_cache/ISdDtfBufferCache"
@@ -19,10 +24,15 @@ import { SdDtfDataItem } from "../components/SdDtfDataItem"
 import { SdDtfFileInfo } from "../components/SdDtfFileInfo"
 import { SdDtfNode } from "../components/SdDtfNode"
 import { SdDtfTypeHint } from "../components/SdDtfTypeHint"
-import { isDataObject, isNil, isNonEmptyString, isUint, isUintArray } from "../typeGuards"
 import { ISdDtfComponentFactory } from "./ISdDtfComponentFactory"
+import { ISdDtfDataParser } from "./ISdDtfDataParser"
 
 export class SdDtfComponentFactory implements ISdDtfComponentFactory {
+
+    constructor (
+        private readonly dataParser: ISdDtfDataParser,
+    ) {
+    }
 
     createAccessor (accessorData: Record<string, unknown>, bufferViews: ISdDtfBufferView[]): ISdDtfAccessor {
         // Validate required properties
@@ -56,7 +66,7 @@ export class SdDtfComponentFactory implements ISdDtfComponentFactory {
             .forEach(([ name, data ], i) => {
                 if (!isDataObject(data)) throw new SdDtfError(`Invalid attribute at [${ i }]: Item must be an object.`)
 
-                const attribute = new SdDtfAttribute()
+                const attribute = new SdDtfAttribute(this.dataParser)
 
                 // Value is not validated
                 attribute.value = data.value
@@ -159,7 +169,7 @@ export class SdDtfComponentFactory implements ISdDtfComponentFactory {
 
     createDataItem (dataItemData: Record<string, unknown>, accessors: ISdDtfAccessor[], attributes: ISdDtfAttributes[], typeHints: ISdDtfTypeHint[]): ISdDtfDataItem {
         // Instantiate object
-        const dataItem = new SdDtfDataItem()
+        const dataItem = new SdDtfDataItem(this.dataParser)
 
         // Add additional properties
         Object

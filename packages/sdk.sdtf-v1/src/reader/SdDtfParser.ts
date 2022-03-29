@@ -1,4 +1,4 @@
-import { ISdDtfAsset, ISdDtfParser, SdDtfError } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfAsset, ISdDtfParser, ISdDtfReader, SdDtfError } from "@shapediver/sdk.sdtf-core"
 import { isBrowser } from "browser-or-node"
 import { ISdDtfBinarySdtf } from "../binary_sdtf/ISdDtfBinarySdtf"
 import { SdDtfBinarySdtf } from "../binary_sdtf/SdDtfBinarySdtf"
@@ -10,13 +10,14 @@ import { ISdDtfHttpClient } from "../http/ISdDtfHttpClient"
 import { SdDtfHttpClient } from "../http/SdDtfHttpClient"
 import { SdDtfFileUtils } from "../utils/SdDtfFileUtils"
 import { SdDtfAssetBuilder } from "./SdDtfAssetBuilder"
+import { SdDtfDataParser } from "./SdDtfDataParser"
 
 export class SdDtfParser implements ISdDtfParser {
 
     private readonly binarySdtfParser: ISdDtfBinarySdtf
     private readonly fileUtils: SdDtfFileUtils
 
-    constructor () {
+    constructor (private readonly readers: ISdDtfReader[]) {
         this.binarySdtfParser = new SdDtfBinarySdtf()
         this.fileUtils = new SdDtfFileUtils()
     }
@@ -72,7 +73,7 @@ export class SdDtfParser implements ISdDtfParser {
         //  Object references between components are set during individual build
         //  sets as well. Thus, the order in which the build steps are executed
         //  is crucial! Otherwise, runtime errors will occur.
-        return new SdDtfAssetBuilder(content, bufferCache)
+        return new SdDtfAssetBuilder(content, bufferCache, new SdDtfDataParser(this.readers))
             .buildTypeHint()
             .buildBuffer()
             .buildBufferView()
