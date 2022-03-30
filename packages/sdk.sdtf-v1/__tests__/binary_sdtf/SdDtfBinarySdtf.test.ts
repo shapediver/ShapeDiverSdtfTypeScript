@@ -21,7 +21,7 @@ describe("readHeader", function () {
         const header = new Uint8Array(456)
         header.set([ 116, 101, 115, 116 ], 0) // magic = test (utf-8 encoded)
 
-        expect(() => binarySdtf.readHeader(header.buffer)).toThrow(/Unknown file type for identifier 'test'/)
+        expect(() => binarySdtf.readHeader(header.buffer)).toThrow(/Unknown file type for sdTF identifier 'test'/)
     })
 
     test("invalid version; should throw", () => {
@@ -40,7 +40,7 @@ describe("readHeader", function () {
         header.set([ 123, 0, 0, 0 ], 12)      // content length = 123
         header.set([ 1, 0, 0, 0 ], 16)        // format = 1
 
-        expect(() => binarySdtf.readHeader(header.buffer)).toThrow(/Unsupported content format '1'/)
+        expect(() => binarySdtf.readHeader(header.buffer)).toThrow(/Unsupported sdTF content format '1'/)
     })
 
 })

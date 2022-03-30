@@ -12,7 +12,7 @@ describe("calcUrl", function () {
 
 describe("getJsonContent", function () {
 
-    let origTryFetchPartially: any, origReadHeader: any, origParseBinarySdtf: any
+    let origFetch: any, origReadHeader: any, origParseBinarySdtf: any
 
     const client = new SdDtfHttpClient(""),
         headerBuffer = new ArrayBuffer(20),
@@ -20,7 +20,7 @@ describe("getJsonContent", function () {
         binaryBuffer = new DataView(new ArrayBuffer(40))
 
     beforeAll(() => {
-        origTryFetchPartially = SdDtfHttpClient.prototype.tryFetchPartially
+        origFetch = SdDtfHttpClient.prototype.fetch
 
         origReadHeader = SdDtfBinarySdtf.prototype.readHeader
         SdDtfBinarySdtf.prototype.readHeader = jest.fn(() => [ 20, 10 ])
@@ -30,7 +30,7 @@ describe("getJsonContent", function () {
     })
 
     afterAll(() => {
-        SdDtfHttpClient.prototype.tryFetchPartially = origTryFetchPartially
+        SdDtfHttpClient.prototype.fetch = origFetch
         SdDtfBinarySdtf.prototype.readHeader = origReadHeader
         SdDtfBinarySdtf.prototype.parseBinarySdtf = origParseBinarySdtf
     })
@@ -38,7 +38,7 @@ describe("getJsonContent", function () {
     test("partial requests supported; should return only partial buffer", async () => {
         // Mock
         let fetchCounter = 0
-        SdDtfHttpClient.prototype.tryFetchPartially = jest.fn(async () => {
+        SdDtfHttpClient.prototype.fetch = jest.fn(async () => {
             fetchCounter++
             if (fetchCounter === 1) return { data: headerBuffer, partial: true }
             if (fetchCounter === 2) return { data: jsonContentBuffer, partial: true }
@@ -50,7 +50,7 @@ describe("getJsonContent", function () {
 
     test("partial requests not supported; should return entire buffer as well", async () => {
         // Mock
-        SdDtfHttpClient.prototype.tryFetchPartially = jest.fn(async () => {
+        SdDtfHttpClient.prototype.fetch = jest.fn(async () => {
             return { data: new ArrayBuffer(90), partial: false }
         })
 
@@ -61,23 +61,23 @@ describe("getJsonContent", function () {
 
 describe("getBinaryBuffer", function () {
 
-    let origTryFetchPartially: any
+    let origFetch: any
 
     const client = new SdDtfHttpClient(""),
         partialBuffer = new ArrayBuffer(30),
         entireBuffer = new ArrayBuffer(50)
 
     beforeAll(() => {
-        origTryFetchPartially = SdDtfHttpClient.prototype.tryFetchPartially
+        origFetch = SdDtfHttpClient.prototype.fetch
     })
 
     afterAll(() => {
-        SdDtfHttpClient.prototype.tryFetchPartially = origTryFetchPartially
+        SdDtfHttpClient.prototype.fetch = origFetch
     })
 
     test("partial requests supported; should return only partial buffer", async () => {
         // Mock
-        SdDtfHttpClient.prototype.tryFetchPartially = jest.fn(async () => {
+        SdDtfHttpClient.prototype.fetch = jest.fn(async () => {
             return { data: partialBuffer, partial: true }
         })
 
@@ -86,7 +86,7 @@ describe("getBinaryBuffer", function () {
 
     test("partial requests not supported; should return entire buffer as well", async () => {
         // Mock
-        SdDtfHttpClient.prototype.tryFetchPartially = jest.fn(async () => {
+        SdDtfHttpClient.prototype.fetch = jest.fn(async () => {
             return { data: entireBuffer, partial: false }
         })
 

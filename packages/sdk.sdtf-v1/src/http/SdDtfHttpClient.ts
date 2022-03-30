@@ -37,12 +37,12 @@ export class SdDtfHttpClient implements ISdDtfHttpClient {
             const {
                 data,
                 partial,
-            } = await this.tryFetchPartially(this.jsonContentUrl, 0, this.binarySdtfParser.binaryHeaderLength)
+            } = await this.fetch(this.jsonContentUrl, 0, this.binarySdtfParser.binaryHeaderLength)
 
             if (partial) {
                 // Partial requests are supported by the server - fetch json content next
                 const [ contentLength, _ ] = this.binarySdtfParser.readHeader(data)
-                const jsonContentBuffer = await this.tryFetchPartially(this.jsonContentUrl, 20, contentLength)
+                const jsonContentBuffer = await this.fetch(this.jsonContentUrl, 20, contentLength)
                 return [ new DataView(jsonContentBuffer.data), undefined ]
             } else {
                 // Entire sdTF has been returned - parse and return
@@ -55,12 +55,13 @@ export class SdDtfHttpClient implements ISdDtfHttpClient {
 
     async getBinaryBuffer (uri: string | undefined, offset: number, length: number): Promise<[ DataView, ArrayBuffer | undefined ]> {
         try {
-            const { data, partial } = await this.tryFetchPartially(this.calcUrl(uri), offset, length)
+            const { data, partial } = await this.fetch(this.calcUrl(uri), offset, length)
+
             if (partial) {
                 // Partial requests are supported by the server - partial buffer was fetched
                 return [ new DataView(data), undefined ]
             } else {
-                // Partial requests are supported by the server - entire buffer was fechted
+                // Partial requests are supported by the server - entire buffer was fetched
                 return [ new DataView(data, offset, length), data ]
             }
         } catch (e) {
@@ -69,19 +70,56 @@ export class SdDtfHttpClient implements ISdDtfHttpClient {
     }
 
     /**
-     * Tries to fetch the specified part of the sdTF file.
-     * When the server supports HTTP range requests, only the requested part is returned.
-     * Otherwise, the entire sdTF file (either a binary sdTF or just binary data) is returned.
+     * Checks if the server supports HTTP range requests by sending a HEAD request and analyzing the response header.
+     * When the server supports range requests, only the requested part is fetched.
+     * Otherwise, the entire sdTF file is fetched.
      * @private
      * @param url
      * @param offset - Zero-based byte index at which to begin (inclusive).
      * @param length - Length of the buffer.
      * @throws {@link SdDtfError} when the request was not successful.
      */
-    async tryFetchPartially (url: string, offset: number, length: number): Promise<{ data: ArrayBuffer, partial: boolean }> {
+    async fetch (url: string, offset: number, length: number): Promise<{ data: ArrayBuffer, partial: boolean }> {
         let response
         try {
+            response = await axios.head(url)
+        } catch (e) {
+            throw new SdDtfError(e.message)
+        }
 
+        // Validate response status
+        if (response.status > 299) throw new SdDtfError(`Received HTTP status ${ response.status }.`)
+
+        const acceptRanges = response.headers["Accept-Ranges"] ?? response.headers["accept-ranges"]
+        const rangeRequestsSupported = (acceptRanges === "bytes")
+
+        // Fetch the actual data
+        const data = (rangeRequestsSupported) ?
+            await this.fetchPartially(url, offset, length) :
+            await this.fetchFully(url, offset, length)
+
+        // This is required to support Node.js as well as Browsers
+        const buffer = (data instanceof ArrayBuffer) ? data : Uint8Array.from(data).buffer
+
+        return {
+            data: buffer,
+            partial: rangeRequestsSupported,
+        }
+    }
+
+    /**
+     * Sends an HTTP range request to fetch only the requested part.
+     * Assumes, that the server supports HTTP range requests and that the response is NOT compressed.
+     * Otherwise, Axios throws an `ERR_CONTENT_DECODING_FAILED` error in the browser.
+     * @private
+     * @param url
+     * @param offset - Zero-based byte index at which to begin (inclusive).
+     * @param length - Length of the buffer.
+     * @throws {@link SdDtfError} when the request was not successful.
+     */
+    async fetchPartially (url: string, offset: number, length: number): Promise<any> {
+        let response
+        try {
             response = await axios.get(url, {
                 headers: { range: `bytes=${ offset }-${ offset + length - 1 }` },
                 responseType: "arraybuffer",
@@ -92,15 +130,34 @@ export class SdDtfHttpClient implements ISdDtfHttpClient {
 
         // Validate response status
         if (response.status === 416) throw new SdDtfError("Invalid range requested.")
-        if (response.status > 299) throw new SdDtfError(`Received HTTP status ${ response.status }.`)
+        if (response.status !== 206) throw new SdDtfError(`Received HTTP status ${ response.status }.`)
 
-        const buffer = Uint8Array.from(response.data).buffer
+        return response.data
+    }
 
-        return {
-            data: buffer,
-            // When the server supports HTTP range requests, it responds with an 206 status.
-            partial: response.status === 206,
+    /**
+     * Fetches the entire sdTF file (either a binary sdTF or just binary data).
+     * Fallback when HTTP range requests are not supported by the server.
+     * @private
+     * @param url
+     * @param offset - Zero-based byte index at which to begin (inclusive).
+     * @param length - Length of the buffer.
+     * @throws {@link SdDtfError} when the request was not successful.
+     */
+    async fetchFully (url: string, offset: number, length: number): Promise<any> {
+        let response
+        try {
+            response = await axios.get(url, {
+                responseType: "arraybuffer",
+            })
+        } catch (e) {
+            throw new SdDtfError(e.message)
         }
+
+        // Validate response status
+        if (response.status !== 200) throw new SdDtfError(`Received HTTP status ${ response.status }.`)
+
+        return response.data
     }
 
 }

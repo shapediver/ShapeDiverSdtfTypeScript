@@ -28,7 +28,7 @@ export class SdDtfBinarySdtf implements ISdDtfBinarySdtf {
             String.fromCharCode(header.getUint8(1)) +
             String.fromCharCode(header.getUint8(2)) +
             String.fromCharCode(header.getUint8(3))
-        if (magic !== "sdtf") throw new SdDtfError(`Invalid identifier: Unknown file type for identifier '${ magic }'.`)
+        if (magic !== "sdtf") throw new SdDtfError(`Invalid identifier: Unknown file type for sdTF identifier '${ magic }'.`)
 
         const version = header.getUint32(4, true)
         if (version !== 1) throw new SdDtfError(`Invalid version: Unsupported sdTF version '${ version }'.`)
@@ -37,7 +37,7 @@ export class SdDtfBinarySdtf implements ISdDtfBinarySdtf {
         const contentLength = header.getUint32(12, true)
 
         const contentFormat = header.getUint32(16, true)
-        if (contentFormat !== 0) throw new SdDtfError(`Invalid content: Unsupported content format '${ contentFormat }'.`)
+        if (contentFormat !== 0) throw new SdDtfError(`Invalid content: Unsupported sdTF content format '${ contentFormat }'.`)
 
         return [ contentLength, totalLength ]
     }
@@ -78,7 +78,7 @@ export class SdDtfBinarySdtf implements ISdDtfBinarySdtf {
         try {
             return JSON.parse(new TextDecoder().decode(jsonContent))
         } catch (e) {
-            throw new SdDtfError(`Invalid content: Cannot parse JSON content. ${ e.message }`)
+            throw new SdDtfError(`Invalid content: Cannot parse sdTF JSON content. ${ e.message }`)
         }
     }
 
