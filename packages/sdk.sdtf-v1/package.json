@@ -39,6 +39,10 @@
   },
   "homepage": "https://github.com/shapediver/ShapeDiverSdtfTypeScript#readme",
   "typings": "dist/index.d.ts",
+  "browser": {
+    "fs": false,
+    "path": false
+  },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
