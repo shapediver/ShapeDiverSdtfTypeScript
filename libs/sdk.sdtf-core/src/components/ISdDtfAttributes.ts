@@ -8,7 +8,7 @@ export interface ISdDtfAttributes extends ISdDtfBaseComponent {
     /** Holds the sequential index in the sdTF asset structure. */
     componentId: number
 
-    items: Record<string, ISdDtfAttribute>
+    entries: Record<string, ISdDtfAttribute>
 
 }
 

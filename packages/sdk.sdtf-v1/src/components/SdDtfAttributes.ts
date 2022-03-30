@@ -4,12 +4,12 @@ import { ISdDtfDataParser } from "../reader/ISdDtfDataParser"
 export class SdDtfAttributes implements ISdDtfAttributes {
 
     componentId: number = -1
-    items: Record<string, ISdDtfAttribute> = {}
+    entries: Record<string, ISdDtfAttribute> = {}
 
     toJson (): Record<string, unknown> {
         const json: Record<string, unknown> = {}
-        Object.entries(this.items).forEach(([ n, a ]) => {
-            json[n] = a.toJson()
+        Object.entries(this.entries).forEach(([ name, attribute ]) => {
+            json[name] = attribute.toJson()
         })
         return json
     }
