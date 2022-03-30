@@ -73,7 +73,7 @@ describe("createAttribute", function () {
     test("minimal attributes data; should return attribute instance", () => {
         const attributes = factory.createAttribute({}, accessors, typeHints)
         expect(attributes).toBeDefined()
-        expect(Object.keys(attributes).length).toBe(0)
+        expect(Object.keys(attributes.items).length).toBe(0)
     })
 
     test("full attributes data; should return attribute instance", () => {
@@ -85,11 +85,11 @@ describe("createAttribute", function () {
             },
         }, accessors, typeHints)
         expect(attributes).toBeDefined()
-        expect(Object.keys(attributes).length).toBe(1)
-        expect(Object.keys(attributes)[0]).toBe("name")
-        expect(Object.values(attributes)[0].value).toBe("awesome value")
-        expect(Object.values(attributes)[0].accessor).toBe(accessor)
-        expect(Object.values(attributes)[0].typeHint).toBe(typeHint)
+        expect(Object.keys(attributes.items).length).toBe(1)
+        expect(Object.keys(attributes.items)[0]).toBe("name")
+        expect(Object.values(attributes.items)[0].value).toBe("awesome value")
+        expect(Object.values(attributes.items)[0].accessor).toBe(accessor)
+        expect(Object.values(attributes.items)[0].typeHint).toBe(typeHint)
     })
 
     test("attributes with additional properties; should throw", () => {
@@ -333,7 +333,7 @@ describe("createChunk", function () {
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = new SdDtfAttribute(dataParser)
+    attribute.items["name"] = new SdDtfAttribute(dataParser)
     dataItem.value = "value"
     node.name = "[0]"
 
@@ -444,7 +444,7 @@ describe("createDataItem", function () {
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = new SdDtfAttribute(dataParser)
+    attribute.items["name"] = new SdDtfAttribute(dataParser)
 
     test("minimal data item data; should return data item instance", () => {
         const dataItem = factory.createDataItem({}, accessors, attributes, typeHints)
@@ -560,7 +560,7 @@ describe("createNode", function () {
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = new SdDtfAttribute(dataParser)
+    attribute.items["name"] = new SdDtfAttribute(dataParser)
     dataItem.value = "value"
 
     test("minimal node data; should return node instance", () => {
@@ -654,7 +654,7 @@ describe("setNodeReferences", function () {
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
-    attribute["name"] = new SdDtfAttribute(dataParser)
+    attribute.items["name"] = new SdDtfAttribute(dataParser)
     dataItem.value = "value"
 
     const nodeData = [

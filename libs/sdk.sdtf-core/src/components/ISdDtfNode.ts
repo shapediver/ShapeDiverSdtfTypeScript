@@ -1,4 +1,5 @@
 import { ISdDtfAttributes } from "./ISdDtfAttributes"
+import { ISdDtfBaseComponent } from "./ISdDtfBaseComponent"
 import { ISdDtfDataItem } from "./ISdDtfDataItem"
 import { ISdDtfTypeHint } from "./ISdDtfTypeHint"
 
@@ -6,7 +7,10 @@ import { ISdDtfTypeHint } from "./ISdDtfTypeHint"
  * Trees in sdTF are made of nodes.
  * Nodes can reference other nodes and/or data items.
  */
-export interface ISdDtfNode {
+export interface ISdDtfNode extends ISdDtfBaseComponent {
+
+    /** Holds the sequential index in the sdTF asset structure. */
+    componentId: number
 
     /** Attributes of the node. */
     attributes?: ISdDtfAttributes

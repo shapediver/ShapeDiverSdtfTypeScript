@@ -1,4 +1,5 @@
 import { ISdDtfBufferValue } from "../reader/ISdDtfBufferValue"
+import { ISdDtfBaseComponent } from "./ISdDtfBaseComponent"
 import { ISdDtfBufferView } from "./ISdDtfBufferView"
 
 /**
@@ -8,7 +9,10 @@ import { ISdDtfBufferView } from "./ISdDtfBufferView"
  *
  * As an example, an accessor referencing an object in a Rhino 3dm file would do so by the object's id in the 3dm file.
  */
-export interface ISdDtfAccessor {
+export interface ISdDtfAccessor extends ISdDtfBaseComponent {
+
+    /** Holds the sequential index in the sdTF asset structure. */
+    componentId: number
 
     /** The referenced buffer view. */
     bufferView: ISdDtfBufferView

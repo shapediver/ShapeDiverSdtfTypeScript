@@ -1,5 +1,10 @@
+import { ISdDtfBaseComponent } from "./ISdDtfBaseComponent"
+
 /** A buffer is used to reference binary data. */
-export interface ISdDtfBuffer {
+export interface ISdDtfBuffer extends ISdDtfBaseComponent {
+
+    /** Holds the sequential index in the sdTF asset structure. */
+    componentId: number
 
     /** The length of the buffer in bytes. */
     byteLength: number

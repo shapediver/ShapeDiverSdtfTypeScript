@@ -1,5 +1,6 @@
 import { ISdDtfAccessor } from "./ISdDtfAccessor"
 import { ISdDtfAttributes } from "./ISdDtfAttributes"
+import { ISdDtfBaseComponent } from "./ISdDtfBaseComponent"
 import { ISdDtfTypeHint } from "./ISdDtfTypeHint"
 
 /**
@@ -7,7 +8,10 @@ import { ISdDtfTypeHint } from "./ISdDtfTypeHint"
  * The actual data may be embedded directly, or a reference to an accessor.
  * Data items can have optional attributes.
  */
-export interface ISdDtfDataItem {
+export interface ISdDtfDataItem extends ISdDtfBaseComponent {
+
+    /** Holds the sequential index in the sdTF asset structure. */
+    componentId: number
 
     /** Referenced accessor to binary data. */
     accessor?: ISdDtfAccessor

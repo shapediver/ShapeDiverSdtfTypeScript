@@ -1,7 +1,11 @@
+import { ISdDtfBaseComponent } from "./ISdDtfBaseComponent"
 import { ISdDtfBuffer } from "./ISdDtfBuffer"
 
 /** A buffer view references a chunk of data in a buffer. */
-export interface ISdDtfBufferView {
+export interface ISdDtfBufferView extends ISdDtfBaseComponent {
+
+    /** Holds the sequential index in the sdTF asset structure. */
+    componentId: number
 
     /** The referenced buffer. */
     buffer: ISdDtfBuffer

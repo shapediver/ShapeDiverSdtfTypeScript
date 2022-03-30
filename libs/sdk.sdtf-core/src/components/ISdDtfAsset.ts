@@ -1,5 +1,6 @@
 import { ISdDtfAccessor } from "./ISdDtfAccessor"
 import { ISdDtfAttributes } from "./ISdDtfAttributes"
+import { ISdDtfBaseComponent } from "./ISdDtfBaseComponent"
 import { ISdDtfBuffer } from "./ISdDtfBuffer"
 import { ISdDtfBufferView } from "./ISdDtfBufferView"
 import { ISdDtfChunk } from "./ISdDtfChunk"
@@ -9,7 +10,7 @@ import { ISdDtfNode } from "./ISdDtfNode"
 import { ISdDtfTypeHint } from "./ISdDtfTypeHint"
 
 /** A ShapeDiver Data Transfer Format (sdTf) asset. */
-export interface ISdDtfAsset {
+export interface ISdDtfAsset extends ISdDtfBaseComponent {
 
     /** Iterator for all accessors referenced by data items. */
     accessors: ISdDtfAccessor[]

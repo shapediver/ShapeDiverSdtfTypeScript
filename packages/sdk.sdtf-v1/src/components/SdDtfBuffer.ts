@@ -3,6 +3,7 @@ import { ISdDtfBufferCache } from "../buffer_cache/ISdDtfBufferCache"
 
 export class SdDtfBuffer implements ISdDtfBuffer {
 
+    componentId: number = -1
     uri?: string
 
     [custom: string]: unknown
@@ -11,6 +12,13 @@ export class SdDtfBuffer implements ISdDtfBuffer {
         public byteLength: number,
         private bufferCache: ISdDtfBufferCache,
     ) {
+    }
+
+    toJson (): Record<string, unknown> {
+        const json: Record<string, unknown> = { ...this }
+        delete json.componentId
+        delete json.bufferCache
+        return json
     }
 
     async getContent (offset: number, length: number): Promise<DataView> {

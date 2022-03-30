@@ -33,11 +33,13 @@ export class SdDtfAssetBuilder implements ISdDtfAssetBuilder {
     buildAccessor (): this {
         this.buildComponent(
             this.PROPERTY_NAME_ACCESSORS,
-            (data: Record<string, unknown>) => {
-                this.asset.accessors.push(this.factory.createAccessor(
+            (data: Record<string, unknown>, i) => {
+                const accessor = this.factory.createAccessor(
                     data,
                     this.asset.bufferViews,
-                ))
+                )
+                accessor.componentId = i
+                this.asset.accessors.push(accessor)
             },
         )
 
@@ -47,12 +49,14 @@ export class SdDtfAssetBuilder implements ISdDtfAssetBuilder {
     buildAttributes (): this {
         this.buildComponent(
             this.PROPERTY_NAME_ATTRIBUTES,
-            (data: Record<string, unknown>) => {
-                this.asset.attributes.push(this.factory.createAttribute(
+            (data: Record<string, unknown>, i) => {
+                const attributes = this.factory.createAttribute(
                     data,
                     this.asset.accessors,
                     this.asset.typeHints,
-                ))
+                )
+                attributes.componentId = i
+                this.asset.attributes.push(attributes)
             },
         )
 
@@ -62,8 +66,10 @@ export class SdDtfAssetBuilder implements ISdDtfAssetBuilder {
     buildBuffer (): this {
         this.buildComponent(
             this.PROPERTY_NAME_BUFFERS,
-            (data: Record<string, unknown>) => {
-                this.asset.buffers.push(this.factory.createBuffer(data, this.bufferCache))
+            (data: Record<string, unknown>, i) => {
+                const buffer = this.factory.createBuffer(data, this.bufferCache)
+                buffer.componentId = i
+                this.asset.buffers.push(buffer)
             },
         )
 
@@ -73,11 +79,13 @@ export class SdDtfAssetBuilder implements ISdDtfAssetBuilder {
     buildBufferView (): this {
         this.buildComponent(
             this.PROPERTY_NAME_BUFFER_VIEWS,
-            (data: Record<string, unknown>) => {
-                this.asset.bufferViews.push(this.factory.createBufferView(
+            (data: Record<string, unknown>, i) => {
+                const bufferView = this.factory.createBufferView(
                     data,
                     this.asset.buffers,
-                ))
+                )
+                bufferView.componentId = i
+                this.asset.bufferViews.push(bufferView)
             },
         )
 
@@ -87,14 +95,16 @@ export class SdDtfAssetBuilder implements ISdDtfAssetBuilder {
     buildChunks (): this {
         this.buildComponent(
             this.PROPERTY_NAME_CHUNKS,
-            (data: Record<string, unknown>) => {
-                this.asset.chunks.push(this.factory.createChunk(
+            (data: Record<string, unknown>, i) => {
+                const chunk = this.factory.createChunk(
                     data,
                     this.asset.attributes,
                     this.asset.items,
                     this.asset.nodes,
                     this.asset.typeHints,
-                ))
+                )
+                chunk.componentId = i
+                this.asset.chunks.push(chunk)
             },
         )
 
@@ -104,13 +114,15 @@ export class SdDtfAssetBuilder implements ISdDtfAssetBuilder {
     buildDataItem (): this {
         this.buildComponent(
             this.PROPERTY_NAME_DATA_ITEMS,
-            (data: Record<string, unknown>) => {
-                this.asset.items.push(this.factory.createDataItem(
+            (data: Record<string, unknown>, i) => {
+                const dataItem = this.factory.createDataItem(
                     data,
                     this.asset.accessors,
                     this.asset.attributes,
                     this.asset.typeHints,
-                ))
+                )
+                dataItem.componentId = i
+                this.asset.items.push(dataItem)
             },
         )
 
@@ -130,13 +142,15 @@ export class SdDtfAssetBuilder implements ISdDtfAssetBuilder {
     buildNode (): this {
         this.buildComponent(
             this.PROPERTY_NAME_NODES,
-            (data: Record<string, unknown>) => {
-                this.asset.nodes.push(this.factory.createNode(
+            (data: Record<string, unknown>, i) => {
+                const node = this.factory.createNode(
                     data,
                     this.asset.attributes,
                     this.asset.items,
                     this.asset.typeHints,
-                ))
+                )
+                node.componentId = i
+                this.asset.nodes.push(node)
             },
         )
 
@@ -152,8 +166,10 @@ export class SdDtfAssetBuilder implements ISdDtfAssetBuilder {
     buildTypeHint (): this {
         this.buildComponent(
             this.PROPERTY_NAME_TYPEHINTS,
-            (data: Record<string, unknown>) => {
-                this.asset.typeHints.push(this.factory.createTypeHint(data))
+            (data: Record<string, unknown>, i) => {
+                const typeHint = this.factory.createTypeHint(data)
+                typeHint.componentId = i
+                this.asset.typeHints.push(typeHint)
             },
         )
 
@@ -169,14 +185,14 @@ export class SdDtfAssetBuilder implements ISdDtfAssetBuilder {
      * @private
      * @throws {@link SdDtfError} when something goes wrong.
      */
-    buildComponent (propertyName: string, createFn: (data: Record<string, unknown>) => void): void {
+    buildComponent (propertyName: string, createFn: (data: Record<string, unknown>, i: number) => void): void {
         const componentDataArray = this.content[propertyName]
         if (componentDataArray === undefined) return
         if (!Array.isArray(componentDataArray)) throw new SdDtfError(`Invalid content property: '${ propertyName }' must be an array.`)
 
         componentDataArray.forEach((componentDataItem: unknown, i) => {
             if (!isDataObject(componentDataItem)) throw new SdDtfError(`Invalid item at ${ propertyName }[${ i }]: Item must be an object.`)
-            createFn(componentDataItem)
+            createFn(componentDataItem, i)
         })
     }
 

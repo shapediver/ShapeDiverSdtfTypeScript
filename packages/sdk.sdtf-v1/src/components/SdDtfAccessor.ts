@@ -2,6 +2,7 @@ import { ISdDtfAccessor, ISdDtfBufferValue, ISdDtfBufferView } from "@shapediver
 
 export class SdDtfAccessor implements ISdDtfAccessor {
 
+    componentId: number = -1
     id?: string
 
     [custom: string]: unknown
@@ -9,6 +10,13 @@ export class SdDtfAccessor implements ISdDtfAccessor {
     constructor (
         public bufferView: ISdDtfBufferView,
     ) {
+    }
+
+    toJson (): Record<string, unknown> {
+        const json: Record<string, unknown> = { ...this }
+        delete json.componentId
+        json.bufferView = this.bufferView.componentId
+        return json
     }
 
     async getContent (): Promise<ISdDtfBufferValue> {

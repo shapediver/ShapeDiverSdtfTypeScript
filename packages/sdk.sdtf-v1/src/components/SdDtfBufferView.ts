@@ -2,6 +2,7 @@ import { ISdDtfBuffer, ISdDtfBufferView } from "@shapediver/sdk.sdtf-core"
 
 export class SdDtfBufferView implements ISdDtfBufferView {
 
+    componentId: number = -1
     contentEncoding?: string
     name?: string
 
@@ -13,6 +14,13 @@ export class SdDtfBufferView implements ISdDtfBufferView {
         public byteOffset: number,
         public contentType: string,
     ) {
+    }
+
+    toJson (): Record<string, unknown> {
+        const json: Record<string, unknown> = { ...this }
+        delete json.componentId
+        json.buffer = this.buffer.componentId
+        return json
     }
 
     async getContent (): Promise<DataView> {

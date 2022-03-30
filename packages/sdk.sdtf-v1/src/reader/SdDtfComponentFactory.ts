@@ -87,7 +87,7 @@ export class SdDtfComponentFactory implements ISdDtfComponentFactory {
                 if (Object.keys(data).filter(name => name !== "accessor" && name !== "typeHint" && name !== "value").length !== 0)
                     throw new SdDtfError("Invalid attribute data: Unspecified properties are not allowed.")
 
-                attributes[name] = attribute
+                attributes.items[name] = attribute
             })
 
         return attributes

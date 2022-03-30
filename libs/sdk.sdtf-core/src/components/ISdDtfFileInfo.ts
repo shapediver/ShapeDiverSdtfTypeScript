@@ -1,5 +1,7 @@
+import { ISdDtfBaseComponent } from "./ISdDtfBaseComponent"
+
 /** Contains meta information about asset file. */
-export interface ISdDtfFileInfo {
+export interface ISdDtfFileInfo extends ISdDtfBaseComponent {
 
     /** Holder of Copyright of the file. */
     copyright?: string

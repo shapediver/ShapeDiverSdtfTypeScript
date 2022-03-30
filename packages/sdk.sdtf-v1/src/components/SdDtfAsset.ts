@@ -9,6 +9,7 @@ import {
     ISdDtfFileInfo,
     ISdDtfNode,
     ISdDtfTypeHint,
+    SdDtfError,
 } from "@shapediver/sdk.sdtf-core"
 
 export class SdDtfAsset implements ISdDtfAsset {
@@ -25,5 +26,12 @@ export class SdDtfAsset implements ISdDtfAsset {
     items: ISdDtfDataItem[] = []
     nodes: ISdDtfNode[] = []
     typeHints: ISdDtfTypeHint[] = []
+
+    toJson (): Record<string, unknown> {
+        // This property is required but has been made optional for accessibility reasons
+        if (!this.fileInfo) throw new SdDtfError("Incomplete asset: Missing property 'fileInfo'.")
+
+        return this.fileInfo.toJson()
+    }
 
 }

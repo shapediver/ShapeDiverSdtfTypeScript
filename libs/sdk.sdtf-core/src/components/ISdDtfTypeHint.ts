@@ -1,5 +1,10 @@
+import { ISdDtfBaseComponent } from "./ISdDtfBaseComponent"
+
 /** Type hints are used to add information about the type of data items found below a specific node in the tree. */
-export interface ISdDtfTypeHint {
+export interface ISdDtfTypeHint extends ISdDtfBaseComponent {
+
+    /** Holds the sequential index in the sdTF asset structure. */
+    componentId: number
 
     /** Name of the type hint. */
     name: SdDtfTypeHintName | string

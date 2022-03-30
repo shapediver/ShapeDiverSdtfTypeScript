@@ -1,15 +1,19 @@
 import { ISdDtfAccessor } from "./ISdDtfAccessor"
+import { ISdDtfBaseComponent } from "./ISdDtfBaseComponent"
 import { ISdDtfTypeHint } from "./ISdDtfTypeHint"
 
 /** Attributes are stored as dictionaries, mapping an arbitrary number of attribute names to their values. */
-export interface ISdDtfAttributes {
+export interface ISdDtfAttributes extends ISdDtfBaseComponent {
 
-    [name: string]: ISdDtfAttribute
+    /** Holds the sequential index in the sdTF asset structure. */
+    componentId: number
+
+    items: Record<string, ISdDtfAttribute>
 
 }
 
 /** The value of a single attributes dictionary key */
-export interface ISdDtfAttribute {
+export interface ISdDtfAttribute extends ISdDtfBaseComponent {
 
     /** Referenced accessor to binary data. */
     accessor?: ISdDtfAccessor
