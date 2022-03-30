@@ -8,13 +8,13 @@ export interface ISdDtfConfig {
 }
 
 /** Returns a new instance of the ShapeDiver sdTf SDK. */
-export function create (config: ISdDtfConfig): SdDtfSdk {
+export function create (config?: ISdDtfConfig): SdDtfSdk {
     return new SdDtfSdk(config)
 }
 
 export class SdDtfSdk {
 
-    constructor (private readonly config: ISdDtfConfig) {
+    constructor (private readonly config: ISdDtfConfig = {}) {
     }
 
     /**

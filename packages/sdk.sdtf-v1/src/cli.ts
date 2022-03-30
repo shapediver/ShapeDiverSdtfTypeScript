@@ -15,7 +15,7 @@ const command_jsonContent = {
 
 (async () => {
     try {
-        const parser = create({}).createParser()
+        const parser = create().createParser()
         const formatter = new SdDtfFormatter()
 
         if (
