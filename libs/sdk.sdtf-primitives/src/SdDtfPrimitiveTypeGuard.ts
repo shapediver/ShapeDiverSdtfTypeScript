@@ -11,9 +11,7 @@ export class SdDtfPrimitiveTypeGuard {
         if (!this.isBoolean(value)) throw new SdDtfError("Assertion error: Value is not a primitive boolean type.")
     }
 
-    /**
-     * Returns `true` when the given value is of type `SdDtfPrimitiveTypeHintName.BOOLEAN`.
-     */
+    /** Returns `true` when the given value is of type `SdDtfPrimitiveTypeHintName.BOOLEAN`. */
     static isBoolean (value: unknown): value is boolean {
         return typeof value === "boolean"
     }
@@ -84,25 +82,27 @@ export class SdDtfPrimitiveTypeGuard {
         if (!this.isColor(value)) throw new SdDtfError("Assertion error: Value is not a primitive color type.")
     }
 
-    /**
-     * Returns `true` when the given value is of type `SdDtfPrimitiveTypeHintName.COLOR`.
-     */
+    /** Returns `true` when the given value is of type `SdDtfPrimitiveTypeHintName.COLOR`. */
     static isColor (value: unknown): value is SdDtfPrimitiveColorType {
         return isNumberArray(value) && value.length === 4 && value.every(v => v >= 0 && v <= 1)
     }
 
     /**
-     * Runtime check that raises an error when the given value is not of type `SdDtfPrimitiveTypeHintName.IMAGE`.
+     * Runtime check that raises an error when the given value is not of type:
+     *   * `SdDtfPrimitiveTypeHintName.DATA`
+     *   * `SdDtfPrimitiveTypeHintName.IMAGE`
      * @throws {@link SdDtfError} when the invariant is not met.
      */
-    static assertImage (value: unknown): asserts value is DataView {
-        if (!this.isImage(value)) throw new SdDtfError("Assertion error: Value is not a primitive image type.")
+    static assertData (value: unknown): asserts value is DataView {
+        if (!this.isData(value)) throw new SdDtfError("Assertion error: Value is not a primitive data type.")
     }
 
     /**
-     * Returns `true` when the given value is of type `SdDtfPrimitiveTypeHintName.IMAGE`.
+     * Returns `true` when the given value is of type:
+     *   * `SdDtfPrimitiveTypeHintName.DATA`
+     *   * `SdDtfPrimitiveTypeHintName.IMAGE`
      */
-    static isImage (value: unknown): value is DataView {
+    static isData (value: unknown): value is DataView {
         return ArrayBuffer.isView(value)
     }
 

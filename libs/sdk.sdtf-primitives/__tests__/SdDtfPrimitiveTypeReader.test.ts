@@ -47,6 +47,15 @@ describe("parseValue", function () {
         expect(reader.parseValue(SdDtfPrimitiveTypeHintName.COLOR, "1,1,1,1")).toStrictEqual([ 1, 1, 1, 1 ])
     })
 
+    test("data", () => {
+        const value = new DataView(new ArrayBuffer(4))
+        expect(reader.parseValue(SdDtfPrimitiveTypeHintName.DATA, value)).toStrictEqual(value)
+        expect(reader.parseValue(SdDtfPrimitiveTypeHintName.DATA, {
+            id: undefined,
+            data: value
+        })).toStrictEqual(value)
+    })
+
     test("decimal", () => {
         expect(reader.parseValue(SdDtfPrimitiveTypeHintName.DECIMAL, "0.3333333333333333333333333333")).toBe(0.3333333333333333333333333333)
     })

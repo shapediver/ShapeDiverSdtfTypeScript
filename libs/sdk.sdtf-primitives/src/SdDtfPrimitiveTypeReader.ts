@@ -35,8 +35,9 @@ export class SdDtfPrimitiveTypeReader implements ISdDtfReader {
                 return this.parseNumberValue(value)
             case SdDtfPrimitiveTypeHintName.COLOR:
                 return this.parseColorValue(value)
+            case SdDtfPrimitiveTypeHintName.DATA:
             case SdDtfPrimitiveTypeHintName.IMAGE:
-                return this.parseImageValue(value)
+                return this.parseDataValue(value)
             default:
                 sdAssertUnreachable(typeHint)
         }
@@ -101,13 +102,13 @@ export class SdDtfPrimitiveTypeReader implements ISdDtfReader {
      * @private
      * @throws {@link SdDtfError} when value is invalid for this type.
      */
-    parseImageValue (value: unknown): DataView {
+    parseDataValue (value: unknown): DataView {
         // This comes form a buffer as a ISdDtfBufferData object
         if (value && typeof value === "object" && ("data" in value)) {
             value = (value as { [data: string]: unknown }).data
         }
 
-        SdDtfPrimitiveTypeGuard.assertImage(value)
+        SdDtfPrimitiveTypeGuard.assertData(value)
         return value
     }
 
