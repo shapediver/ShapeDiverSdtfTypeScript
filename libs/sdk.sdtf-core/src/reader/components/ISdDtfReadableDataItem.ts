@@ -1,11 +1,11 @@
 import { ISdDtfDataItem } from "../../structure/components/ISdDtfDataItem"
 import { ISdDtfReadableAccessor } from "./ISdDtfReadableAccessor"
 import { ISdDtfReadableAttributes } from "./ISdDtfReadableAttributes"
-import { ISdDtfReadableBaseComponent, SdDtfReadableBase } from "./ISdDtfReadableBaseComponent"
+import { ISdDtfBaseReadableComponent, SdDtfReadableBase } from "./ISdDtfBaseReadableComponent"
 import { ISdDtfReadableTypeHint } from "./ISdDtfReadableTypeHint"
 
 /** Representation of a [sdTF data item](https://github.com/shapediver/sdTF/tree/development/specification/1.0#data-items). */
-export interface ISdDtfReadableDataItem extends ISdDtfReadableBaseComponent,
+export interface ISdDtfReadableDataItem extends ISdDtfBaseReadableComponent,
     Omit<SdDtfReadableBase<ISdDtfDataItem>, "accessor" | "attributes" | "typeHint"> {
 
     /** Referenced accessor to binary data. */

@@ -4,9 +4,9 @@ import {
     ISdDtfReadableNode,
     ISdDtfReadableTypeHint,
 } from "@shapediver/sdk.sdtf-core"
-import { SdDtfReadableBaseComponent } from "./SdDtfReadableBaseComponent"
+import { SdDtfBaseReadableComponent } from "./SdDtfBaseReadableComponent"
 
-export class SdDtfReadableNode extends SdDtfReadableBaseComponent implements ISdDtfReadableNode {
+export class SdDtfReadableNode extends SdDtfBaseReadableComponent implements ISdDtfReadableNode {
 
     attributes?: ISdDtfReadableAttributes
     items: ISdDtfReadableDataItem[] = []

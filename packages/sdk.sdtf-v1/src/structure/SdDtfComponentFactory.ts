@@ -12,7 +12,6 @@ import {
     ISdDtfTypeHint,
     isNumber,
     isNumberArray,
-    isUint,
     SdDtfError,
 } from "@shapediver/sdk.sdtf-core"
 import { SdDtfPartialAccessor } from "./components/SdDtfPartialAccessor"
@@ -103,9 +102,6 @@ export class SdDtfComponentFactory implements ISdDtfComponentFactory {
     }
 
     createBuffer (bufferData: Record<string, unknown>): Partial<ISdDtfBuffer> {
-        // Validate required properties
-        if (!isUint(bufferData.byteLength)) throw new SdDtfError("Invalid buffer data: Required property 'byteLength' must be an unsigned integer.")
-
         const buffer = new SdDtfPartialBuffer()
 
         // Set properties of allowed types

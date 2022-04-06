@@ -1,8 +1,8 @@
 import { ISdDtfReadableBuffer, SdDtfError } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfBufferCache } from "../../buffer_cache/ISdDtfBufferCache"
-import { SdDtfReadableBaseComponent } from "./SdDtfReadableBaseComponent"
+import { SdDtfBaseReadableComponent } from "./SdDtfBaseReadableComponent"
 
-export class SdDtfReadableBuffer extends SdDtfReadableBaseComponent implements ISdDtfReadableBuffer {
+export class SdDtfReadableBuffer extends SdDtfBaseReadableComponent implements ISdDtfReadableBuffer {
 
     uri?: string
 

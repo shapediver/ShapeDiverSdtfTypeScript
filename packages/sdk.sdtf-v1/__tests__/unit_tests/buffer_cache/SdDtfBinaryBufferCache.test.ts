@@ -1,4 +1,4 @@
-import { SdDtfBinaryBufferCache } from "../../src/buffer_cache/SdDtfBinaryBufferCache"
+import { SdDtfBinaryBufferCache } from "../../../src/buffer_cache/SdDtfBinaryBufferCache"
 
 describe("calcCacheKey", function () {
 

@@ -9,3 +9,8 @@ export function userComponentToDataObject (o: object): Record<string, unknown> {
         .forEach(([ key, value ]) => dataObject[key] = value)
     return dataObject
 }
+
+/** Creates a random component id. */
+export function createComponentId(): string {
+    return Math.random().toString(36).substring(2, 9)
+}

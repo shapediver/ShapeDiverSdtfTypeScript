@@ -1,11 +1,11 @@
 import { ISdDtfNode } from "../../structure/components/ISdDtfNode"
 import { ISdDtfReadableAttributes } from "./ISdDtfReadableAttributes"
-import { ISdDtfReadableBaseComponent, SdDtfReadableBase } from "./ISdDtfReadableBaseComponent"
+import { ISdDtfBaseReadableComponent, SdDtfReadableBase } from "./ISdDtfBaseReadableComponent"
 import { ISdDtfReadableDataItem } from "./ISdDtfReadableDataItem"
 import { ISdDtfReadableTypeHint } from "./ISdDtfReadableTypeHint"
 
 /** Representation of a [sdTF node](https://github.com/shapediver/sdTF/tree/development/specification/1.0#nodes). */
-export interface ISdDtfReadableNode extends ISdDtfReadableBaseComponent,
+export interface ISdDtfReadableNode extends ISdDtfBaseReadableComponent,
     Omit<SdDtfReadableBase<ISdDtfNode>, "attributes" | "items" | "nodes" | "typeHint"> {
 
     /** Attributes of the node. */

@@ -23,7 +23,7 @@ export class SdDtfComponentValidator implements ISdDtfComponentValidator {
     constructor (private componentList: ISdDtfPartialComponentList) {
     }
 
-    validateAccessor (accessor: Partial<ISdDtfAccessor>): accessor is ISdDtfAccessor {
+    validateAccessor (accessor: Partial<ISdDtfAccessor>): asserts accessor is ISdDtfAccessor {
         // Validate required properties
         if (!isUint(accessor.bufferView))
             throw new SdDtfError("Invalid accessor: Required property 'bufferView' must be an unsigned integer.")
@@ -31,8 +31,6 @@ export class SdDtfComponentValidator implements ISdDtfComponentValidator {
         // Validate component references
         if (accessor.bufferView >= this.componentList.bufferViews.length)
             throw new SdDtfError("Invalid accessor: Buffer view index is out of range.")
-
-        return true
     }
 
     validateAsset (asset: Partial<ISdDtfAsset>): asserts asset is ISdDtfAsset {

@@ -1,10 +1,10 @@
 import { ISdDtfAttribute, ISdDtfAttributes } from "../../structure/components/ISdDtfAttributes"
 import { ISdDtfReadableAccessor } from "./ISdDtfReadableAccessor"
-import { ISdDtfReadableBaseComponent, SdDtfReadableBase } from "./ISdDtfReadableBaseComponent"
+import { ISdDtfBaseReadableComponent, SdDtfReadableBase } from "./ISdDtfBaseReadableComponent"
 import { ISdDtfReadableTypeHint } from "./ISdDtfReadableTypeHint"
 
 /** Representation of a [sdTF attributes](https://github.com/shapediver/sdTF/tree/development/specification/1.0#attributes). */
-export interface ISdDtfReadableAttributes extends ISdDtfReadableBaseComponent,
+export interface ISdDtfReadableAttributes extends ISdDtfBaseReadableComponent,
     Omit<SdDtfReadableBase<ISdDtfAttributes>, "entries"> {
 
     /** Attributes are stored as dictionaries, mapping an arbitrary number of attribute names to their values. */
@@ -13,7 +13,7 @@ export interface ISdDtfReadableAttributes extends ISdDtfReadableBaseComponent,
 }
 
 /** The value of a single attributes dictionary key */
-export interface ISdDtfReadableAttribute extends Omit<ISdDtfReadableBaseComponent, "componentId">,
+export interface ISdDtfReadableAttribute extends Omit<ISdDtfBaseReadableComponent, "componentId">,
     Omit<ISdDtfAttribute, "toJson" | "accessor" | "typeHint"> {
 
     /** Referenced accessor to binary data. */

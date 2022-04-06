@@ -1,4 +1,4 @@
-import { SdDtfBinarySdtf } from "../../src/binary_sdtf/SdDtfBinarySdtf"
+import { SdDtfBinarySdtf } from "../../../src/binary_sdtf/SdDtfBinarySdtf"
 
 const binarySdtf = new SdDtfBinarySdtf()
 
@@ -45,10 +45,10 @@ describe("readHeader", function () {
 
 })
 
-describe("writeHeader", function () {
+describe("createHeader", function () {
 
     test("should return header with valid parts", () => {
-        const header = binarySdtf.writeHeader(123, 456 - 123 - 20)
+        const header = binarySdtf.createHeader(123, 456 - 123 - 20)
         const dataView = new DataView(header)
 
         // magic = sdtf (utf-8 encoded)
@@ -83,7 +83,7 @@ describe("writeHeader", function () {
     })
 
     test("sanity check; created header should be readable", () => {
-        const header = binarySdtf.writeHeader(123, 456)
+        const header = binarySdtf.createHeader(123, 456)
         expect(binarySdtf.readHeader(header)).toStrictEqual([ 123, 20 + 123 + 456 ])
     })
 

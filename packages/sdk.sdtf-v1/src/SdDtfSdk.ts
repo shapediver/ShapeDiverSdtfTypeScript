@@ -2,6 +2,8 @@ import { ISdDtfIntegration, ISdDtfParser } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfFormatter } from "./formatter/ISdDtfFormatter"
 import { SdDtfFormatter } from "./formatter/SdDtfFormatter"
 import { SdDtfParser } from "./reader/SdDtfParser"
+import { ISdDtfConstructor } from "./writer/ISdDtfConstructor"
+import { SdDtfConstructor } from "./writer/SdDtfConstructor"
 
 /** Configuration options for the SDK. */
 export interface ISdDtfConfig {
@@ -26,6 +28,14 @@ export class SdDtfSdk {
      */
     createParser (): ISdDtfParser {
         return new SdDtfParser(this.config.integrations ?? [])
+    }
+
+    /**
+     * Instantiates and returns a new sdTF constructor object.
+     * The constructor provides functionality to create new sdTF assets.
+     */
+    createConstructor (): ISdDtfConstructor {
+        return new SdDtfConstructor()
     }
 
     /** Instantiates and returns a new formatter to convert sdTF components into prettified JSON data. */

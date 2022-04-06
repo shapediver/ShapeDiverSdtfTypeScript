@@ -26,11 +26,11 @@ const command_jsonContent = {
             if (command_jsonContent.options.url.includes(process.argv[3])) {
                 // Fetch and parse via url
                 const asset = await sdk.createParser().readFromUrl(process.argv[4])
-                console.log("sdTF JSON content:\n", sdk.createFormatter().prettifyAsset(asset))
+                console.log("sdTF JSON content:\n", sdk.createFormatter().prettifyReadableAsset(asset))
             } else if (command_jsonContent.options.file.includes(process.argv[3])) {
                 // Fetch and parse via file path
                 const asset = await sdk.createParser().readFromFile(process.argv[4])
-                console.log("sdTF JSON content:\n", sdk.createFormatter().prettifyAsset(asset))
+                console.log("sdTF JSON content:\n", sdk.createFormatter().prettifyReadableAsset(asset))
             } else if (process.argv[3] === undefined || general.help.includes(process.argv[3])) {
                 // help or undefined
                 printJsonContentCommandInfo()

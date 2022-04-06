@@ -4,7 +4,7 @@ import { ISdDtfBaseComponent } from "../../structure/components/ISdDtfBaseCompon
 export type SdDtfReadableBase<T extends ISdDtfBaseComponent> = Omit<T, "toJson">
 
 /** Base for readable data object */
-export interface ISdDtfReadableBaseComponent {
+export interface ISdDtfBaseReadableComponent {
 
     /** Unique id of the component instance. */
     readonly componentId: string

@@ -1,7 +1,7 @@
 import { ISdDtfReadableTypeHint, SdDtfTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { SdDtfReadableBaseComponent } from "./SdDtfReadableBaseComponent"
+import { SdDtfBaseReadableComponent } from "./SdDtfBaseReadableComponent"
 
-export class SdDtfReadableTypeHint extends SdDtfReadableBaseComponent implements ISdDtfReadableTypeHint {
+export class SdDtfReadableTypeHint extends SdDtfBaseReadableComponent implements ISdDtfReadableTypeHint {
 
     additionalProperties: Record<string, unknown> = {}
 

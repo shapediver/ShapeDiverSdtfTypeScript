@@ -38,7 +38,7 @@ export class SdDtfReadableComponentFactory implements ISdDtfReadableComponentFac
     ) {
     }
 
-    createReadableAccessor (accessor: ISdDtfAccessor, bufferViews: ISdDtfReadableBufferView[]): ISdDtfReadableAccessor {
+    createAccessor (accessor: ISdDtfAccessor, bufferViews: ISdDtfReadableBufferView[]): ISdDtfReadableAccessor {
         // Instantiate object
         const readableAccessor = new SdDtfReadableAccessor(bufferViews[accessor.bufferView])
 
@@ -49,7 +49,7 @@ export class SdDtfReadableComponentFactory implements ISdDtfReadableComponentFac
         return readableAccessor
     }
 
-    createAttribute (
+    createAttributes (
         attribute: ISdDtfAttributes,
         accessors: ISdDtfReadableAccessor[],
         typeHints: ISdDtfReadableTypeHint[],
@@ -67,7 +67,7 @@ export class SdDtfReadableComponentFactory implements ISdDtfReadableComponentFac
         return readableAttributes
     }
 
-    createReadableBuffer (buffer: ISdDtfBuffer): ISdDtfReadableBuffer {
+    createBuffer (buffer: ISdDtfBuffer): ISdDtfReadableBuffer {
         const readableBuffer = new SdDtfReadableBuffer(buffer.byteLength, this.bufferCache)
         readableBuffer.uri = buffer.uri
         readableBuffer.additionalProperties = buffer.additionalProperties
@@ -75,7 +75,7 @@ export class SdDtfReadableComponentFactory implements ISdDtfReadableComponentFac
         return readableBuffer
     }
 
-    createReadableBufferView (bufferView: ISdDtfBufferView, buffers: ISdDtfReadableBuffer[]): ISdDtfReadableBufferView {
+    createBufferView (bufferView: ISdDtfBufferView, buffers: ISdDtfReadableBuffer[]): ISdDtfReadableBufferView {
         const readableBufferView = new SdDtfReadableBufferView(
             buffers[bufferView.buffer],
             bufferView.byteLength,
@@ -89,16 +89,16 @@ export class SdDtfReadableComponentFactory implements ISdDtfReadableComponentFac
         return readableBufferView
     }
 
-    createReadableChunk (
+    createChunk (
         chunk: ISdDtfChunk,
         attributes: ISdDtfReadableAttributes[],
         dataItems: ISdDtfReadableDataItem[],
         typeHints: ISdDtfReadableTypeHint[],
     ): ISdDtfReadableChunk {
-        return this.createReadableNode(chunk, attributes, dataItems, typeHints)
+        return this.createNode(chunk, attributes, dataItems, typeHints)
     }
 
-    createReadableDataItem (
+    createDataItem (
         dataItem: ISdDtfDataItem,
         accessors: ISdDtfReadableAccessor[],
         attributes: ISdDtfReadableAttributes[],
@@ -115,7 +115,7 @@ export class SdDtfReadableComponentFactory implements ISdDtfReadableComponentFac
         return readableDataItem
     }
 
-    createReadableFileInfo (fileInfo: ISdDtfFileInfo): ISdDtfReadableFileInfo {
+    createFileInfo (fileInfo: ISdDtfFileInfo): ISdDtfReadableFileInfo {
         const readableFileInfo = new SdDtfReadableFileInfo(fileInfo.version)
 
         readableFileInfo.copyright = fileInfo.copyright
@@ -126,7 +126,7 @@ export class SdDtfReadableComponentFactory implements ISdDtfReadableComponentFac
         return readableFileInfo
     }
 
-    createReadableNode (
+    createNode (
         node: ISdDtfNode,
         attributes: ISdDtfReadableAttributes[],
         dataItems: ISdDtfReadableDataItem[],
@@ -144,8 +144,11 @@ export class SdDtfReadableComponentFactory implements ISdDtfReadableComponentFac
         return readableNode
     }
 
-    createReadableTypeHint (typeHint: ISdDtfTypeHint): ISdDtfReadableTypeHint {
-        return new SdDtfReadableTypeHint(typeHint.name)
+    createTypeHint (typeHint: ISdDtfTypeHint): ISdDtfReadableTypeHint {
+        const readableTypeHint = new SdDtfReadableTypeHint(typeHint.name)
+        readableTypeHint.additionalProperties = typeHint.additionalProperties
+
+        return readableTypeHint
     }
 
     setChunkReferences (readableChunks: ISdDtfReadableChunk[], chunks: ISdDtfChunk[], readableNodes: ISdDtfReadableNode[]): void {

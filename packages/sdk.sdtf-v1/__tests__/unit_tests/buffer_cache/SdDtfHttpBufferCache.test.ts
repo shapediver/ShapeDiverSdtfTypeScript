@@ -1,5 +1,5 @@
-import { SdDtfHttpBufferCache } from "../../src/buffer_cache/SdDtfHttpBufferCache"
-import { SdDtfHttpClient } from "../../src/http/SdDtfHttpClient"
+import { SdDtfHttpBufferCache } from "../../../src/buffer_cache/SdDtfHttpBufferCache"
+import { SdDtfHttpClient } from "../../../src/http/SdDtfHttpClient"
 
 describe("acquireBuffer", function () {
 

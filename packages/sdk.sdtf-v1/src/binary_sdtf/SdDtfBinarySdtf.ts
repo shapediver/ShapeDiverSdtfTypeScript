@@ -1,4 +1,5 @@
 import { SdDtfError } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfComponentList, toJsonContent } from "../structure/ISdDtfComponentList"
 import { ISdDtfBinarySdtf } from "./ISdDtfBinarySdtf"
 
 export class SdDtfBinarySdtf implements ISdDtfBinarySdtf {
@@ -6,8 +7,17 @@ export class SdDtfBinarySdtf implements ISdDtfBinarySdtf {
     /** Number of bytes of the sdTF header. */
     readonly binaryHeaderLength = 20
 
-    constructBinarySdtf (content: Record<string, unknown>, body: ArrayBuffer): ArrayBuffer {
-        throw new Error("Not yet implemented!")
+    constructBinarySdtf (componentList: ISdDtfComponentList): ArrayBuffer {
+        const binaryBody = componentList.binaryBody ?? new ArrayBuffer(0)
+        const jsonContent = this.createJsonContent(componentList)
+        const header = this.createHeader(jsonContent.byteLength, binaryBody.byteLength)
+
+        // Merge sdTF parts
+        return new Uint8Array([
+            ...new Uint8Array(header),
+            ...new Uint8Array(jsonContent),
+            ...new Uint8Array(binaryBody),
+        ]).buffer
     }
 
     parseBinarySdtf (sdtf: ArrayBuffer): [ DataView, DataView ] {
@@ -43,7 +53,7 @@ export class SdDtfBinarySdtf implements ISdDtfBinarySdtf {
     }
 
     /** Creates an sdTF header buffer object. */
-    writeHeader (contentLength: number, bodyLength: number): ArrayBuffer {
+    createHeader (contentLength: number, bodyLength: number): ArrayBuffer {
         const buffer = new Uint8Array(20)
         const headerDataView = new DataView(buffer.buffer, 0, buffer.byteLength)
 
@@ -79,6 +89,17 @@ export class SdDtfBinarySdtf implements ISdDtfBinarySdtf {
             return JSON.parse(new TextDecoder().decode(jsonContent))
         } catch (e) {
             throw new SdDtfError(`Invalid content: Cannot parse sdTF JSON content. ${ e.message }`)
+        }
+    }
+
+    /** Creates an sdTF JSON content buffer object. */
+    createJsonContent (componentList: ISdDtfComponentList): ArrayBuffer {
+        const jsonContent = toJsonContent(componentList)
+
+        try {
+            return new TextEncoder().encode(JSON.stringify(jsonContent, undefined, 0))
+        } catch (e) {
+            throw new SdDtfError(`Invalid content: Cannot create sdTF JSON content. ${ e.message }`)
         }
     }
 

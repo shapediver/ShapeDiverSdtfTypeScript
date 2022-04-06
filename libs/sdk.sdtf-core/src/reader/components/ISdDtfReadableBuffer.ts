@@ -1,8 +1,8 @@
 import { ISdDtfBuffer } from "../../structure/components/ISdDtfBuffer"
-import { ISdDtfReadableBaseComponent, SdDtfReadableBase } from "./ISdDtfReadableBaseComponent"
+import { ISdDtfBaseReadableComponent, SdDtfReadableBase } from "./ISdDtfBaseReadableComponent"
 
 /** Representation of a [sdTF buffer](https://github.com/shapediver/sdTF/tree/development/specification/1.0#buffers). */
-export interface ISdDtfReadableBuffer extends ISdDtfReadableBaseComponent,
+export interface ISdDtfReadableBuffer extends ISdDtfBaseReadableComponent,
     SdDtfReadableBase<ISdDtfBuffer> {
 
     /**

@@ -1,30 +1,41 @@
-import { ISdDtfReadableAsset } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfReadableAsset, ISdDtfWriteableAsset } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfComponentFactoryWrapper } from "../structure/ISdDtfComponentFactoryWrapper"
+import { ISdDtfComponentList, toJsonContent } from "../structure/ISdDtfComponentList"
 import { SdDtfComponentFactoryWrapper } from "../structure/SdDtfComponentFactoryWrapper"
+import { writeableComponentListFromAsset } from "../writer/ISdDtfWriteableComponentList"
+import { ISdDtfWriteableComponentOptimizer } from "../writer/ISdDtfWriteableComponentOptimizer"
+import { SdDtfWriteableComponentOptimizer } from "../writer/SdDtfWriteableComponentOptimizer"
 import { ISdDtfFormatter } from "./ISdDtfFormatter"
 
 export class SdDtfFormatter implements ISdDtfFormatter {
 
     private readonly factory: ISdDtfComponentFactoryWrapper
+    private readonly optimizer: ISdDtfWriteableComponentOptimizer
 
     constructor () {
         this.factory = new SdDtfComponentFactoryWrapper()
+        this.optimizer = new SdDtfWriteableComponentOptimizer()
     }
 
-    prettifyAsset (asset: ISdDtfReadableAsset): string {
+    prettifyReadableAsset (asset: ISdDtfReadableAsset): string {
         const componentList = this.factory.createFromReadable(asset)
+        return this.prettifyAsset(componentList)
+    }
 
-        const json = componentList.asset.toJson()
-        json.asset = componentList.fileInfo.toJson()
-        json.chunks = componentList.chunks.map(c => c.toJson())
-        json.nodes = componentList.nodes.map(n => n.toJson())
-        json.items = componentList.items.map(i => i.toJson())
-        json.attributes = componentList.attributes.map(a => a.toJson())
-        json.typeHints = componentList.typeHints.map(t => t.toJson())
-        json.accessors = componentList.accessors.map(a => a.toJson())
-        json.bufferViews = componentList.bufferViews.map(v => v.toJson())
-        json.buffers = componentList.buffers.map(b => b.toJson())
+    prettifyWriteableAsset (asset: ISdDtfWriteableAsset): string {
+        const writeableList = writeableComponentListFromAsset(asset)
+        this.optimizer.optimize(writeableList)
 
+        const componentList = this.factory.createFromWriteable(writeableList)
+        return this.prettifyAsset(componentList)
+    }
+
+    /**
+     * Printify domain model.
+     * @private
+     */
+    prettifyAsset (componentList: ISdDtfComponentList): string {
+        const json = toJsonContent(componentList)
         return JSON.stringify(json, undefined, 2)
     }
 

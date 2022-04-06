@@ -1,10 +1,12 @@
+import { ISdDtfComponentList } from "../structure/ISdDtfComponentList"
+
 /** Handles parsing and construction of the three sdTF file parts: _Header_, _JSON content_ and _binary body_. */
 export interface ISdDtfBinarySdtf {
 
     readonly binaryHeaderLength: number
 
-    /** Constructs a binary sdTF file as a buffer object from the given content and body. */
-    constructBinarySdtf (content: Record<string, unknown>, body: ArrayBuffer): ArrayBuffer
+    /** Constructs a new binary sdTF file from the given component list. */
+    constructBinarySdtf (componentList: ISdDtfComponentList): ArrayBuffer
 
     /**
      * Parses the given buffer data that holds a binary sdTF and returns its JSON content and body as buffers.

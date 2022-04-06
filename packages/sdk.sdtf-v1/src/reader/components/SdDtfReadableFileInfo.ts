@@ -1,7 +1,7 @@
 import { ISdDtfReadableFileInfo } from "@shapediver/sdk.sdtf-core"
-import { SdDtfReadableBaseComponent } from "./SdDtfReadableBaseComponent"
+import { SdDtfBaseReadableComponent } from "./SdDtfBaseReadableComponent"
 
-export class SdDtfReadableFileInfo extends SdDtfReadableBaseComponent implements ISdDtfReadableFileInfo {
+export class SdDtfReadableFileInfo extends SdDtfBaseReadableComponent implements ISdDtfReadableFileInfo {
 
     copyright?: string
     generator?: string

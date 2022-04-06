@@ -1,15 +1,16 @@
 import { ISdDtfReadableAccessor, ISdDtfReadableTypeHint } from "@shapediver/sdk.sdtf-core"
 
 /**
- * This is a wrapper around sdTF data items.
- * Data items can either be stored directly in the JSON content (=value) or inside a buffer (=accessor).
- * In general, a data item can be of any structure and therefore is of type `unknown`.
- * However, they are often coupled with type hints to make further processing easier.
- * These type hints impose language dependent structural requirements on the data item.
- * For instance, a data item with type hint `string` cannot be represented by a `DataView` object.
- * Additionally, data items might be stored in a different structure than how they are used by the caller.
+ * This is a wrapper around data access used in sdTF items and attributes.
+ * Data can either be stored directly in the JSON content (=value) or inside a buffer (=accessor).
+ * In general, data can be of any structure and therefore is of type `unknown`.
+ * However, data is usually coupled with a concrete type hints to make further processing easier.
+ * These type hints might impose a specific structural representation on the data.
+ * So data might be stored in a different structure than how they are used by the caller.
  * For instance, a color might be represented by a string, but to improve usability, the color value is returned as an array.
- * The `SdDtfDataParser` class is responsible for parsing the data item, validating its content and mapping it in a user-friendly format.
+ *
+ * The `SdDtfDataParser` class is responsible for parsing data and eventually mapping it into a specific structure
+ * depending on the data's concrete type hint.
  */
 export interface ISdDtfDataParser {
 

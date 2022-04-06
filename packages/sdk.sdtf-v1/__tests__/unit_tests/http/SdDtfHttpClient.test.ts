@@ -1,5 +1,5 @@
-import { SdDtfBinarySdtf } from "../../src/binary_sdtf/SdDtfBinarySdtf"
-import { SdDtfHttpClient } from "../../src/http/SdDtfHttpClient"
+import { SdDtfBinarySdtf } from "../../../src/binary_sdtf/SdDtfBinarySdtf"
+import { SdDtfHttpClient } from "../../../src/http/SdDtfHttpClient"
 
 describe("calcUrl", function () {
 

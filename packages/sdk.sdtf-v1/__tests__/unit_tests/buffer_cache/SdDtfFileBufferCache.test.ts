@@ -1,5 +1,5 @@
-import { SdDtfFileBufferCache } from "../../src/buffer_cache/SdDtfFileBufferCache"
-import { SdDtfFileUtils } from "../../src/utils/SdDtfFileUtils"
+import { SdDtfFileBufferCache } from "../../../src/buffer_cache/SdDtfFileBufferCache"
+import { SdDtfFileUtils } from "../../../src/utils/SdDtfFileUtils"
 
 describe("acquireBuffer", function () {
 

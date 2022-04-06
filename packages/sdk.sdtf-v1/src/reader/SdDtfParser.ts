@@ -87,16 +87,16 @@ export class SdDtfParser implements ISdDtfParser {
      * @private
      */
     buildReadableAsset (componentList: ISdDtfComponentList, factory: ISdDtfReadableComponentFactory): ISdDtfReadableAsset {
-        const fileInfo = factory.createReadableFileInfo(componentList.fileInfo)
+        const fileInfo = factory.createFileInfo(componentList.fileInfo)
         const asset = new SdDtfReadableAsset(fileInfo)
-        asset.typeHints = componentList.typeHints.map(t => factory.createReadableTypeHint(t))
-        asset.buffers = componentList.buffers.map(b => factory.createReadableBuffer(b))
-        asset.bufferViews = componentList.bufferViews.map(b => factory.createReadableBufferView(b, asset.buffers))
-        asset.accessors = componentList.accessors.map(a => factory.createReadableAccessor(a, asset.bufferViews))
-        asset.attributes = componentList.attributes.map(a => factory.createAttribute(a, asset.accessors, asset.typeHints))
-        asset.items = componentList.items.map(d => factory.createReadableDataItem(d, asset.accessors, asset.attributes, asset.typeHints))
-        asset.nodes = componentList.nodes.map(n => factory.createReadableNode(n, asset.attributes, asset.items, asset.typeHints))
-        asset.chunks = componentList.chunks.map(c => factory.createReadableChunk(c, asset.attributes, asset.items, asset.typeHints))
+        asset.typeHints = componentList.typeHints.map(t => factory.createTypeHint(t))
+        asset.buffers = componentList.buffers.map(b => factory.createBuffer(b))
+        asset.bufferViews = componentList.bufferViews.map(b => factory.createBufferView(b, asset.buffers))
+        asset.accessors = componentList.accessors.map(a => factory.createAccessor(a, asset.bufferViews))
+        asset.attributes = componentList.attributes.map(a => factory.createAttributes(a, asset.accessors, asset.typeHints))
+        asset.items = componentList.items.map(d => factory.createDataItem(d, asset.accessors, asset.attributes, asset.typeHints))
+        asset.nodes = componentList.nodes.map(n => factory.createNode(n, asset.attributes, asset.items, asset.typeHints))
+        asset.chunks = componentList.chunks.map(c => factory.createChunk(c, asset.attributes, asset.items, asset.typeHints))
 
         factory.setChunkReferences(asset.chunks, componentList.chunks, asset.nodes)
         factory.setNodeReferences(asset.nodes, componentList.nodes)

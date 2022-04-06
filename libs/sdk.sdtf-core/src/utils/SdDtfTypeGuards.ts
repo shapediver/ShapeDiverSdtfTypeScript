@@ -55,7 +55,13 @@ export function isUintArray (arg: unknown): arg is (number | string)[] {
 export function isDataObject (arg: unknown): arg is Record<string, unknown> {
     return typeof arg === "object" &&
         !Array.isArray(arg) &&
-        arg !== null
+        arg !== null &&
+        !isBinaryData(arg)
+}
+
+export function isBinaryData (arg: unknown): arg is unknown {
+    return arg instanceof ArrayBuffer ||    // Catches `ArrayBuffer`
+        ArrayBuffer.isView(arg)             // Catches `DataView`, `Uint8Array`, etc.
 }
 
 //</editor-fold>

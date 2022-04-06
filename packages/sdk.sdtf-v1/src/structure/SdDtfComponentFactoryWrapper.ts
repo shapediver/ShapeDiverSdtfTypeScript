@@ -1,6 +1,7 @@
 import { isDataObject, ISdDtfReadableAsset, SdDtfError } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfComponentValidator } from "../validation/ISdDtfComponentValidator"
 import { SdDtfComponentValidator } from "../validation/SdDtfComponentValidator"
+import { ISdDtfWriteableComponentList } from "../writer/ISdDtfWriteableComponentList"
 import { ISdDtfComponentFactory } from "./ISdDtfComponentFactory"
 import { ISdDtfComponentList, ISdDtfPartialComponentList } from "./ISdDtfComponentList"
 import { SdDtfComponentFactory } from "./SdDtfComponentFactory"
@@ -45,6 +46,27 @@ export class SdDtfComponentFactoryWrapper implements SdDtfComponentFactoryWrappe
         }
 
         this.mapHierarchyRepresentation(partialComponentList, readableAsset)
+        return this.createComponentList(partialComponentList)
+    }
+
+    createFromWriteable (writeableComponents: ISdDtfWriteableComponentList): ISdDtfComponentList {
+        const f = this.factory  // Alias to shorten lines
+        const partialComponentList: ISdDtfPartialComponentList = {
+            accessors: writeableComponents.accessors.map(a => f.createAccessor(a.toDataObject())),
+            asset: f.createAsset(writeableComponents.asset.toDataObject()),
+            attributes: writeableComponents.attributes.map(a => f.createAttributes(a.toDataObject())),
+            buffers: writeableComponents.buffers.map(b => f.createBuffer(b.toDataObject())),
+            bufferViews: writeableComponents.bufferViews.map(b => f.createBufferView(b.toDataObject())),
+            chunks: writeableComponents.chunks.map(c => f.createChunk(c.toDataObject())),
+            items: writeableComponents.items.map(i => f.createDataItem(i.toDataObject())),
+            fileInfo: f.createFileInfo(writeableComponents.fileInfo.toDataObject()),
+            nodes: writeableComponents.nodes.map(n => f.createNode(n.toDataObject())),
+            typeHints: writeableComponents.typeHints.map(t => f.createTypeHint(t.toDataObject())),
+            // The writeable-optimizer merges all buffers, thus there is only a single binary buffer
+            binaryBody: writeableComponents.buffers.find(buffer => !buffer.uri)?.data,
+        }
+
+        this.mapHierarchyRepresentation(partialComponentList, writeableComponents)
         return this.createComponentList(partialComponentList)
     }
 
@@ -107,6 +129,7 @@ export class SdDtfComponentFactoryWrapper implements SdDtfComponentFactoryWrappe
             nodes,
             typeHints,
             fileInfo,
+            binaryBody: partialComponents.binaryBody,
         }
     }
 
@@ -146,12 +169,12 @@ export class SdDtfComponentFactoryWrapper implements SdDtfComponentFactoryWrappe
     }
 
     /**
-     * Readable components use object references to represent the hierarchy.
+     * Readable and writeable components use object references to represent the hierarchy.
      * However, sdTF components use reference IDs for this.
      * This method maps the object representation into a reference ID representation.
      * @private
      */
-    mapHierarchyRepresentation (target: ISdDtfPartialComponentList, src: ISdDtfReadableAsset): void {
+    mapHierarchyRepresentation (target: ISdDtfPartialComponentList, src: ISdDtfWriteableComponentList | ISdDtfReadableAsset): void {
         // Helper to find the element position in an array
         const getIndex = (list: { componentId: string }[], componentId?: string) => {
             if (!componentId) return -1

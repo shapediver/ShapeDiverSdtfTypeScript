@@ -6,9 +6,9 @@ import {
 } from "@shapediver/sdk.sdtf-core"
 import { userComponentToDataObject } from "../../utils/SdDtfUtils"
 import { ISdDtfDataParser } from "../ISdDtfDataParser"
-import { SdDtfReadableBaseComponent } from "./SdDtfReadableBaseComponent"
+import { SdDtfBaseReadableComponent } from "./SdDtfBaseReadableComponent"
 
-export class SdDtfReadableAttributes extends SdDtfReadableBaseComponent implements ISdDtfReadableAttributes {
+export class SdDtfReadableAttributes extends SdDtfBaseReadableComponent implements ISdDtfReadableAttributes {
 
     entries: Record<string, ISdDtfReadableAttribute> = {}
 

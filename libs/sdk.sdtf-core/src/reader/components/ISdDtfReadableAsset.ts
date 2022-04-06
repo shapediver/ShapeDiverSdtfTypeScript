@@ -1,7 +1,7 @@
 import { ISdDtfAsset } from "../../structure/components/ISdDtfAsset"
 import { ISdDtfReadableAccessor } from "./ISdDtfReadableAccessor"
 import { ISdDtfReadableAttributes } from "./ISdDtfReadableAttributes"
-import { ISdDtfReadableBaseComponent, SdDtfReadableBase } from "./ISdDtfReadableBaseComponent"
+import { ISdDtfBaseReadableComponent, SdDtfReadableBase } from "./ISdDtfBaseReadableComponent"
 import { ISdDtfReadableBuffer } from "./ISdDtfReadableBuffer"
 import { ISdDtfReadableBufferView } from "./ISdDtfReadableBufferView"
 import { ISdDtfReadableChunk } from "./ISdDtfReadableChunk"
@@ -11,7 +11,7 @@ import { ISdDtfReadableNode } from "./ISdDtfReadableNode"
 import { ISdDtfReadableTypeHint } from "./ISdDtfReadableTypeHint"
 
 /** Represents a readable [sdTf](https://github.com/shapediver/sdTF/tree/development/specification/1.0) (Standard Data Transfer Format). */
-export interface ISdDtfReadableAsset extends ISdDtfReadableBaseComponent,
+export interface ISdDtfReadableAsset extends ISdDtfBaseReadableComponent,
     Omit<SdDtfReadableBase<ISdDtfAsset>, "fileInfo"> {
 
     /** Iterator for all accessors referenced by data items. */

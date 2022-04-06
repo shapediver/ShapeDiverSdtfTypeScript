@@ -1,7 +1,7 @@
 import { ISdDtfBufferValue, ISdDtfReadableAccessor, ISdDtfReadableBufferView } from "@shapediver/sdk.sdtf-core"
-import { SdDtfReadableBaseComponent } from "./SdDtfReadableBaseComponent"
+import { SdDtfBaseReadableComponent } from "./SdDtfBaseReadableComponent"
 
-export class SdDtfReadableAccessor extends SdDtfReadableBaseComponent implements ISdDtfReadableAccessor {
+export class SdDtfReadableAccessor extends SdDtfBaseReadableComponent implements ISdDtfReadableAccessor {
 
     id?: string
 
