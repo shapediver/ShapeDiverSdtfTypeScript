@@ -1,4 +1,6 @@
 import { ISdDtfIntegration, ISdDtfParser } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfFormatter } from "./formatter/ISdDtfFormatter"
+import { SdDtfFormatter } from "./formatter/SdDtfFormatter"
 import { SdDtfParser } from "./reader/SdDtfParser"
 
 /** Configuration options for the SDK. */
@@ -23,7 +25,12 @@ export class SdDtfSdk {
      * the sdTF file and provides easy access functionality for embedded values and binary data.
      */
     createParser (): ISdDtfParser {
-        return new SdDtfParser((this.config.integrations ?? []).map(i => i.getReader()))
+        return new SdDtfParser(this.config.integrations ?? [])
+    }
+
+    /** Instantiates and returns a new formatter to convert sdTF components into prettified JSON data. */
+    createFormatter (): ISdDtfFormatter {
+        return new SdDtfFormatter()
     }
 
 }

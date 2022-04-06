@@ -1,9 +1,9 @@
 import { ISdDtfReader } from "@shapediver/sdk.sdtf-core"
 import { SdDtfBinaryBufferCache } from "../../src/buffer_cache/SdDtfBinaryBufferCache"
-import { SdDtfAccessor } from "../../src/components/SdDtfAccessor"
-import { SdDtfBuffer } from "../../src/components/SdDtfBuffer"
-import { SdDtfBufferView } from "../../src/components/SdDtfBufferView"
-import { SdDtfTypeHint } from "../../src/components/SdDtfTypeHint"
+import { SdDtfReadableAccessor } from "../../src/reader/components/SdDtfReadableAccessor"
+import { SdDtfReadableBuffer } from "../../src/reader/components/SdDtfReadableBuffer"
+import { SdDtfReadableBufferView } from "../../src/reader/components/SdDtfReadableBufferView"
+import { SdDtfReadableTypeHint } from "../../src/reader/components/SdDtfReadableTypeHint"
 import { SdDtfDataParser } from "../../src/reader/SdDtfDataParser"
 
 const bufferCache = new SdDtfBinaryBufferCache()
@@ -12,9 +12,9 @@ describe("parseContent", function () {
 
     const parser = new SdDtfDataParser([])
 
-    const buffer = new SdDtfBuffer(1, bufferCache),
-        bufferView = new SdDtfBufferView(buffer, 1, 0, "text"),
-        accessor = new SdDtfAccessor(bufferView),
+    const buffer = new SdDtfReadableBuffer(1, bufferCache),
+        bufferView = new SdDtfReadableBufferView(buffer, 1, 0, "text"),
+        accessor = new SdDtfReadableAccessor(bufferView),
         value = "foobar",
         data = new DataView(new ArrayBuffer(1))
 
@@ -40,7 +40,7 @@ describe("parseData", function () {
 
     let isSupported: boolean
     const parsedValue: unknown = "parsed foobar",
-        typeHint = new SdDtfTypeHint("type")
+        typeHint = new SdDtfReadableTypeHint("type")
 
     const dummyReader: ISdDtfReader = {
         isTypeHintSupported (_: string) {

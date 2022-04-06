@@ -1,4 +1,4 @@
-import { ISdDtfAccessor, ISdDtfTypeHint } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfReadableAccessor, ISdDtfReadableTypeHint } from "@shapediver/sdk.sdtf-core"
 
 /**
  * This is a wrapper around sdTF data items.
@@ -14,6 +14,6 @@ import { ISdDtfAccessor, ISdDtfTypeHint } from "@shapediver/sdk.sdtf-core"
 export interface ISdDtfDataParser {
 
     /** Parses the given data item with the registered readers. */
-    parseContent (value?: unknown, accessor?: ISdDtfAccessor, typeHint?: ISdDtfTypeHint): Promise<unknown>
+    parseContent (value?: unknown, accessor?: ISdDtfReadableAccessor, typeHint?: ISdDtfReadableTypeHint): Promise<unknown>
 
 }

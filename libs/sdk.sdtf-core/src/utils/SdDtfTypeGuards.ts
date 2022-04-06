@@ -16,9 +16,14 @@ export function isNumber (arg: unknown): arg is number {
     return isNumeric(arg) && typeof arg === "number"
 }
 
+/** Checks whether the given argument is a finite signed integer. */
+export function isInt (arg: unknown): arg is number {
+    return isNumber(arg) && Number.isInteger(Number(arg))
+}
+
 /** Checks whether the given argument is a finite unsigned integer. */
-export function isUint (arg: unknown): arg is number | string {
-    return isNumber(arg) && Number.isInteger(Number(arg)) && Number(arg) >= 0
+export function isUint (arg: unknown): arg is number {
+    return isInt(arg) && Number(arg) >= 0
 }
 
 /** Checks whether the given argument is a string of length larger than 0. */
@@ -32,7 +37,7 @@ export function isNonEmptyString (arg: unknown): arg is string {
 //<editor-fold desc="Arrays">
 
 /** Checks whether the given argument is an array of numbers. */
-export function isNumberArray (arg: unknown): arg is (number | string)[] {
+export function isNumberArray (arg: unknown): arg is number[] {
     return Array.isArray(arg) && arg.every(a => isNumber(a))
 }
 

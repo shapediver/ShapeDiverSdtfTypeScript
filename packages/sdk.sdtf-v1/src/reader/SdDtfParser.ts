@@ -1,4 +1,4 @@
-import { ISdDtfAsset, ISdDtfParser, ISdDtfReader, SdDtfError } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfIntegration, ISdDtfParser, ISdDtfReadableAsset, SdDtfError } from "@shapediver/sdk.sdtf-core"
 import { isBrowser } from "browser-or-node"
 import { ISdDtfBinarySdtf } from "../binary_sdtf/ISdDtfBinarySdtf"
 import { SdDtfBinarySdtf } from "../binary_sdtf/SdDtfBinarySdtf"
@@ -8,21 +8,28 @@ import { SdDtfFileBufferCache } from "../buffer_cache/SdDtfFileBufferCache"
 import { SdDtfHttpBufferCache } from "../buffer_cache/SdDtfHttpBufferCache"
 import { ISdDtfHttpClient } from "../http/ISdDtfHttpClient"
 import { SdDtfHttpClient } from "../http/SdDtfHttpClient"
+import { ISdDtfComponentFactoryWrapper } from "../structure/ISdDtfComponentFactoryWrapper"
+import { ISdDtfComponentList } from "../structure/ISdDtfComponentList"
+import { SdDtfComponentFactoryWrapper } from "../structure/SdDtfComponentFactoryWrapper"
 import { SdDtfFileUtils } from "../utils/SdDtfFileUtils"
-import { SdDtfAssetBuilder } from "./SdDtfAssetBuilder"
+import { SdDtfReadableAsset } from "./components/SdDtfReadableAsset"
+import { ISdDtfReadableComponentFactory } from "./ISdDtfReadableComponentFactory"
 import { SdDtfDataParser } from "./SdDtfDataParser"
+import { SdDtfReadableComponentFactory } from "./SdDtfReadableComponentFactory"
 
 export class SdDtfParser implements ISdDtfParser {
 
     private readonly binarySdtfParser: ISdDtfBinarySdtf
+    private readonly componentFactory: ISdDtfComponentFactoryWrapper
     private readonly fileUtils: SdDtfFileUtils
 
-    constructor (private readonly readers: ISdDtfReader[]) {
+    constructor (private readonly integration: ISdDtfIntegration[]) {
         this.binarySdtfParser = new SdDtfBinarySdtf()
+        this.componentFactory = new SdDtfComponentFactoryWrapper()
         this.fileUtils = new SdDtfFileUtils()
     }
 
-    readFromFile (path: string): ISdDtfAsset {
+    readFromFile (path: string): ISdDtfReadableAsset {
         // Quick check to make sure we are in NodeJs
         if (isBrowser) throw new SdDtfError("Reading from file is only supported in Node.js.")
 
@@ -44,7 +51,7 @@ export class SdDtfParser implements ISdDtfParser {
         return this.createSdtfAsset(jsonContent, bufferCache)
     }
 
-    async readFromUrl (url: string): Promise<ISdDtfAsset> {
+    async readFromUrl (url: string): Promise<ISdDtfReadableAsset> {
         const httpClient: ISdDtfHttpClient = new SdDtfHttpClient(url)
         const [ contentBuffer, binaryBuffer ] = await httpClient.getJsonContent()
         const jsonContent = this.binarySdtfParser.readJsonContent(contentBuffer)
@@ -56,7 +63,7 @@ export class SdDtfParser implements ISdDtfParser {
         return this.createSdtfAsset(jsonContent, bufferCache)
     }
 
-    readFromBuffer (sdtf: ArrayBuffer): ISdDtfAsset {
+    readFromBuffer (sdtf: ArrayBuffer): ISdDtfReadableAsset {
         const [ contentBuffer, binaryBuffer ] = this.binarySdtfParser.parseBinarySdtf(sdtf)
         const jsonContent = this.binarySdtfParser.readJsonContent(contentBuffer)
 
@@ -68,22 +75,33 @@ export class SdDtfParser implements ISdDtfParser {
     }
 
     /** Instantiates a sdTF asset that represents the given content. */
-    createSdtfAsset (content: Record<string, unknown>, bufferCache: ISdDtfBufferCache): ISdDtfAsset {
-        // NOTE:
-        //  Object references between components are set during individual build
-        //  sets as well. Thus, the order in which the build steps are executed
-        //  is crucial! Otherwise, runtime errors will occur.
-        return new SdDtfAssetBuilder(content, bufferCache, new SdDtfDataParser(this.readers))
-            .buildTypeHint()
-            .buildBuffer()
-            .buildBufferView()
-            .buildAccessor()
-            .buildAttributes()
-            .buildDataItem()
-            .buildNode()
-            .buildChunks()
-            .buildFileInfo()
-            .getResult()
+    createSdtfAsset (content: Record<string, unknown>, bufferCache: ISdDtfBufferCache): ISdDtfReadableAsset {
+        const componentList = this.componentFactory.createFromJson(content)
+        // TODO apply integrations - validate + map!!!
+        const readableComponentFactory = new SdDtfReadableComponentFactory(bufferCache, new SdDtfDataParser(this.integration))
+        return this.buildReadableAsset(componentList, readableComponentFactory)
+    }
+
+    /**
+     * Transforms the given component list into a readable sdTF asset.
+     * @private
+     */
+    buildReadableAsset (componentList: ISdDtfComponentList, factory: ISdDtfReadableComponentFactory): ISdDtfReadableAsset {
+        const fileInfo = factory.createReadableFileInfo(componentList.fileInfo)
+        const asset = new SdDtfReadableAsset(fileInfo)
+        asset.typeHints = componentList.typeHints.map(t => factory.createReadableTypeHint(t))
+        asset.buffers = componentList.buffers.map(b => factory.createReadableBuffer(b))
+        asset.bufferViews = componentList.bufferViews.map(b => factory.createReadableBufferView(b, asset.buffers))
+        asset.accessors = componentList.accessors.map(a => factory.createReadableAccessor(a, asset.bufferViews))
+        asset.attributes = componentList.attributes.map(a => factory.createAttribute(a, asset.accessors, asset.typeHints))
+        asset.items = componentList.items.map(d => factory.createReadableDataItem(d, asset.accessors, asset.attributes, asset.typeHints))
+        asset.nodes = componentList.nodes.map(n => factory.createReadableNode(n, asset.attributes, asset.items, asset.typeHints))
+        asset.chunks = componentList.chunks.map(c => factory.createReadableChunk(c, asset.attributes, asset.items, asset.typeHints))
+
+        factory.setChunkReferences(asset.chunks, componentList.chunks, asset.nodes)
+        factory.setNodeReferences(asset.nodes, componentList.nodes)
+
+        return asset
     }
 
 }

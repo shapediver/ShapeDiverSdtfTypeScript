@@ -1,40 +1,40 @@
 import { ISdDtfNode } from "@shapediver/sdk.sdtf-core"
 import { SdDtfBinaryBufferCache } from "../../src/buffer_cache/SdDtfBinaryBufferCache"
-import { SdDtfAccessor } from "../../src/components/SdDtfAccessor"
-import { SdDtfAttribute, SdDtfAttributes } from "../../src/components/SdDtfAttributes"
-import { SdDtfBuffer } from "../../src/components/SdDtfBuffer"
-import { SdDtfBufferView } from "../../src/components/SdDtfBufferView"
-import { SdDtfDataItem } from "../../src/components/SdDtfDataItem"
-import { SdDtfNode } from "../../src/components/SdDtfNode"
-import { SdDtfTypeHint } from "../../src/components/SdDtfTypeHint"
-import { SdDtfComponentFactory } from "../../src/reader/SdDtfComponentFactory"
+import { SdDtfReadableAccessor } from "../../src/reader/components/SdDtfReadableAccessor"
+import { SdDtfAttribute, SdDtfReadableAttributes } from "../../src/reader/components/SdDtfReadableAttributes"
+import { SdDtfReadableBuffer } from "../../src/reader/components/SdDtfReadableBuffer"
+import { SdDtfReadableBufferView } from "../../src/reader/components/SdDtfReadableBufferView"
+import { SdDtfReadableDataItem } from "../../src/reader/components/SdDtfReadableDataItem"
+import { SdDtfReadableNode } from "../../src/reader/components/SdDtfReadableNode"
+import { SdDtfReadableTypeHint } from "../../src/reader/components/SdDtfReadableTypeHint"
+import { SdDtfReadableComponentFactory } from "../../src/reader/SdDtfReadableComponentFactory"
 import { SdDtfDataParser } from "../../src/reader/SdDtfDataParser"
 
 const dataParser = new SdDtfDataParser([])
-const factory = new SdDtfComponentFactory(dataParser)
+const factory = new SdDtfReadableComponentFactory(dataParser)
 const bufferCache = new SdDtfBinaryBufferCache()
 
 describe("createAccessor", function () {
 
-    const buffer = new SdDtfBuffer(1, bufferCache),
-        bufferView = new SdDtfBufferView(buffer, 1, 0, "text"),
+    const buffer = new SdDtfReadableBuffer(1, bufferCache),
+        bufferView = new SdDtfReadableBufferView(buffer, 1, 0, "text"),
         bufferViews = [ bufferView ]
 
     test("minimal accessor data; should return accessor instance", () => {
-        const accessor = factory.createAccessor({ bufferView: 0 }, bufferViews)
+        const accessor = factory.createReadableAccessor({ bufferView: 0 }, bufferViews)
         expect(accessor).toBeDefined()
         expect(accessor.bufferView).toBe(bufferView)
     })
 
     test("full accessor data; should return accessor instance", () => {
-        const accessor = factory.createAccessor({ bufferView: 0, id: "[0]" }, bufferViews)
+        const accessor = factory.createReadableAccessor({ bufferView: 0, id: "[0]" }, bufferViews)
         expect(accessor).toBeDefined()
         expect(accessor.bufferView).toBe(bufferView)
         expect(accessor.id).toBe("[0]")
     })
 
     test("accessor with additional properties; should add additional properties to accessor", () => {
-        const accessor = factory.createAccessor({ bufferView: 0, foo: "bar" }, bufferViews)
+        const accessor = factory.createReadableAccessor({ bufferView: 0, foo: "bar" }, bufferViews)
         expect(accessor).toBeDefined()
         expect(accessor.bufferView).toBe(bufferView)
         expect(accessor.foo).toBe("bar")
@@ -42,18 +42,18 @@ describe("createAccessor", function () {
 
     test("invalid bufferView property; should throw", () => {
         // property missing
-        expect(() => factory.createAccessor({}, bufferViews)).toThrow(/Required property 'bufferView' must be an unsigned integer/)
+        expect(() => factory.createReadableAccessor({}, bufferViews)).toThrow(/Required property 'bufferView' must be an unsigned integer/)
 
         // invalid property value
-        expect(() => factory.createAccessor({ bufferView: -1 }, bufferViews)).toThrow(/Required property 'bufferView' must be an unsigned integer/)
+        expect(() => factory.createReadableAccessor({ bufferView: -1 }, bufferViews)).toThrow(/Required property 'bufferView' must be an unsigned integer/)
 
         // invalid reference
-        expect(() => factory.createAccessor({ bufferView: 1 }, bufferViews)).toThrow(/Buffer view index is out of range/)
+        expect(() => factory.createReadableAccessor({ bufferView: 1 }, bufferViews)).toThrow(/Buffer view index is out of range/)
     })
 
     test("invalid id property; should throw", () => {
         // invalid property value
-        expect(() => factory.createAccessor({
+        expect(() => factory.createReadableAccessor({
             bufferView: 0,
             id: 1,
         }, bufferViews)).toThrow(/Optional property 'id' must be a string/)
@@ -63,11 +63,11 @@ describe("createAccessor", function () {
 
 describe("createAttribute", function () {
 
-    const buffer = new SdDtfBuffer(1, bufferCache),
-        bufferView = new SdDtfBufferView(buffer, 1, 0, "text"),
-        accessor = new SdDtfAccessor(bufferView),
+    const buffer = new SdDtfReadableBuffer(1, bufferCache),
+        bufferView = new SdDtfReadableBufferView(buffer, 1, 0, "text"),
+        accessor = new SdDtfReadableAccessor(bufferView),
         accessors = [ accessor ],
-        typeHint = new SdDtfTypeHint("rhino.mesh"),
+        typeHint = new SdDtfReadableTypeHint("rhino.mesh"),
         typeHints = [ typeHint ]
 
     test("minimal attributes data; should return attribute instance", () => {
@@ -130,20 +130,20 @@ describe("createAttribute", function () {
 describe("createBuffer", function () {
 
     test("minimal buffer data; should return buffer instance", () => {
-        const buffer = factory.createBuffer({ byteLength: 666 }, bufferCache)
+        const buffer = factory.createReadableBuffer({ byteLength: 666 }, bufferCache)
         expect(buffer).toBeDefined()
         expect(buffer.byteLength).toBe(666)
     })
 
     test("full buffer data; should return buffer instance", () => {
-        const buffer = factory.createBuffer({ byteLength: 666, uri: "data:,foobar" }, bufferCache)
+        const buffer = factory.createReadableBuffer({ byteLength: 666, uri: "data:,foobar" }, bufferCache)
         expect(buffer).toBeDefined()
         expect(buffer.byteLength).toBe(666)
         expect(buffer.uri).toBe("data:,foobar")
     })
 
     test("buffer with additional properties; should add additional properties to buffer", () => {
-        const buffer = factory.createBuffer({ byteLength: 666, foo: "bar" }, bufferCache)
+        const buffer = factory.createReadableBuffer({ byteLength: 666, foo: "bar" }, bufferCache)
         expect(buffer).toBeDefined()
         expect(buffer.byteLength).toBe(666)
         expect(buffer.foo).toBe("bar")
@@ -151,16 +151,16 @@ describe("createBuffer", function () {
 
     test("invalid byteLength property; should throw", () => {
         // property missing
-        expect(() => factory.createBuffer({}, bufferCache)).toThrow(/Required property 'byteLength' must be an unsigned integer/)
+        expect(() => factory.createReadableBuffer({}, bufferCache)).toThrow(/Required property 'byteLength' must be an unsigned integer/)
 
         // invalid property value
-        expect(() => factory.createBuffer({ byteLength: "666" }, bufferCache))
+        expect(() => factory.createReadableBuffer({ byteLength: "666" }, bufferCache))
             .toThrow(/Required property 'byteLength' must be an unsigned integer/)
     })
 
     test("invalid uri property; should throw", () => {
         // invalid property value
-        expect(() => factory.createBuffer({
+        expect(() => factory.createReadableBuffer({
             byteLength: 666,
             uri: 0,
         }, bufferCache)).toThrow(/Optional property 'uri' must be a string/)
@@ -170,11 +170,11 @@ describe("createBuffer", function () {
 
 describe("createBufferView", function () {
 
-    const buffer = new SdDtfBuffer(1, bufferCache),
+    const buffer = new SdDtfReadableBuffer(1, bufferCache),
         buffers = [ buffer ]
 
     test("minimal buffer view data; should return buffer view instance", () => {
-        const bufferView = factory.createBufferView({
+        const bufferView = factory.createReadableBufferView({
             buffer: 0,
             byteLength: 1,
             byteOffset: 0,
@@ -188,7 +188,7 @@ describe("createBufferView", function () {
     })
 
     test("full buffer view data; should return buffer view instance", () => {
-        const bufferView = factory.createBufferView({
+        const bufferView = factory.createReadableBufferView({
             buffer: 0,
             byteLength: 1,
             byteOffset: 0,
@@ -206,7 +206,7 @@ describe("createBufferView", function () {
     })
 
     test("buffer view with additional properties; should add additional properties to buffer view", () => {
-        const bufferView = factory.createBufferView({
+        const bufferView = factory.createReadableBufferView({
             buffer: 0,
             byteLength: 1,
             byteOffset: 0,
@@ -223,14 +223,14 @@ describe("createBufferView", function () {
 
     test("invalid buffer property; should throw", () => {
         // property missing
-        expect(() => factory.createBufferView({
+        expect(() => factory.createReadableBufferView({
             byteLength: 1,
             byteOffset: 0,
             contentType: "text",
         }, buffers)).toThrow(/Required property 'buffer' must be an unsigned integer/)
 
         // invalid property value
-        expect(() => factory.createBufferView({
+        expect(() => factory.createReadableBufferView({
             buffer: -1,
             byteLength: 1,
             byteOffset: 0,
@@ -238,7 +238,7 @@ describe("createBufferView", function () {
         }, buffers)).toThrow(/Required property 'buffer' must be an unsigned integer/)
 
         // invalid reference
-        expect(() => factory.createBufferView({
+        expect(() => factory.createReadableBufferView({
             buffer: 1,
             byteLength: 1,
             byteOffset: 0,
@@ -248,14 +248,14 @@ describe("createBufferView", function () {
 
     test("invalid byteLength property; should throw", () => {
         // property missing
-        expect(() => factory.createBufferView({
+        expect(() => factory.createReadableBufferView({
             buffer: 0,
             byteOffset: 0,
             contentType: "text",
         }, buffers)).toThrow(/Required property 'byteLength' must be an unsigned integer/)
 
         // invalid property value
-        expect(() => factory.createBufferView({
+        expect(() => factory.createReadableBufferView({
             buffer: 0,
             byteLength: -1,
             byteOffset: 0,
@@ -265,14 +265,14 @@ describe("createBufferView", function () {
 
     test("invalid byteOffset property; should throw", () => {
         // property missing
-        expect(() => factory.createBufferView({
+        expect(() => factory.createReadableBufferView({
             buffer: 0,
             byteLength: 1,
             contentType: "text",
         }, buffers)).toThrow(/Required property 'byteOffset' must be an unsigned integer/)
 
         // invalid property value
-        expect(() => factory.createBufferView({
+        expect(() => factory.createReadableBufferView({
             buffer: 0,
             byteLength: 1,
             byteOffset: -1,
@@ -282,14 +282,14 @@ describe("createBufferView", function () {
 
     test("invalid contentType property; should throw", () => {
         // property missing
-        expect(() => factory.createBufferView({
+        expect(() => factory.createReadableBufferView({
             buffer: 0,
             byteLength: 1,
             byteOffset: 0,
         }, buffers)).toThrow(/Required property 'contentType' must be a non-empty string/)
 
         // invalid property value
-        expect(() => factory.createBufferView({
+        expect(() => factory.createReadableBufferView({
             buffer: 0,
             byteLength: 1,
             byteOffset: 0,
@@ -299,7 +299,7 @@ describe("createBufferView", function () {
 
     test("invalid contentEncoding property; should throw", () => {
         // invalid property value
-        expect(() => factory.createBufferView({
+        expect(() => factory.createReadableBufferView({
             buffer: 0,
             byteLength: 1,
             byteOffset: 0,
@@ -310,7 +310,7 @@ describe("createBufferView", function () {
 
     test("invalid name property; should throw", () => {
         // invalid property value
-        expect(() => factory.createBufferView({
+        expect(() => factory.createReadableBufferView({
             buffer: 0,
             byteLength: 1,
             byteOffset: 0,
@@ -323,13 +323,13 @@ describe("createBufferView", function () {
 
 describe("createChunk", function () {
 
-    const attribute = new SdDtfAttributes(),
+    const attribute = new SdDtfReadableAttributes(),
         attributes = [ attribute ],
-        dataItem = new SdDtfDataItem(dataParser),
+        dataItem = new SdDtfReadableDataItem(dataParser),
         dataItems = [ dataItem ],
-        node = new SdDtfNode(),
+        node = new SdDtfReadableNode(),
         nodes = [ node ],
-        typeHint = new SdDtfTypeHint("rhino.mesh"),
+        typeHint = new SdDtfReadableTypeHint("rhino.mesh"),
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
@@ -338,13 +338,13 @@ describe("createChunk", function () {
     node.name = "[0]"
 
     test("minimal node data; should return node instance", () => {
-        const node = factory.createChunk({ name: "root" }, attributes, dataItems, nodes, typeHints)
+        const node = factory.createReadableChunk({ name: "root" }, attributes, dataItems, nodes, typeHints)
         expect(node).toBeDefined()
         expect(node.name).toBe("root")
     })
 
     test("full node data; should return node instance", () => {
-        const node = factory.createChunk({
+        const node = factory.createReadableChunk({
             attributes: 0,
             items: [ 0 ],
             name: "[0]",
@@ -360,7 +360,7 @@ describe("createChunk", function () {
     })
 
     test("data item with additional properties; should add additional properties to data item", () => {
-        const node = factory.createChunk({ name: "root", foo: "bar" }, attributes, dataItems, nodes, typeHints)
+        const node = factory.createReadableChunk({ name: "root", foo: "bar" }, attributes, dataItems, nodes, typeHints)
         expect(node).toBeDefined()
         expect(node.name).toBe("root")
         expect(node.foo).toBe("bar")
@@ -368,21 +368,21 @@ describe("createChunk", function () {
 
     test("invalid name property; should throw", () => {
         // property missing
-        expect(() => factory.createChunk({}, attributes, dataItems, nodes, typeHints)).toThrow(/Required property 'name' must be a string/)
+        expect(() => factory.createReadableChunk({}, attributes, dataItems, nodes, typeHints)).toThrow(/Required property 'name' must be a string/)
 
         // invalid property value
-        expect(() => factory.createChunk({ name: 1 }, attributes, dataItems, nodes, typeHints)).toThrow(/Required property 'name' must be a string/)
+        expect(() => factory.createReadableChunk({ name: 1 }, attributes, dataItems, nodes, typeHints)).toThrow(/Required property 'name' must be a string/)
     })
 
     test("invalid attributes property; should throw", () => {
         // invalid property value
-        expect(() => factory.createChunk({
+        expect(() => factory.createReadableChunk({
             name: "root",
             attributes: -1,
         }, attributes, dataItems, nodes, typeHints)).toThrow(/Optional property 'attributes' must be an unsigned integer/)
 
         // invalid reference
-        expect(() => factory.createChunk({
+        expect(() => factory.createReadableChunk({
             name: "root",
             attributes: 1,
         }, attributes, dataItems, nodes, typeHints)).toThrow(/Attributes index is out of range/)
@@ -390,13 +390,13 @@ describe("createChunk", function () {
 
     test("invalid items property; should throw", () => {
         // invalid property value
-        expect(() => factory.createChunk({
+        expect(() => factory.createReadableChunk({
             name: "root",
             items: [ -1 ],
         }, attributes, dataItems, nodes, typeHints)).toThrow(/Optional property 'items' must be an array of unsigned integers/)
 
         // invalid reference
-        expect(() => factory.createChunk({
+        expect(() => factory.createReadableChunk({
             name: "root",
             items: [ 1 ],
         }, attributes, dataItems, nodes, typeHints)).toThrow(/Data item index is out of range/)
@@ -404,13 +404,13 @@ describe("createChunk", function () {
 
     test("invalid nodes property; should throw", () => {
         // invalid property value
-        expect(() => factory.createChunk({
+        expect(() => factory.createReadableChunk({
             name: "root",
             nodes: [ -1 ],
         }, attributes, dataItems, nodes, typeHints)).toThrow(/Optional property 'nodes' must be an array of unsigned integers/)
 
         // invalid reference
-        expect(() => factory.createChunk({
+        expect(() => factory.createReadableChunk({
             name: "root",
             nodes: [ 1 ],
         }, attributes, dataItems, nodes, typeHints)).toThrow(/Node index is out of range/)
@@ -418,13 +418,13 @@ describe("createChunk", function () {
 
     test("invalid type hints property; should throw", () => {
         // invalid property value
-        expect(() => factory.createChunk({
+        expect(() => factory.createReadableChunk({
             name: "root",
             typeHint: -1,
         }, attributes, dataItems, nodes, typeHints)).toThrow(/Optional property 'typeHint' must be an unsigned integer/)
 
         // invalid reference
-        expect(() => factory.createChunk({
+        expect(() => factory.createReadableChunk({
             name: "root",
             typeHint: 1,
         }, attributes, dataItems, nodes, typeHints)).toThrow(/Type hint index is out of range/)
@@ -434,25 +434,25 @@ describe("createChunk", function () {
 
 describe("createDataItem", function () {
 
-    const buffer = new SdDtfBuffer(1, bufferCache),
-        bufferView = new SdDtfBufferView(buffer, 1, 0, "text"),
-        accessor = new SdDtfAccessor(bufferView),
+    const buffer = new SdDtfReadableBuffer(1, bufferCache),
+        bufferView = new SdDtfReadableBufferView(buffer, 1, 0, "text"),
+        accessor = new SdDtfReadableAccessor(bufferView),
         accessors = [ accessor ],
-        attribute = new SdDtfAttributes(),
+        attribute = new SdDtfReadableAttributes(),
         attributes = [ attribute ],
-        typeHint = new SdDtfTypeHint("rhino.mesh"),
+        typeHint = new SdDtfReadableTypeHint("rhino.mesh"),
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
     attribute.entries["name"] = new SdDtfAttribute(dataParser)
 
     test("minimal data item data; should return data item instance", () => {
-        const dataItem = factory.createDataItem({}, accessors, attributes, typeHints)
+        const dataItem = factory.createReadableDataItem({}, accessors, attributes, typeHints)
         expect(dataItem).toBeDefined()
     })
 
     test("full data item data; should return data item instance", () => {
-        const dataItem = factory.createDataItem({
+        const dataItem = factory.createReadableDataItem({
             accessor: 0,
             attributes: 0,
             typeHint: 0,
@@ -466,33 +466,33 @@ describe("createDataItem", function () {
     })
 
     test("data item with additional properties; should add additional properties to data item", () => {
-        const dataItem = factory.createDataItem({ foo: "bar" }, accessors, attributes, typeHints)
+        const dataItem = factory.createReadableDataItem({ foo: "bar" }, accessors, attributes, typeHints)
         expect(dataItem).toBeDefined()
         expect(dataItem.foo).toBe("bar")
     })
 
     test("invalid accessor property; should throw", () => {
         // invalid property value
-        expect(() => factory.createDataItem({ accessor: -1 }, accessors, attributes, typeHints)).toThrow(/Optional property 'accessor' must be an unsigned integer/)
+        expect(() => factory.createReadableDataItem({ accessor: -1 }, accessors, attributes, typeHints)).toThrow(/Optional property 'accessor' must be an unsigned integer/)
 
         // invalid reference
-        expect(() => factory.createDataItem({ accessor: 1 }, accessors, attributes, typeHints)).toThrow(/Accessor index is out of range/)
+        expect(() => factory.createReadableDataItem({ accessor: 1 }, accessors, attributes, typeHints)).toThrow(/Accessor index is out of range/)
     })
 
     test("invalid attributes property; should throw", () => {
         // invalid property value
-        expect(() => factory.createDataItem({ attributes: -1 }, accessors, attributes, typeHints)).toThrow(/Optional property 'attributes' must be an unsigned integer/)
+        expect(() => factory.createReadableDataItem({ attributes: -1 }, accessors, attributes, typeHints)).toThrow(/Optional property 'attributes' must be an unsigned integer/)
 
         // invalid reference
-        expect(() => factory.createDataItem({ attributes: 1 }, accessors, attributes, typeHints)).toThrow(/Attributes index is out of range/)
+        expect(() => factory.createReadableDataItem({ attributes: 1 }, accessors, attributes, typeHints)).toThrow(/Attributes index is out of range/)
     })
 
     test("invalid type hints property; should throw", () => {
         // invalid property value
-        expect(() => factory.createDataItem({ typeHint: -1 }, accessors, attributes, typeHints)).toThrow(/Optional property 'typeHint' must be an unsigned integer/)
+        expect(() => factory.createReadableDataItem({ typeHint: -1 }, accessors, attributes, typeHints)).toThrow(/Optional property 'typeHint' must be an unsigned integer/)
 
         // invalid reference
-        expect(() => factory.createDataItem({ typeHint: 1 }, accessors, attributes, typeHints)).toThrow(/Type hint index is out of range/)
+        expect(() => factory.createReadableDataItem({ typeHint: 1 }, accessors, attributes, typeHints)).toThrow(/Type hint index is out of range/)
     })
 
 })
@@ -500,13 +500,13 @@ describe("createDataItem", function () {
 describe("createFileInfo", function () {
 
     test("minimal file info data; should return file info instance", () => {
-        const fileInfo = factory.createFileInfo({ version: "1.0" })
+        const fileInfo = factory.createReadableFileInfo({ version: "1.0" })
         expect(fileInfo).toBeDefined()
         expect(fileInfo.version).toBe("1.0")
     })
 
     test("full file info data; should return file info instance", () => {
-        const fileInfo = factory.createFileInfo({
+        const fileInfo = factory.createReadableFileInfo({
             version: "1.0",
             copyright: "GPLv3",
             generator: "ShapeDiverSdtfWriter",
@@ -518,7 +518,7 @@ describe("createFileInfo", function () {
     })
 
     test("file info with additional properties; should add additional properties to file info", () => {
-        const fileInfo = factory.createFileInfo({ version: "1.0", foo: "bar" })
+        const fileInfo = factory.createReadableFileInfo({ version: "1.0", foo: "bar" })
         expect(fileInfo).toBeDefined()
         expect(fileInfo.version).toBe("1.0")
         expect(fileInfo.foo).toBe("bar")
@@ -526,15 +526,15 @@ describe("createFileInfo", function () {
 
     test("invalid version property; should throw", () => {
         // property missing
-        expect(() => factory.createFileInfo({})).toThrow(/Required property 'version' must be a non-empty string/)
+        expect(() => factory.createReadableFileInfo({})).toThrow(/Required property 'version' must be a non-empty string/)
 
         // invalid property value
-        expect(() => factory.createFileInfo({ version: "" })).toThrow(/Required property 'version' must be a non-empty string/)
+        expect(() => factory.createReadableFileInfo({ version: "" })).toThrow(/Required property 'version' must be a non-empty string/)
     })
 
     test("invalid copyright property; should throw", () => {
         // invalid property value
-        expect(() => factory.createFileInfo({
+        expect(() => factory.createReadableFileInfo({
             version: "1.0",
             copyright: false,
         })).toThrow(/Optional property 'copyright' must be a string/)
@@ -542,7 +542,7 @@ describe("createFileInfo", function () {
 
     test("invalid generator property; should throw", () => {
         // invalid property value
-        expect(() => factory.createFileInfo({
+        expect(() => factory.createReadableFileInfo({
             version: "1.0",
             generator: false,
         })).toThrow(/Optional property 'generator' must be a string/)
@@ -552,11 +552,11 @@ describe("createFileInfo", function () {
 
 describe("createNode", function () {
 
-    const attribute = new SdDtfAttributes(),
+    const attribute = new SdDtfReadableAttributes(),
         attributes = [ attribute ],
-        dataItem = new SdDtfDataItem(dataParser),
+        dataItem = new SdDtfReadableDataItem(dataParser),
         dataItems = [ dataItem ],
-        typeHint = new SdDtfTypeHint("rhino.mesh"),
+        typeHint = new SdDtfReadableTypeHint("rhino.mesh"),
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
@@ -564,12 +564,12 @@ describe("createNode", function () {
     dataItem.value = "value"
 
     test("minimal node data; should return node instance", () => {
-        const node = factory.createNode({}, attributes, dataItems, typeHints)
+        const node = factory.createReadableNode({}, attributes, dataItems, typeHints)
         expect(node).toBeDefined()
     })
 
     test("full node data; should return node instance", () => {
-        const node = factory.createNode({
+        const node = factory.createReadableNode({
             attributes: 0,
             items: [ 0 ],
             name: "[0]",
@@ -584,37 +584,37 @@ describe("createNode", function () {
     })
 
     test("data item with additional properties; should add additional properties to data item", () => {
-        const node = factory.createNode({ foo: "bar" }, attributes, dataItems, typeHints)
+        const node = factory.createReadableNode({ foo: "bar" }, attributes, dataItems, typeHints)
         expect(node).toBeDefined()
         expect(node.foo).toBe("bar")
     })
 
     test("invalid attributes property; should throw", () => {
         // invalid property value
-        expect(() => factory.createNode({ attributes: -1 }, attributes, dataItems, typeHints)).toThrow(/Optional property 'attributes' must be an unsigned integer/)
+        expect(() => factory.createReadableNode({ attributes: -1 }, attributes, dataItems, typeHints)).toThrow(/Optional property 'attributes' must be an unsigned integer/)
 
         // invalid reference
-        expect(() => factory.createNode({ attributes: 1 }, attributes, dataItems, typeHints)).toThrow(/Attributes index is out of range/)
+        expect(() => factory.createReadableNode({ attributes: 1 }, attributes, dataItems, typeHints)).toThrow(/Attributes index is out of range/)
     })
 
     test("invalid items property; should throw", () => {
         // invalid property value
-        expect(() => factory.createNode({ items: [ -1 ] }, attributes, dataItems, typeHints)).toThrow(/Optional property 'items' must be an array of unsigned integers/)
+        expect(() => factory.createReadableNode({ items: [ -1 ] }, attributes, dataItems, typeHints)).toThrow(/Optional property 'items' must be an array of unsigned integers/)
 
         // invalid reference
-        expect(() => factory.createNode({ items: [ 1 ] }, attributes, dataItems, typeHints)).toThrow(/Data item index is out of range/)
+        expect(() => factory.createReadableNode({ items: [ 1 ] }, attributes, dataItems, typeHints)).toThrow(/Data item index is out of range/)
     })
 
     test("invalid name property; should throw", () => {
-        expect(() => factory.createNode({ name: 123 }, attributes, dataItems, typeHints)).toThrow(/Optional property 'name' must be a string/)
+        expect(() => factory.createReadableNode({ name: 123 }, attributes, dataItems, typeHints)).toThrow(/Optional property 'name' must be a string/)
     })
 
     test("invalid type hints property; should throw", () => {
         // invalid property value
-        expect(() => factory.createNode({ typeHint: -1 }, attributes, dataItems, typeHints)).toThrow(/Optional property 'typeHint' must be an unsigned integer/)
+        expect(() => factory.createReadableNode({ typeHint: -1 }, attributes, dataItems, typeHints)).toThrow(/Optional property 'typeHint' must be an unsigned integer/)
 
         // invalid reference
-        expect(() => factory.createNode({ typeHint: 1 }, attributes, dataItems, typeHints)).toThrow(/Type hint index is out of range/)
+        expect(() => factory.createReadableNode({ typeHint: 1 }, attributes, dataItems, typeHints)).toThrow(/Type hint index is out of range/)
     })
 
 })
@@ -622,13 +622,13 @@ describe("createNode", function () {
 describe("createTypeHint", function () {
 
     test("full type hint data; should return type hint instance", () => {
-        const typeHint = factory.createTypeHint({ name: "rhino.mesh" })
+        const typeHint = factory.createReadableTypeHint({ name: "rhino.mesh" })
         expect(typeHint).toBeDefined()
         expect(typeHint.name).toBe("rhino.mesh")
     })
 
     test("type hint with additional properties; should add additional properties to type hint", () => {
-        const typeHint = factory.createTypeHint({ name: "grasshopper.path", foo: "bar" })
+        const typeHint = factory.createReadableTypeHint({ name: "grasshopper.path", foo: "bar" })
         expect(typeHint).toBeDefined()
         expect(typeHint.name).toBe("grasshopper.path")
         expect(typeHint.foo).toBe("bar")
@@ -636,21 +636,21 @@ describe("createTypeHint", function () {
 
     test("type hint without name property; should throw", () => {
         // property missing
-        expect(() => factory.createTypeHint({})).toThrow(/Required property 'name' must be a non-empty string/)
+        expect(() => factory.createReadableTypeHint({})).toThrow(/Required property 'name' must be a non-empty string/)
 
         // invalid property value
-        expect(() => factory.createTypeHint({ name: "" })).toThrow(/Required property 'name' must be a non-empty string/)
+        expect(() => factory.createReadableTypeHint({ name: "" })).toThrow(/Required property 'name' must be a non-empty string/)
     })
 
 })
 
 describe("setNodeReferences", function () {
 
-    const attribute = new SdDtfAttributes(),
+    const attribute = new SdDtfReadableAttributes(),
         attributes = [ attribute ],
-        dataItem = new SdDtfDataItem(dataParser),
+        dataItem = new SdDtfReadableDataItem(dataParser),
         dataItems = [ dataItem ],
-        typeHint = new SdDtfTypeHint("rhino.mesh"),
+        typeHint = new SdDtfReadableTypeHint("rhino.mesh"),
         typeHints = [ typeHint ]
 
     // Set some data, otherwise .toBe fails
@@ -666,7 +666,7 @@ describe("setNodeReferences", function () {
     const nodes: ISdDtfNode[] = []
 
     beforeAll(() => {
-        nodeData.forEach(data => nodes.push(factory.createNode(data, attributes, dataItems, typeHints)))
+        nodeData.forEach(data => nodes.push(factory.createReadableNode(data, attributes, dataItems, typeHints)))
     })
 
     test("similar number of node data and instances; should set node-references ", () => {

@@ -1,6 +1,5 @@
 import * as process from "process"
 import { create } from "./SdDtfSdk"
-import { SdDtfFormatter } from "./utils/SdDtfFormatter"
 
 const general = {
     help: [ "-h", "--help" ],
@@ -15,8 +14,7 @@ const command_jsonContent = {
 
 (async () => {
     try {
-        const parser = create().createParser()
-        const formatter = new SdDtfFormatter()
+        const sdk = create()
 
         if (
             process.argv.length < 3 ||
@@ -27,12 +25,12 @@ const command_jsonContent = {
         } else if (process.argv[2] === command_jsonContent.name) {
             if (command_jsonContent.options.url.includes(process.argv[3])) {
                 // Fetch and parse via url
-                const asset = await parser.readFromUrl(process.argv[4])
-                console.log(formatter.prettifyAsset(asset))
+                const asset = await sdk.createParser().readFromUrl(process.argv[4])
+                console.log("sdTF JSON content:\n", sdk.createFormatter().prettifyAsset(asset))
             } else if (command_jsonContent.options.file.includes(process.argv[3])) {
                 // Fetch and parse via file path
-                const asset = await parser.readFromFile(process.argv[4])
-                console.log(formatter.prettifyAsset(asset))
+                const asset = await sdk.createParser().readFromFile(process.argv[4])
+                console.log("sdTF JSON content:\n", sdk.createFormatter().prettifyAsset(asset))
             } else if (process.argv[3] === undefined || general.help.includes(process.argv[3])) {
                 // help or undefined
                 printJsonContentCommandInfo()
@@ -43,7 +41,7 @@ const command_jsonContent = {
             errExit(`Invalid command '${ process.argv[2] }.'`)
         }
     } catch (e) {
-        errExit(e.message)
+        errExit(e)
     }
 })()
 
@@ -51,8 +49,14 @@ function isHelpArg (arg: any): boolean {
     return general.help.includes(arg)
 }
 
-function errExit (msg: string): void {
-    console.error("ERROR:", msg)
+function errExit (e: Error | string): void {
+    if (e instanceof Error) {
+        console.error("ERROR:", e.message, "\n")
+        console.error(e.stack)
+    } else {
+        console.error("ERROR:", e)
+    }
+
     process.exit(1)
 }
 

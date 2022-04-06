@@ -1,15 +1,14 @@
 import { SdDtfBinaryBufferCache } from "../../src/buffer_cache/SdDtfBinaryBufferCache"
-import { SdDtfAccessor } from "../../src/components/SdDtfAccessor"
-import { SdDtfAttributes } from "../../src/components/SdDtfAttributes"
-import { SdDtfBuffer } from "../../src/components/SdDtfBuffer"
-import { SdDtfBufferView } from "../../src/components/SdDtfBufferView"
-import { SdDtfChunk } from "../../src/components/SdDtfChunk"
-import { SdDtfDataItem } from "../../src/components/SdDtfDataItem"
-import { SdDtfFileInfo } from "../../src/components/SdDtfFileInfo"
-import { SdDtfNode } from "../../src/components/SdDtfNode"
-import { SdDtfTypeHint } from "../../src/components/SdDtfTypeHint"
-import { SdDtfAssetBuilder } from "../../src/reader/SdDtfAssetBuilder"
-import { SdDtfComponentFactory } from "../../src/reader/SdDtfComponentFactory"
+import { SdDtfReadableAccessor } from "../../src/reader/components/SdDtfReadableAccessor"
+import { SdDtfReadableAttributes } from "../../src/reader/components/SdDtfReadableAttributes"
+import { SdDtfReadableBuffer } from "../../src/reader/components/SdDtfReadableBuffer"
+import { SdDtfReadableBufferView } from "../../src/reader/components/SdDtfReadableBufferView"
+import { SdDtfReadableChunk } from "../../src/reader/components/SdDtfReadableChunk"
+import { SdDtfReadableDataItem } from "../../src/reader/components/SdDtfReadableDataItem"
+import { SdDtfReadableFileInfo } from "../../src/reader/components/SdDtfReadableFileInfo"
+import { SdDtfReadableNode } from "../../src/reader/components/SdDtfReadableNode"
+import { SdDtfReadableTypeHint } from "../../src/reader/components/SdDtfReadableTypeHint"
+import { SdDtfReadableComponentFactory } from "../../src/reader/SdDtfReadableComponentFactory"
 import { SdDtfDataParser } from "../../src/reader/SdDtfDataParser"
 
 const bufferCache = new SdDtfBinaryBufferCache()
@@ -20,15 +19,15 @@ describe("buildAccessor", function () {
     let origCreateAccessor: any
 
     beforeAll(() => {
-        origCreateAccessor = SdDtfComponentFactory.prototype.createAccessor
-        SdDtfComponentFactory.prototype.createAccessor = jest.fn(() => {
+        origCreateAccessor = SdDtfReadableComponentFactory.prototype.createReadableAccessor
+        SdDtfReadableComponentFactory.prototype.createReadableAccessor = jest.fn(() => {
             // @ts-ignore
-            return new SdDtfAccessor()
+            return new SdDtfReadableAccessor()
         })
     })
 
     afterAll(() => {
-        SdDtfComponentFactory.prototype.createAccessor = origCreateAccessor
+        SdDtfReadableComponentFactory.prototype.createReadableAccessor = origCreateAccessor
     })
 
     test("happy path; should add one accessor to asset", () => {
@@ -44,12 +43,12 @@ describe("buildAttribute", function () {
     let origCreateAttribute: any
 
     beforeAll(() => {
-        origCreateAttribute = SdDtfComponentFactory.prototype.createAttribute
-        SdDtfComponentFactory.prototype.createAttribute = jest.fn(() => new SdDtfAttributes())
+        origCreateAttribute = SdDtfReadableComponentFactory.prototype.createAttribute
+        SdDtfReadableComponentFactory.prototype.createAttribute = jest.fn(() => new SdDtfReadableAttributes())
     })
 
     afterAll(() => {
-        SdDtfComponentFactory.prototype.createAttribute = origCreateAttribute
+        SdDtfReadableComponentFactory.prototype.createAttribute = origCreateAttribute
     })
 
     test("happy path; should add one attribute to asset", () => {
@@ -65,12 +64,12 @@ describe("buildBuffer", function () {
     let origCreateBuffer: any
 
     beforeAll(() => {
-        origCreateBuffer = SdDtfComponentFactory.prototype.createBuffer
-        SdDtfComponentFactory.prototype.createBuffer = jest.fn(() => new SdDtfBuffer(666, bufferCache))
+        origCreateBuffer = SdDtfReadableComponentFactory.prototype.createReadableBuffer
+        SdDtfReadableComponentFactory.prototype.createReadableBuffer = jest.fn(() => new SdDtfReadableBuffer(666, bufferCache))
     })
 
     afterAll(() => {
-        SdDtfComponentFactory.prototype.createBuffer = origCreateBuffer
+        SdDtfReadableComponentFactory.prototype.createReadableBuffer = origCreateBuffer
     })
 
     test("happy path; should add one buffer to asset", () => {
@@ -86,15 +85,15 @@ describe("buildBufferView", function () {
     let origCreateBufferView: any
 
     beforeAll(() => {
-        origCreateBufferView = SdDtfComponentFactory.prototype.createBufferView
-        SdDtfComponentFactory.prototype.createBufferView = jest.fn(() => {
+        origCreateBufferView = SdDtfReadableComponentFactory.prototype.createReadableBufferView
+        SdDtfReadableComponentFactory.prototype.createReadableBufferView = jest.fn(() => {
             // @ts-ignore
-            return new SdDtfBufferView()
+            return new SdDtfReadableBufferView()
         })
     })
 
     afterAll(() => {
-        SdDtfComponentFactory.prototype.createBufferView = origCreateBufferView
+        SdDtfReadableComponentFactory.prototype.createReadableBufferView = origCreateBufferView
     })
 
     test("happy path; should add one buffer view to asset", () => {
@@ -110,15 +109,15 @@ describe("buildChunks", function () {
     let origCreateChunk: any
 
     beforeAll(() => {
-        origCreateChunk = SdDtfComponentFactory.prototype.createChunk
-        SdDtfComponentFactory.prototype.createChunk = jest.fn(() => {
+        origCreateChunk = SdDtfReadableComponentFactory.prototype.createReadableChunk
+        SdDtfReadableComponentFactory.prototype.createReadableChunk = jest.fn(() => {
             // @ts-ignore
-            return new SdDtfChunk()
+            return new SdDtfReadableChunk()
         })
     })
 
     afterAll(() => {
-        SdDtfComponentFactory.prototype.createChunk = origCreateChunk
+        SdDtfReadableComponentFactory.prototype.createReadableChunk = origCreateChunk
     })
 
     test("happy path; should add one buffer view to asset", () => {
@@ -134,12 +133,12 @@ describe("buildDataItem", function () {
     let origCreateDataItem: any
 
     beforeAll(() => {
-        origCreateDataItem = SdDtfComponentFactory.prototype.createDataItem
-        SdDtfComponentFactory.prototype.createDataItem = jest.fn(() => new SdDtfDataItem(dataParser))
+        origCreateDataItem = SdDtfReadableComponentFactory.prototype.createReadableDataItem
+        SdDtfReadableComponentFactory.prototype.createReadableDataItem = jest.fn(() => new SdDtfReadableDataItem(dataParser))
     })
 
     afterAll(() => {
-        SdDtfComponentFactory.prototype.createDataItem = origCreateDataItem
+        SdDtfReadableComponentFactory.prototype.createReadableDataItem = origCreateDataItem
     })
 
     test("happy path; should add one buffer view to asset", () => {
@@ -155,12 +154,12 @@ describe("buildFileInfo", function () {
     let origCreateFileInfo: any
 
     beforeAll(() => {
-        origCreateFileInfo = SdDtfComponentFactory.prototype.createFileInfo
-        SdDtfComponentFactory.prototype.createFileInfo = jest.fn(() => new SdDtfFileInfo("test"))
+        origCreateFileInfo = SdDtfReadableComponentFactory.prototype.createReadableFileInfo
+        SdDtfReadableComponentFactory.prototype.createReadableFileInfo = jest.fn(() => new SdDtfReadableFileInfo("test"))
     })
 
     afterAll(() => {
-        SdDtfComponentFactory.prototype.createFileInfo = origCreateFileInfo
+        SdDtfReadableComponentFactory.prototype.createReadableFileInfo = origCreateFileInfo
     })
 
     test("content contains no type hints; should not call create-fn", () => {
@@ -187,12 +186,12 @@ describe("buildNode", function () {
     let origCreateNode: any
 
     beforeAll(() => {
-        origCreateNode = SdDtfComponentFactory.prototype.createNode
-        SdDtfComponentFactory.prototype.createNode = jest.fn(() => new SdDtfNode())
+        origCreateNode = SdDtfReadableComponentFactory.prototype.createReadableNode
+        SdDtfReadableComponentFactory.prototype.createReadableNode = jest.fn(() => new SdDtfReadableNode())
     })
 
     afterAll(() => {
-        SdDtfComponentFactory.prototype.createNode = origCreateNode
+        SdDtfReadableComponentFactory.prototype.createReadableNode = origCreateNode
     })
 
     test("happy path; should add one buffer view to asset", () => {
@@ -208,12 +207,12 @@ describe("buildTypeHint", function () {
     let origCreateTypeHint: any
 
     beforeAll(() => {
-        origCreateTypeHint = SdDtfComponentFactory.prototype.createTypeHint
-        SdDtfComponentFactory.prototype.createTypeHint = jest.fn(() => new SdDtfTypeHint(""))
+        origCreateTypeHint = SdDtfReadableComponentFactory.prototype.createReadableTypeHint
+        SdDtfReadableComponentFactory.prototype.createReadableTypeHint = jest.fn(() => new SdDtfReadableTypeHint(""))
     })
 
     afterAll(() => {
-        SdDtfComponentFactory.prototype.createTypeHint = origCreateTypeHint
+        SdDtfReadableComponentFactory.prototype.createReadableTypeHint = origCreateTypeHint
     })
 
     test("happy path; should add one buffer view to asset", () => {
@@ -232,12 +231,12 @@ describe("buildComponent", function () {
         createFn = () => spyCreateFn++
 
     beforeAll(() => {
-        origCreateTypeHint = SdDtfComponentFactory.prototype.createTypeHint
-        SdDtfComponentFactory.prototype.createTypeHint = jest.fn(() => new SdDtfTypeHint("test"))
+        origCreateTypeHint = SdDtfReadableComponentFactory.prototype.createReadableTypeHint
+        SdDtfReadableComponentFactory.prototype.createReadableTypeHint = jest.fn(() => new SdDtfReadableTypeHint("test"))
     })
 
     afterAll(() => {
-        SdDtfComponentFactory.prototype.createTypeHint = origCreateTypeHint
+        SdDtfReadableComponentFactory.prototype.createReadableTypeHint = origCreateTypeHint
     })
 
     beforeEach(() => {
