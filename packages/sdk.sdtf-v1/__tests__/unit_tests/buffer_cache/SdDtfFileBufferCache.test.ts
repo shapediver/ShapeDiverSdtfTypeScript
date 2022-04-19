@@ -11,7 +11,7 @@ describe("acquireBuffer", function () {
 
     beforeAll(() => {
         origReadFile = SdDtfFileUtils.prototype.readFile
-        SdDtfFileUtils.prototype.readFile = jest.fn(() => buffer)
+        SdDtfFileUtils.prototype.readFile = jest.fn(() => Promise.resolve(buffer))
     })
 
     afterAll(() => {

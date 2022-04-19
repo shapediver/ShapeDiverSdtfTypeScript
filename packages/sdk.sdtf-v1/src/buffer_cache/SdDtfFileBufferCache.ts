@@ -27,7 +27,7 @@ export class SdDtfFileBufferCache extends SdDtfBinaryBufferCache {
     async acquireBuffer (relativePath: string | undefined, offset: number, length: number): Promise<DataView> {
         let buffer
         try {
-            buffer = this.fileUtils.readFile(`${ this.basePath }/${ relativePath }`)
+            buffer = await this.fileUtils.readFile(`${ this.basePath }/${ relativePath }`)
         } catch (e) {
             throw new SdDtfError(`Error reading buffer: ${ e.message }`)
         }

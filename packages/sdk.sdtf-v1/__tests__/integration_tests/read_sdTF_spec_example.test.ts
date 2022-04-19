@@ -4,8 +4,8 @@ import { SdDtfComponentFactoryWrapper } from "../../src/structure/SdDtfComponent
 
 describe("read_sdTF_spec_example", () => {
 
-    test("check structure", () => {
-        const asset = create().createParser().readFromFile("./test_data/sdTF_spec_example.sdtf")
+    test("check structure", async () => {
+        const asset = await create().createParser().readFromFile("./test_data/sdTF_spec_example.sdtf")
         expect(asset).toBeDefined()
 
         const componentList = new SdDtfComponentFactoryWrapper().createFromReadable(asset)
@@ -216,7 +216,7 @@ describe("read_sdTF_spec_example", () => {
     })
 
     test("check content access", async () => {
-        const asset = create().createParser().readFromFile("./test_data/sdTF_spec_example.sdtf")
+        const asset = await create().createParser().readFromFile("./test_data/sdTF_spec_example.sdtf")
         expect(asset).toBeDefined()
 
         // Data item content

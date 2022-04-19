@@ -29,14 +29,14 @@ export class SdDtfParser implements ISdDtfParser {
         this.fileUtils = new SdDtfFileUtils()
     }
 
-    readFromFile (path: string): ISdDtfReadableAsset {
+    async readFromFile (path: string): Promise<ISdDtfReadableAsset> {
         // Quick check to make sure we are in NodeJs
         if (isBrowser) throw new SdDtfError("Reading from file is only supported in Node.js.")
 
         let absolutePath, buffer
         try {
             absolutePath = this.fileUtils.toAbsolutePath(path)
-            buffer = this.fileUtils.readFile(absolutePath)
+            buffer = await this.fileUtils.readFile(absolutePath)
         } catch (e) {
             throw new SdDtfError(`Error reading sdTF-file: ${ e.message }`)
         }
@@ -46,7 +46,6 @@ export class SdDtfParser implements ISdDtfParser {
 
         const bufferCache = new SdDtfFileBufferCache(absolutePath)
         bufferCache.setBinaryBody(binaryBuffer)
-        // TODO add bufferCache to context
 
         return this.createSdtfAsset(jsonContent, bufferCache)
     }
@@ -58,7 +57,6 @@ export class SdDtfParser implements ISdDtfParser {
 
         const bufferCache = new SdDtfHttpBufferCache(httpClient)
         bufferCache.setBinaryBody(binaryBuffer)
-        // TODO add bufferCache to context
 
         return this.createSdtfAsset(jsonContent, bufferCache)
     }
@@ -69,7 +67,6 @@ export class SdDtfParser implements ISdDtfParser {
 
         const bufferCache = new SdDtfBinaryBufferCache()
         bufferCache.setBinaryBody(binaryBuffer)
-        // TODO add bufferCache to context
 
         return this.createSdtfAsset(jsonContent, bufferCache)
     }
@@ -77,7 +74,6 @@ export class SdDtfParser implements ISdDtfParser {
     /** Instantiates a sdTF asset that represents the given content. */
     createSdtfAsset (content: Record<string, unknown>, bufferCache: ISdDtfBufferCache): ISdDtfReadableAsset {
         const componentList = this.componentFactory.createFromJson(content)
-        // TODO apply integrations - validate + map!!!
         const readableComponentFactory = new SdDtfReadableComponentFactory(bufferCache, new SdDtfDataParser(this.integration))
         return this.buildReadableAsset(componentList, readableComponentFactory)
     }

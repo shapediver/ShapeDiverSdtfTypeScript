@@ -10,7 +10,7 @@ export interface ISdDtfParser {
      * @param path - Absolute or relative path of the sdTF file.
      * @throws {@link SdDtfError} when the sdTF-file could not be parsed.
      */
-    readFromFile (path: string): ISdDtfReadableAsset
+    readFromFile (path: string): Promise<ISdDtfReadableAsset>
 
     /**
      * Fetches the sdTF-file from the given link and returns the parsing results.
