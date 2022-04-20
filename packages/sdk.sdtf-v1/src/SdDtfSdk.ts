@@ -35,12 +35,12 @@ export class SdDtfSdk {
      * The constructor provides functionality to create new sdTF assets.
      */
     createConstructor (): ISdDtfConstructor {
-        return new SdDtfConstructor()
+        return new SdDtfConstructor(this.config.integrations ?? [])
     }
 
     /** Instantiates and returns a new formatter to convert sdTF components into prettified JSON data. */
     createFormatter (): ISdDtfFormatter {
-        return new SdDtfFormatter()
+        return new SdDtfFormatter(this.config.integrations ?? [])
     }
 
 }

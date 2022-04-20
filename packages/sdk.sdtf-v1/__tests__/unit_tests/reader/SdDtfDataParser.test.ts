@@ -1,4 +1,4 @@
-import { ISdDtfIntegration, ISdDtfTypeReader } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfIntegration, ISdDtfTypeReader, ISdDtfTypeWriter } from "@shapediver/sdk.sdtf-core"
 import { SdDtfBinaryBufferCache } from "../../../src/buffer_cache/SdDtfBinaryBufferCache"
 import { SdDtfReadableAccessor } from "../../../src/reader/components/SdDtfReadableAccessor"
 import { SdDtfReadableBuffer } from "../../../src/reader/components/SdDtfReadableBuffer"
@@ -29,6 +29,9 @@ describe("parseValue", function () {
             },
             getReader () {
                 return dummyReader
+            },
+            getWriter: function (): ISdDtfTypeWriter {
+                throw new Error("Should not be called in this test.")
             },
         }
 

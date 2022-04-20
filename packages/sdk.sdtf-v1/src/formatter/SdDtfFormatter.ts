@@ -1,21 +1,20 @@
-import { ISdDtfReadableAsset, ISdDtfWriteableAsset } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfIntegration, ISdDtfReadableAsset, ISdDtfWriteableAsset } from "@shapediver/sdk.sdtf-core"
 import { readableComponentListFromAsset } from "../reader/ISdDtfReadableComponentList"
 import { ISdDtfComponentFactoryWrapper } from "../structure/ISdDtfComponentFactoryWrapper"
 import { ISdDtfComponentList, toJsonContent } from "../structure/ISdDtfComponentList"
 import { SdDtfComponentFactoryWrapper } from "../structure/SdDtfComponentFactoryWrapper"
-import { writeableComponentListFromAsset } from "../writer/ISdDtfWriteableComponentList"
-import { ISdDtfWriteableComponentOptimizer } from "../writer/ISdDtfWriteableComponentOptimizer"
-import { SdDtfWriteableComponentOptimizer } from "../writer/SdDtfWriteableComponentOptimizer"
+import { ISdDtfWriteableComponentPostProcessor } from "../writer/ISdDtfWriteableComponentPostProcessor"
+import { SdDtfWriteableComponentPostProcessor } from "../writer/SdDtfWriteableComponentPostProcessor"
 import { ISdDtfFormatter } from "./ISdDtfFormatter"
 
 export class SdDtfFormatter implements ISdDtfFormatter {
 
     private readonly factory: ISdDtfComponentFactoryWrapper
-    private readonly optimizer: ISdDtfWriteableComponentOptimizer
+    private readonly postProcessor: ISdDtfWriteableComponentPostProcessor
 
-    constructor () {
+    constructor (integrations: ISdDtfIntegration[]) {
         this.factory = new SdDtfComponentFactoryWrapper()
-        this.optimizer = new SdDtfWriteableComponentOptimizer()
+        this.postProcessor = new SdDtfWriteableComponentPostProcessor(integrations)
     }
 
     prettifyReadableAsset (asset: ISdDtfReadableAsset): string {
@@ -25,9 +24,7 @@ export class SdDtfFormatter implements ISdDtfFormatter {
     }
 
     prettifyWriteableAsset (asset: ISdDtfWriteableAsset): string {
-        const writeableList = writeableComponentListFromAsset(asset)
-        this.optimizer.optimize(writeableList)
-
+        const writeableList = this.postProcessor.optimize(asset)
         const componentList = this.factory.createFromWriteable(writeableList)
         return this.prettifyAsset(componentList)
     }

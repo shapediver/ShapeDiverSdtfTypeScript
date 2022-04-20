@@ -1,13 +1,58 @@
-import { ISdDtfWriteableBuffer, ISdDtfWriteableBufferView, ISdDtfWriteableTypeHint } from "@shapediver/sdk.sdtf-core"
+import {
+    ISdDtfIntegration,
+    ISdDtfWriteableAsset,
+    ISdDtfWriteableAttribute,
+    ISdDtfWriteableBuffer,
+    ISdDtfWriteableBufferView,
+    ISdDtfWriteableComponentFactory,
+    ISdDtfWriteableDataItem,
+    ISdDtfWriteableTypeHint,
+} from "@shapediver/sdk.sdtf-core"
 import { SdDtfWriteableBuffer } from "./components/SdDtfWriteableBuffer"
-import { ISdDtfWriteableComponentList } from "./ISdDtfWriteableComponentList"
-import { ISdDtfWriteableComponentOptimizer } from "./ISdDtfWriteableComponentOptimizer"
+import { ISdDtfWriteableComponentList, writeableComponentListFromAsset } from "./ISdDtfWriteableComponentList"
+import { ISdDtfWriteableComponentPostProcessor } from "./ISdDtfWriteableComponentPostProcessor"
+import { SdDtfWriteableComponentFactory } from "./SdDtfWriteableComponentFactory"
 
-export class SdDtfWriteableComponentOptimizer implements ISdDtfWriteableComponentOptimizer {
+export class SdDtfWriteableComponentPostProcessor implements ISdDtfWriteableComponentPostProcessor {
 
-    optimize (componentList: ISdDtfWriteableComponentList): void {
+    private readonly factory: ISdDtfWriteableComponentFactory
+
+    constructor (private readonly integrations: ISdDtfIntegration[]) {
+        this.factory = new SdDtfWriteableComponentFactory()
+    }
+
+    optimize (asset: ISdDtfWriteableAsset): ISdDtfWriteableComponentList {
+        let componentList = writeableComponentListFromAsset(asset)
+
+        // Apply integration writers on data components
+        this.processDataComponents(componentList.attributes.flatMap(a => Object.values(a.entries)))
+        this.processDataComponents(componentList.items)
+
+        // `processDataComponents` might create new components.
+        // Thus, we generate the component list again to include those new components as well.
+        componentList = writeableComponentListFromAsset(asset)
+
         this.removeDuplicatedTypeHints(componentList)
         this.resolveBuffers(componentList)
+
+        return componentList
+    }
+
+    /**
+     * Tries to find a suitable registered integration for each given component and runs the integration's writer.
+     * @private
+     */
+    processDataComponents (components: (ISdDtfWriteableAttribute | ISdDtfWriteableDataItem)[]): void {
+        components.forEach(component => {
+            // Get the first integration that is supporting the given type hint
+            const integration = this.integrations.find(i => i.isTypeHintSupported(component.typeHint?.name ?? ""))
+
+            // Stop when no integration was found for this type hint
+            if (!integration) return
+
+            // Post-process component
+            integration.getWriter(this.factory).writeComponent(component)
+        })
     }
 
     /**
@@ -120,6 +165,7 @@ export class SdDtfWriteableComponentOptimizer implements ISdDtfWriteableComponen
 
         // Merge buffer data
         const [ mergedData, offsetsPerBuffer ] = this.mergeBufferData(buffers)
+        merged.byteLength = mergedData.byteLength
         merged.data = mergedData
 
         return [ merged, offsetsPerBuffer ]

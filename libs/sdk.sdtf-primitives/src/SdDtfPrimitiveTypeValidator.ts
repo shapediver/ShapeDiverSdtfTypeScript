@@ -1,5 +1,6 @@
 import {
     ISdDtfReadableAccessor,
+    ISdDtfWriteableAccessor,
     isInt,
     isNumber,
     isNumberArray,
@@ -23,7 +24,7 @@ export class SdDtfPrimitiveTypeValidator {
      * Validates the given component of the given type.
      * @throws {@link SdDtfError} when the given type is not supported.
      */
-    validateComponent (typeHint: SdDtfPrimitiveTypeHintName, value?: unknown, accessor?: ISdDtfReadableAccessor): boolean {
+    validateComponent (typeHint: SdDtfPrimitiveTypeHintName, value?: unknown, accessor?: ISdDtfReadableAccessor | ISdDtfWriteableAccessor): boolean {
         switch (typeHint) {
             case SdDtfPrimitiveTypeHintName.BOOLEAN:
                 return SdDtfPrimitiveTypeValidator.validateBooleanType(value)
@@ -95,15 +96,11 @@ export class SdDtfPrimitiveTypeValidator {
      * Thus, JavaScript automatically rounds them to a precision of 17.
      */
     static validateDecimalType (value: unknown): value is number {
-        return isNumber(value) && new Decimal(value).precision() <= 17
+        return isNumber(value)
     }
 
     /** Returns `true` when the given value is a valid `SdDtfPrimitiveTypeHintName.DOUBLE` type, otherwise `false`. */
     static validateDoubleType (value: unknown): value is number {
-        // Double-precision floating points have a precision between 15 and 17, and a range from +/- 1.7976931348623157E+308.
-        // However, we do not have to check any limits here because JavaScript can't represent them anyway:
-        //  * Precision > 17 is automatically rounded.
-        //  * Exponent > 308 is represented as `Number.Infinity`.
         return isNumber(value)
     }
 

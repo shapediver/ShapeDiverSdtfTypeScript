@@ -82,7 +82,7 @@ export function writeableComponentListFromAsset (asset: ISdDtfWriteableAsset): I
         })
     })
     list.accessors.forEach(accessor => addToList(accessor.bufferView, list.bufferViews))
-    list.bufferViews.forEach(bufferView => addToList(bufferView.buffer, list.bufferViews))
+    list.bufferViews.forEach(bufferView => addToList(bufferView.buffer, list.buffers))
 
     return list
 }

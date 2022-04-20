@@ -1,5 +1,6 @@
 export * from "./integrations/ISdDtfIntegration"
 export * from "./integrations/ISdDtfTypeReader"
+export * from "./integrations/ISdDtfTypeWriter"
 
 export * from "./reader/components/ISdDtfBaseReadableComponent"
 export * from "./reader/components/ISdDtfReadableAccessor"
@@ -43,5 +44,6 @@ export * from "./writer/components/ISdDtfWriteableDataItem"
 export * from "./writer/components/ISdDtfWriteableFileInfo"
 export * from "./writer/components/ISdDtfWriteableNode"
 export * from "./writer/components/ISdDtfWriteableTypeHint"
+export * from "./writer/ISdDtfWriteableComponentFactory"
 
 export * from "./SdDtfError"

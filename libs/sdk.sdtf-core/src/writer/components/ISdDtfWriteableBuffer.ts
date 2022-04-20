@@ -2,8 +2,7 @@ import { ISdDtfBuffer } from "../../structure/components/ISdDtfBuffer"
 import { ISdDtfBaseWriteableComponent, SdDtfWriteableBase } from "./ISdDtfBaseWriteableComponent"
 
 /** Representation of a [sdTF buffer](https://github.com/shapediver/sdTF/tree/development/specification/1.0#buffers). */
-export interface ISdDtfWriteableBuffer extends ISdDtfBaseWriteableComponent,
-    Omit<SdDtfWriteableBase<ISdDtfBuffer>, "byteLength"> {
+export interface ISdDtfWriteableBuffer extends ISdDtfBaseWriteableComponent, SdDtfWriteableBase<ISdDtfBuffer> {
 
     /**
      * The data hold by this buffer.

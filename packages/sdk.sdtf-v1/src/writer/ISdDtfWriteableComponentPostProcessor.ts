@@ -1,3 +1,4 @@
+import { ISdDtfWriteableAsset } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfWriteableComponentList } from "./ISdDtfWriteableComponentList"
 
 /**
@@ -5,14 +6,11 @@ import { ISdDtfWriteableComponentList } from "./ISdDtfWriteableComponentList"
  *
  * The structure and handling of writeable components has been simplified to improve usability.
  * However, these differences must be addressed before a writeable asset can be mapped to our domain model.
- * This is done the optimizer.
+ * This is done by the optimizer.
  */
-export interface ISdDtfWriteableComponentOptimizer {
+export interface ISdDtfWriteableComponentPostProcessor {
 
-    /**
-     * Removes duplicated type hints and merges buffer data.
-     * @param componentList
-     */
-    optimize (componentList: ISdDtfWriteableComponentList): void
+    /** Calls component-writers of registered integrations, removes duplicated type hints and merges buffer data. */
+    optimize (asset: ISdDtfWriteableAsset): ISdDtfWriteableComponentList
 
 }

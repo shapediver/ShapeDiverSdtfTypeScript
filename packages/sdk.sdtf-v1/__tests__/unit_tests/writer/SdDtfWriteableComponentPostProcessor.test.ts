@@ -1,10 +1,55 @@
+import { ISdDtfIntegration, ISdDtfTypeReader, ISdDtfTypeWriter } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfWriteableComponentFactory } from "../../../src"
 import { ISdDtfWriteableComponentList } from "../../../src/writer/ISdDtfWriteableComponentList"
 import { SdDtfWriteableComponentFactory } from "../../../src/writer/SdDtfWriteableComponentFactory"
-import { SdDtfWriteableComponentOptimizer } from "../../../src/writer/SdDtfWriteableComponentOptimizer"
+import { SdDtfWriteableComponentPostProcessor } from "../../../src/writer/SdDtfWriteableComponentPostProcessor"
 
-const optimizer = new SdDtfWriteableComponentOptimizer()
+const optimizer = new SdDtfWriteableComponentPostProcessor([])
 const factory: ISdDtfWriteableComponentFactory = new SdDtfWriteableComponentFactory()
+
+describe("processDataComponents", () => {
+
+    let isSupported: boolean, spyWriteComponent: boolean
+
+    const dummyWriter: ISdDtfTypeWriter = {
+            writeComponent () {
+                spyWriteComponent = true
+            },
+        },
+        dummyIntegration: ISdDtfIntegration = {
+            isTypeHintSupported () {
+                return isSupported
+            },
+            getReader: function (): ISdDtfTypeReader {
+                throw new Error("Should not be called in this test.")
+            },
+            getWriter () {
+                return dummyWriter
+            },
+        }
+
+    beforeEach(() => {
+        spyWriteComponent = false
+    })
+
+    test("no integrations; should return", async () => {
+        optimizer.processDataComponents([ {} ])
+        expect(spyWriteComponent).toBeFalsy()
+    })
+
+    test("type hint is not supported; should return", async () => {
+        isSupported = false
+        new SdDtfWriteableComponentPostProcessor([ dummyIntegration ]).processDataComponents([ {} ])
+        expect(spyWriteComponent).toBeFalsy()
+    })
+
+    test("type hint is supported; should call writeComponent", async () => {
+        isSupported = true
+        new SdDtfWriteableComponentPostProcessor([ dummyIntegration ]).processDataComponents([ {} ])
+        expect(spyWriteComponent).toBeTruthy()
+    })
+
+})
 
 describe("removeDuplicatedTypeHints", function () {
 
@@ -111,6 +156,7 @@ describe("resolveBuffers", function () {
         expect(componentList.buffers.length).toBe(1)
         const buffer = componentList.buffers[0]
         expect(buffer.uri).toBe("")
+        expect(buffer.byteLength).toBe(2358119)
         expect(buffer.data?.byteLength).toBe(2358119)
 
         expect(componentList.bufferViews.length).toBe(3)
@@ -202,6 +248,7 @@ describe("resolveBuffers", function () {
         expect(componentList.buffers.length).toBe(1)
         const buffer = componentList.buffers[0]
         expect(buffer.uri).toBe("")
+        expect(buffer.byteLength).toBe(10)
         expect(buffer.data?.byteLength).toBe(10)
 
         expect(componentList.bufferViews.length).toBe(3)

@@ -1,4 +1,6 @@
+import { ISdDtfWriteableComponentFactory } from "../writer/ISdDtfWriteableComponentFactory"
 import { ISdDtfTypeReader } from "./ISdDtfTypeReader"
+import { ISdDtfTypeWriter } from "./ISdDtfTypeWriter"
 
 /** The integration binds reading, writing and validation logic to the supported type hints of the integration. */
 export interface ISdDtfIntegration {
@@ -8,5 +10,7 @@ export interface ISdDtfIntegration {
 
     /** Returns a reader instance for parsing and mapping data content. */
     getReader (): ISdDtfTypeReader
+
+    getWriter (factory: ISdDtfWriteableComponentFactory): ISdDtfTypeWriter
 
 }

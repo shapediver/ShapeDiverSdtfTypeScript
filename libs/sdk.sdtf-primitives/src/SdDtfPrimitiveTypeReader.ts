@@ -24,15 +24,15 @@ export class SdDtfPrimitiveTypeReader implements ISdDtfTypeReader {
         switch (typeHint) {
             case SdDtfPrimitiveTypeHintName.BOOLEAN:
             case SdDtfPrimitiveTypeHintName.CHAR:
-            case SdDtfPrimitiveTypeHintName.GUID:
-            case SdDtfPrimitiveTypeHintName.STRING:
             case SdDtfPrimitiveTypeHintName.DECIMAL:
             case SdDtfPrimitiveTypeHintName.DOUBLE:
-            case SdDtfPrimitiveTypeHintName.SINGLE:
+            case SdDtfPrimitiveTypeHintName.GUID:
             case SdDtfPrimitiveTypeHintName.INT8:
             case SdDtfPrimitiveTypeHintName.INT16:
             case SdDtfPrimitiveTypeHintName.INT32:
             case SdDtfPrimitiveTypeHintName.INT64:
+            case SdDtfPrimitiveTypeHintName.SINGLE:
+            case SdDtfPrimitiveTypeHintName.STRING:
             case SdDtfPrimitiveTypeHintName.UINT8:
             case SdDtfPrimitiveTypeHintName.UINT16:
             case SdDtfPrimitiveTypeHintName.UINT32:

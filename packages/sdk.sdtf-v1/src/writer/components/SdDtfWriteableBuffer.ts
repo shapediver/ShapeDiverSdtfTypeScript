@@ -3,6 +3,7 @@ import { SdDtfBaseWriteableComponent } from "./SdDtfBaseWriteableComponent"
 
 export class SdDtfWriteableBuffer extends SdDtfBaseWriteableComponent implements ISdDtfWriteableBuffer {
 
+    byteLength?: number
     data?: ArrayBuffer
     uri?: string
 

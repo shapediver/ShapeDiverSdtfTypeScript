@@ -1,16 +1,13 @@
-import {
-    ISdDtfWriteableAccessor,
-    ISdDtfWriteableAsset,
-    ISdDtfWriteableAttribute,
-    ISdDtfWriteableAttributes,
-    ISdDtfWriteableBuffer,
-    ISdDtfWriteableBufferView,
-    ISdDtfWriteableChunk,
-    ISdDtfWriteableDataItem,
-    ISdDtfWriteableNode,
-    ISdDtfWriteableTypeHint,
-    SdDtfTypeHintName,
-} from "@shapediver/sdk.sdtf-core"
+import { SdDtfTypeHintName } from "../structure/SdDtfShapeDiverTypeHints"
+import { ISdDtfWriteableAccessor } from "./components/ISdDtfWriteableAccessor"
+import { ISdDtfWriteableAsset } from "./components/ISdDtfWriteableAsset"
+import { ISdDtfWriteableAttribute, ISdDtfWriteableAttributes } from "./components/ISdDtfWriteableAttributes"
+import { ISdDtfWriteableBuffer } from "./components/ISdDtfWriteableBuffer"
+import { ISdDtfWriteableBufferView } from "./components/ISdDtfWriteableBufferView"
+import { ISdDtfWriteableChunk } from "./components/ISdDtfWriteableChunk"
+import { ISdDtfWriteableDataItem } from "./components/ISdDtfWriteableDataItem"
+import { ISdDtfWriteableNode } from "./components/ISdDtfWriteableNode"
+import { ISdDtfWriteableTypeHint } from "./components/ISdDtfWriteableTypeHint"
 
 /** Creates instances of individual writeable components. */
 export interface ISdDtfWriteableComponentFactory {
