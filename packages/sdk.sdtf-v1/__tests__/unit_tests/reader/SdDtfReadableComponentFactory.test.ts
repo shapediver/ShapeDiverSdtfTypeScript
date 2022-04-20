@@ -8,6 +8,8 @@ import {
     ISdDtfFileInfo,
     ISdDtfNode,
     ISdDtfReadableChunk,
+    ISdDtfReadableContentComponent,
+    ISdDtfReadableDataItem,
     ISdDtfReadableNode,
     ISdDtfTypeHint,
 } from "@shapediver/sdk.sdtf-core"
@@ -40,7 +42,9 @@ describe("createAccessor", function () {
             id: "[0]",
             foo: "bar",
         }) as ISdDtfAccessor
+
         const readableAccessor = readableFactory.createAccessor(accessor, bufferViews)
+
         expect(readableAccessor).toBeDefined()
         expect(readableAccessor.bufferView).toBe(bufferView)
         expect(readableAccessor.id).toBe("[0]")
@@ -66,13 +70,16 @@ describe("createAttributes", function () {
                 typeHint: 0,
             },
         }) as ISdDtfAttributes
+
         const readableAttributes = readableFactory.createAttributes(attributes, accessors, typeHints)
+
         expect(readableAttributes).toBeDefined()
         expect(Object.keys(readableAttributes.entries).length).toBe(1)
         expect(Object.keys(readableAttributes.entries)[0]).toBe("name")
-        expect(Object.values(readableAttributes.entries)[0].value).toBe("awesome value")
-        expect(Object.values(readableAttributes.entries)[0].accessor).toBe(accessor)
-        expect(Object.values(readableAttributes.entries)[0].typeHint).toBe(typeHint)
+        const attribute: ISdDtfReadableContentComponent = Object.values(readableAttributes.entries)[0]
+        expect(attribute.value).toBe("awesome value")
+        expect(attribute.accessor).toBe(accessor)
+        expect(attribute.typeHint).toBe(typeHint)
     })
 
 })
@@ -85,7 +92,9 @@ describe("createBuffer", function () {
             uri: "data:,foobar",
             foo: "bar",
         }) as ISdDtfBuffer
+
         const readableBuffer = readableFactory.createBuffer(buffer)
+
         expect(readableBuffer).toBeDefined()
         expect(readableBuffer.byteLength).toBe(666)
         expect(readableBuffer.uri).toBe("data:,foobar")
@@ -109,7 +118,9 @@ describe("createBufferView", function () {
             name: "[1]",
             foo: "bar",
         }) as ISdDtfBufferView
+
         const readableBufferView = readableFactory.createBufferView(bufferView, buffers)
+
         expect(readableBufferView).toBeDefined()
         expect(readableBufferView.buffer).toBe(buffer)
         expect(readableBufferView.byteLength).toBe(1)
@@ -144,7 +155,9 @@ describe("createChunk", function () {
             typeHint: 0,
             foo: "bar",
         }) as ISdDtfChunk
+
         const readableChunk = readableFactory.createChunk(chunk, attributes, dataItems, typeHints)
+
         expect(readableChunk).toBeDefined()
         expect(readableChunk.attributes).toBe(attribute)
         expect(readableChunk.items).toStrictEqual(dataItems)
@@ -178,7 +191,10 @@ describe("createDataItem", function () {
             value: "awesome value",
             foo: "bar",
         }) as ISdDtfDataItem
-        const readableDataItem = readableFactory.createDataItem(dataItem, accessors, attributes, typeHints)
+
+        const readableDataItem: (ISdDtfReadableDataItem & ISdDtfReadableContentComponent) =
+            readableFactory.createDataItem(dataItem, accessors, attributes, typeHints)
+
         expect(readableDataItem).toBeDefined()
         expect(readableDataItem.accessor).toBe(accessor)
         expect(readableDataItem.attributes).toBe(attribute)
@@ -198,7 +214,9 @@ describe("createFileInfo", function () {
             generator: "ShapeDiverSdtfWriter",
             foo: "bar",
         }) as ISdDtfFileInfo
+
         const readableFileInfo = readableFactory.createFileInfo(fileInfo)
+
         expect(readableFileInfo).toBeDefined()
         expect(readableFileInfo.copyright).toStrictEqual("GPLv3")
         expect(readableFileInfo.generator).toBe("ShapeDiverSdtfWriter")
@@ -230,7 +248,9 @@ describe("createNode", function () {
             typeHint: 0,
             foo: "bar",
         }) as ISdDtfNode
+
         const readableNode = readableFactory.createNode(node, attributes, dataItems, typeHints)
+
         expect(readableNode).toBeDefined()
         expect(readableNode.attributes).toBe(attribute)
         expect(readableNode.items).toStrictEqual(dataItems)
@@ -249,7 +269,9 @@ describe("createTypeHint", function () {
             name: "rhino.mesh",
             foo: "bar",
         }) as ISdDtfTypeHint
+
         const readableTypeHint = readableFactory.createTypeHint(typeHint)
+
         expect(readableTypeHint).toBeDefined()
         expect(readableTypeHint.name).toBe("rhino.mesh")
         expect(readableTypeHint.additionalProperties).toStrictEqual({ foo: "bar" })

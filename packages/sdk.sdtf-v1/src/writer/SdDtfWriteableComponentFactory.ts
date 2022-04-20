@@ -6,6 +6,7 @@ import {
     ISdDtfWriteableBuffer,
     ISdDtfWriteableBufferView,
     ISdDtfWriteableChunk,
+    ISdDtfWriteableComponentFactory,
     ISdDtfWriteableDataItem,
     ISdDtfWriteableFileInfo,
     ISdDtfWriteableNode,
@@ -22,7 +23,6 @@ import { SdDtfWriteableDataItem } from "./components/SdDtfWriteableDataItem"
 import { SdDtfWriteableFileInfo } from "./components/SdDtfWriteableFileInfo"
 import { SdDtfWriteableNode } from "./components/SdDtfWriteableNode"
 import { SdDtfWriteableTypeHint } from "./components/SdDtfWriteableTypeHint"
-import { ISdDtfWriteableComponentFactory } from "./ISdDtfWriteableComponentFactory"
 
 export class SdDtfWriteableComponentFactory implements ISdDtfWriteableComponentFactory {
 

@@ -1,13 +1,14 @@
 import {
     ISdDtfReadableAccessor,
     ISdDtfReadableAttributes,
+    ISdDtfReadableContentComponent,
     ISdDtfReadableDataItem,
     ISdDtfReadableTypeHint,
 } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfDataParser } from "../ISdDtfDataParser"
 import { SdDtfBaseReadableComponent } from "./SdDtfBaseReadableComponent"
 
-export class SdDtfReadableDataItem extends SdDtfBaseReadableComponent implements ISdDtfReadableDataItem {
+export class SdDtfReadableDataItem extends SdDtfBaseReadableComponent implements ISdDtfReadableDataItem, ISdDtfReadableContentComponent {
 
     accessor?: ISdDtfReadableAccessor
     attributes?: ISdDtfReadableAttributes
@@ -30,7 +31,7 @@ export class SdDtfReadableDataItem extends SdDtfBaseReadableComponent implements
     }
 
     async getContent (): Promise<unknown> {
-        return this.dataParser.parseContent(this.value, this.accessor, this.typeHint)
+        return this.dataParser.parseContent(this)
     }
 
 }

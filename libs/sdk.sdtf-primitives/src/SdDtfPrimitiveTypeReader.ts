@@ -1,26 +1,31 @@
 import {
-    enumValues,
-    ISdDtfReader,
-    isNumeric,
+    ISdDtfBufferValue,
+    ISdDtfReadableContentComponent,
+    ISdDtfTypeReader,
     sdAssertUnreachable,
+    SdDtfError,
     SdDtfPrimitiveTypeHintName,
 } from "@shapediver/sdk.sdtf-core"
-import { SdDtfPrimitiveTypeGuard } from "./SdDtfPrimitiveTypeGuard"
+import { SdDtfPrimitiveTypeValidator } from "./SdDtfPrimitiveTypeValidator"
 
-export class SdDtfPrimitiveTypeReader implements ISdDtfReader {
+export class SdDtfPrimitiveTypeReader implements ISdDtfTypeReader {
 
-    isTypeHintSupported (typeHint: string): typeHint is SdDtfPrimitiveTypeHintName {
-        return enumValues(SdDtfPrimitiveTypeHintName).includes(typeHint)
-    }
+    private readonly validator = new SdDtfPrimitiveTypeValidator()
 
-    parseValue (typeHint: SdDtfPrimitiveTypeHintName, value: unknown): unknown {
+    async readComponent (component: ISdDtfReadableContentComponent): Promise<unknown> {
+        const typeHint = component.typeHint?.name as SdDtfPrimitiveTypeHintName
+
+        // Make sure that the component consists of valid data
+        if (!this.validator.validateComponent(typeHint, component.value, component.accessor)) {
+            throw new SdDtfError(`Cannot read value of type '${ typeHint }': Invalid component.`)
+        }
+
+        // Map the component data and return the result
         switch (typeHint) {
             case SdDtfPrimitiveTypeHintName.BOOLEAN:
-                return this.parseBooleanValue(value)
             case SdDtfPrimitiveTypeHintName.CHAR:
             case SdDtfPrimitiveTypeHintName.GUID:
             case SdDtfPrimitiveTypeHintName.STRING:
-                return this.parseStringValue(value)
             case SdDtfPrimitiveTypeHintName.DECIMAL:
             case SdDtfPrimitiveTypeHintName.DOUBLE:
             case SdDtfPrimitiveTypeHintName.SINGLE:
@@ -32,84 +37,49 @@ export class SdDtfPrimitiveTypeReader implements ISdDtfReader {
             case SdDtfPrimitiveTypeHintName.UINT16:
             case SdDtfPrimitiveTypeHintName.UINT32:
             case SdDtfPrimitiveTypeHintName.UINT64:
-                return this.parseNumberValue(value)
+                return component.value  // Nothing to map here
             case SdDtfPrimitiveTypeHintName.COLOR:
-                return this.parseColorValue(value)
+                return this.mapColor(component.value)
             case SdDtfPrimitiveTypeHintName.DATA:
             case SdDtfPrimitiveTypeHintName.IMAGE:
-                return this.parseDataValue(value)
+                return this.mapGenericData(await component.accessor?.getContent())
             default:
                 sdAssertUnreachable(typeHint)
         }
     }
 
     /**
-     * Parses and validates the given value.
+     * The internal representation of Color is either an array or a string (legacy).
+     * Its external representation is a number-array.
      * @private
-     * @throws {@link SdDtfError} when value is invalid for this type.
      */
-    parseBooleanValue (value: unknown): boolean {
-        // Map string to boolean
-        if (value === "true") value = true
-        if (value === "false") value = false
+    mapColor (content: unknown): unknown {
+        let parts: number[]
 
-        SdDtfPrimitiveTypeGuard.assertBoolean(value)
-        return value
-    }
-
-    /**
-     * Parses and validates the given value.
-     * @private
-     * @throws {@link SdDtfError} when value is invalid for this type.
-     */
-    parseStringValue (value: unknown): string {
-        SdDtfPrimitiveTypeGuard.assertString(value)
-        return value
-    }
-
-    /**
-     * Parses and validates the given value.
-     * @private
-     * @throws {@link SdDtfError} when value is invalid for this type.
-     */
-    parseNumberValue (value: unknown): number {
-        // Map string number to number
-        if (isNumeric(value)) value = Number(value)
-
-        SdDtfPrimitiveTypeGuard.assertNumber(value)
-        return value
-    }
-
-    /**
-     * Parses and validates the given value.
-     * @private
-     * @throws {@link SdDtfError} when value is invalid for this type.
-     */
-    parseColorValue (value: unknown): [ number, number, number, number ] {
-        // Map sdTF color string to array
-        if (typeof value === "string") {
-            const parts = value.split(",").map(p => Number(p))
-            if (parts.length === 3) value = [ ...parts, 1 ]     // Default alpha value is `1`
-            if (parts.length === 4) value = [ ...parts ]
+        if (Array.isArray(content)) {
+            // Handle regular color
+            parts = content
+        } else {
+            // Handle legacy color: Map sdTF color string to array
+            parts = (content as string).split(",").map(p => Number(p))
         }
 
-        SdDtfPrimitiveTypeGuard.assertColor(value)
-        return value
+        let res = [ ...parts ]
+
+        // Default alpha content is `1`
+        if (res.length === 3) res = [ ...parts, 1 ]
+
+        return res
     }
 
     /**
-     * Parses and validates the given value.
+     * Data content is stored in a binary buffer.
+     * Its external representation is its data.
      * @private
-     * @throws {@link SdDtfError} when value is invalid for this type.
+     * @throws {@link SdDtfError} when content is not a {@link ISdDtfBufferValue}.
      */
-    parseDataValue (value: unknown): DataView {
-        // This comes form a buffer as a ISdDtfBufferData object
-        if (value && typeof value === "object" && ("data" in value)) {
-            value = (value as { [data: string]: unknown }).data
-        }
-
-        SdDtfPrimitiveTypeGuard.assertData(value)
-        return value
+    mapGenericData (content?: ISdDtfBufferValue): unknown {
+        return content?.data
     }
 
 }

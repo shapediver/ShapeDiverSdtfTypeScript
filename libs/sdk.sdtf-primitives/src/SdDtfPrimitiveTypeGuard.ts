@@ -84,7 +84,7 @@ export class SdDtfPrimitiveTypeGuard {
 
     /** Returns `true` when the given value is of type `SdDtfPrimitiveTypeHintName.COLOR`. */
     static isColor (value: unknown): value is SdDtfPrimitiveColorType {
-        return isNumberArray(value) && value.length === 4 && value.every(v => v >= 0 && v <= 1)
+        return isNumberArray(value) && value.length === 4
     }
 
     /**
@@ -93,8 +93,8 @@ export class SdDtfPrimitiveTypeGuard {
      *   * `SdDtfPrimitiveTypeHintName.IMAGE`
      * @throws {@link SdDtfError} when the invariant is not met.
      */
-    static assertData (value: unknown): asserts value is DataView {
-        if (!this.isData(value)) throw new SdDtfError("Assertion error: Value is not a primitive data type.")
+    static assertDataView (value: unknown): asserts value is DataView {
+        if (!this.isDataView(value)) throw new SdDtfError("Assertion error: Value is not a primitive data type.")
     }
 
     /**
@@ -102,7 +102,7 @@ export class SdDtfPrimitiveTypeGuard {
      *   * `SdDtfPrimitiveTypeHintName.DATA`
      *   * `SdDtfPrimitiveTypeHintName.IMAGE`
      */
-    static isData (value: unknown): value is DataView {
+    static isDataView (value: unknown): value is DataView {
         return ArrayBuffer.isView(value)
     }
 

@@ -1,5 +1,4 @@
 import { ISdDtfAttribute, ISdDtfAttributes } from "../../structure/components/ISdDtfAttributes"
-import { ISdDtfReadableAccessor } from "./ISdDtfReadableAccessor"
 import { ISdDtfBaseReadableComponent, SdDtfReadableBase } from "./ISdDtfBaseReadableComponent"
 import { ISdDtfReadableTypeHint } from "./ISdDtfReadableTypeHint"
 
@@ -14,10 +13,7 @@ export interface ISdDtfReadableAttributes extends ISdDtfBaseReadableComponent,
 
 /** The value of a single attributes dictionary key */
 export interface ISdDtfReadableAttribute extends Omit<ISdDtfBaseReadableComponent, "componentId">,
-    Omit<ISdDtfAttribute, "toJson" | "accessor" | "typeHint"> {
-
-    /** Referenced accessor to binary data. */
-    accessor?: ISdDtfReadableAccessor
+    Omit<ISdDtfAttribute, "toJson" | "accessor" | "typeHint" | "value"> {
 
     /** The type hint of the referenced accessor or value. */
     typeHint?: ISdDtfReadableTypeHint

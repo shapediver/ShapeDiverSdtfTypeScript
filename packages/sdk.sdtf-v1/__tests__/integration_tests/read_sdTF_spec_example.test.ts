@@ -1,5 +1,6 @@
 import { ISdDtfBufferValue } from "@shapediver/sdk.sdtf-core"
 import { create } from "../../src"
+import { readableComponentListFromAsset } from "../../src/reader/ISdDtfReadableComponentList"
 import { SdDtfComponentFactoryWrapper } from "../../src/structure/SdDtfComponentFactoryWrapper"
 
 describe("read_sdTF_spec_example", () => {
@@ -8,7 +9,8 @@ describe("read_sdTF_spec_example", () => {
         const asset = await create().createParser().readFromFile("./test_data/sdTF_spec_example.sdtf")
         expect(asset).toBeDefined()
 
-        const componentList = new SdDtfComponentFactoryWrapper().createFromReadable(asset)
+        const readableList = readableComponentListFromAsset(asset)
+        const componentList = new SdDtfComponentFactoryWrapper().createFromReadable(readableList)
 
         expect(componentList.asset.fileInfo).toBe(0)
         expect(componentList.asset.additionalProperties).toStrictEqual({})

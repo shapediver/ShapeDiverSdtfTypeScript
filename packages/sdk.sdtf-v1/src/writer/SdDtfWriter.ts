@@ -1,5 +1,4 @@
-import { ISdDtfWriteableAsset } from "@shapediver/sdk.sdtf-core"
-import { ISdDtfWriteableComponentFactory } from "./ISdDtfWriteableComponentFactory"
+import { ISdDtfWriteableAsset, ISdDtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfWriter, ISdDtfWriterAttributes, ISdDtfWriterDataItems } from "./ISdDtfWriter"
 
 export class SdDtfWriter implements ISdDtfWriter {

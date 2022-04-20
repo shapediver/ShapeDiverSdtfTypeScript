@@ -1,4 +1,5 @@
 import { ISdDtfReadableAsset, ISdDtfWriteableAsset } from "@shapediver/sdk.sdtf-core"
+import { readableComponentListFromAsset } from "../reader/ISdDtfReadableComponentList"
 import { ISdDtfComponentFactoryWrapper } from "../structure/ISdDtfComponentFactoryWrapper"
 import { ISdDtfComponentList, toJsonContent } from "../structure/ISdDtfComponentList"
 import { SdDtfComponentFactoryWrapper } from "../structure/SdDtfComponentFactoryWrapper"
@@ -18,7 +19,8 @@ export class SdDtfFormatter implements ISdDtfFormatter {
     }
 
     prettifyReadableAsset (asset: ISdDtfReadableAsset): string {
-        const componentList = this.factory.createFromReadable(asset)
+        const readableList = readableComponentListFromAsset(asset)
+        const componentList = this.factory.createFromReadable(readableList)
         return this.prettifyAsset(componentList)
     }
 

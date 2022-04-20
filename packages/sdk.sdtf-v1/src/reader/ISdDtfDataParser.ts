@@ -1,4 +1,4 @@
-import { ISdDtfReadableAccessor, ISdDtfReadableTypeHint } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfReadableContentComponent } from "@shapediver/sdk.sdtf-core"
 
 /**
  * This is a wrapper around data access used in sdTF items and attributes.
@@ -15,6 +15,6 @@ import { ISdDtfReadableAccessor, ISdDtfReadableTypeHint } from "@shapediver/sdk.
 export interface ISdDtfDataParser {
 
     /** Parses the given data item with the registered readers. */
-    parseContent (value?: unknown, accessor?: ISdDtfReadableAccessor, typeHint?: ISdDtfReadableTypeHint): Promise<unknown>
+    parseContent (component: ISdDtfReadableContentComponent): Promise<unknown>
 
 }

@@ -66,7 +66,7 @@ export class SdDtfWriteableComponentOptimizer implements ISdDtfWriteableComponen
     }
 
     /**
-     *
+     * Merges all individual buffers by their URI.
      * @private
      */
     resolveBuffers (componentList: ISdDtfWriteableComponentList): void {

@@ -1,4 +1,10 @@
-import { isDataObject, ISdDtfReadableAsset, SdDtfError } from "@shapediver/sdk.sdtf-core"
+import {
+    isDataObject,
+    ISdDtfReadableContentComponent,
+    ISdDtfWriteableAttribute,
+    SdDtfError,
+} from "@shapediver/sdk.sdtf-core"
+import { ISdDtfReadableComponentList } from "../reader/ISdDtfReadableComponentList"
 import { ISdDtfComponentValidator } from "../validation/ISdDtfComponentValidator"
 import { SdDtfComponentValidator } from "../validation/SdDtfComponentValidator"
 import { ISdDtfWriteableComponentList } from "../writer/ISdDtfWriteableComponentList"
@@ -30,22 +36,22 @@ export class SdDtfComponentFactoryWrapper implements SdDtfComponentFactoryWrappe
         })
     }
 
-    createFromReadable (readableAsset: ISdDtfReadableAsset): ISdDtfComponentList {
+    createFromReadable (readableComponents: ISdDtfReadableComponentList): ISdDtfComponentList {
         const f = this.factory  // Alias to shorten lines
         const partialComponentList: ISdDtfPartialComponentList = {
-            accessors: readableAsset.accessors.map(a => f.createAccessor(a.toDataObject())),
-            asset: f.createAsset(readableAsset.toDataObject()),
-            attributes: readableAsset.attributes.map(a => f.createAttributes(a.toDataObject())),
-            buffers: readableAsset.buffers.map(b => f.createBuffer(b.toDataObject())),
-            bufferViews: readableAsset.bufferViews.map(b => f.createBufferView(b.toDataObject())),
-            chunks: readableAsset.chunks.map(c => f.createChunk(c.toDataObject())),
-            items: readableAsset.items.map(i => f.createDataItem(i.toDataObject())),
-            fileInfo: f.createFileInfo(readableAsset.fileInfo.toDataObject()),
-            nodes: readableAsset.nodes.map(n => f.createNode(n.toDataObject())),
-            typeHints: readableAsset.typeHints.map(y => f.createTypeHint(y.toDataObject())),
+            accessors: readableComponents.accessors.map(a => f.createAccessor(a.toDataObject())),
+            asset: f.createAsset(readableComponents.asset.toDataObject()),
+            attributes: readableComponents.attributes.map(a => f.createAttributes(a.toDataObject())),
+            buffers: readableComponents.buffers.map(b => f.createBuffer(b.toDataObject())),
+            bufferViews: readableComponents.bufferViews.map(b => f.createBufferView(b.toDataObject())),
+            chunks: readableComponents.chunks.map(c => f.createChunk(c.toDataObject())),
+            items: readableComponents.items.map(i => f.createDataItem(i.toDataObject())),
+            fileInfo: f.createFileInfo(readableComponents.fileInfo.toDataObject()),
+            nodes: readableComponents.nodes.map(n => f.createNode(n.toDataObject())),
+            typeHints: readableComponents.typeHints.map(y => f.createTypeHint(y.toDataObject())),
         }
 
-        this.mapHierarchyRepresentation(partialComponentList, readableAsset)
+        this.mapHierarchyRepresentation(partialComponentList, readableComponents)
         return this.createComponentList(partialComponentList)
     }
 
@@ -174,7 +180,7 @@ export class SdDtfComponentFactoryWrapper implements SdDtfComponentFactoryWrappe
      * This method maps the object representation into a reference ID representation.
      * @private
      */
-    mapHierarchyRepresentation (target: ISdDtfPartialComponentList, src: ISdDtfWriteableComponentList | ISdDtfReadableAsset): void {
+    mapHierarchyRepresentation (target: ISdDtfPartialComponentList, src: ISdDtfWriteableComponentList | ISdDtfReadableComponentList): void {
         // Helper to find the element position in an array
         const getIndex = (list: { componentId: string }[], componentId?: string) => {
             if (!componentId) return -1
@@ -190,7 +196,7 @@ export class SdDtfComponentFactoryWrapper implements SdDtfComponentFactoryWrappe
         target.attributes.forEach((attributes, index) => {
             if (!attributes.entries) return
             Object.entries(attributes.entries).forEach(([ name, attribute ]) => {
-                const srcComponent = src.attributes[index].entries[name]
+                const srcComponent: ISdDtfWriteableAttribute | ISdDtfReadableContentComponent = src.attributes[index].entries[name]
                 if (srcComponent.accessor) attribute.accessor = getIndex(src.accessors, srcComponent?.accessor?.componentId)
                 if (srcComponent.typeHint) attribute.typeHint = getIndex(src.typeHints, srcComponent?.typeHint?.componentId)
             })

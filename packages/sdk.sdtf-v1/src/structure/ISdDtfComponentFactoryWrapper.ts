@@ -1,4 +1,4 @@
-import { ISdDtfReadableAsset } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfReadableComponentList } from "../reader/ISdDtfReadableComponentList"
 import { ISdDtfWriteableComponentList } from "../writer/ISdDtfWriteableComponentList"
 import { ISdDtfComponentList } from "./ISdDtfComponentList"
 
@@ -9,7 +9,7 @@ export interface ISdDtfComponentFactoryWrapper {
     createFromJson (json: Record<string, unknown>): ISdDtfComponentList
 
     /** Create sdTF components from a readable asset representation. */
-    createFromReadable (readableAsset: ISdDtfReadableAsset): ISdDtfComponentList
+    createFromReadable (readableComponents: ISdDtfReadableComponentList): ISdDtfComponentList
 
     /** Create sdTF components from a writable asset representation. */
     createFromWriteable (writeableComponents: ISdDtfWriteableComponentList): ISdDtfComponentList
