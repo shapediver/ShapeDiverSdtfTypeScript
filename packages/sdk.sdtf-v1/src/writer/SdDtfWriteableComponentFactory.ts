@@ -1,4 +1,5 @@
 import {
+    isDataObject,
     ISdDtfWriteableAccessor,
     ISdDtfWriteableAsset,
     ISdDtfWriteableAttribute,
@@ -29,9 +30,9 @@ export class SdDtfWriteableComponentFactory implements ISdDtfWriteableComponentF
     readonly ASSET_VERSION = "1.0"
     readonly ASSET_GENERATOR = "ShapeDiverSdtfWriter"
 
-    createAccessor (bufferData?: ArrayBuffer): ISdDtfWriteableAccessor {
+    createAccessor (content?: { data: ArrayBuffer, contentType: string }): ISdDtfWriteableAccessor {
         const accessor = new SdDtfWriteableAccessor()
-        if (bufferData) accessor.bufferView = this.createBufferView(bufferData)
+        if (content) accessor.bufferView = this.createBufferView(content)
         return accessor
     }
 
@@ -42,14 +43,25 @@ export class SdDtfWriteableComponentFactory implements ISdDtfWriteableComponentF
         return new SdDtfWriteableAsset(fileInfo)
     }
 
-    createAttribute (value?: unknown, typeHint?: string): ISdDtfWriteableAttribute {
+    createAttribute (
+        content?: unknown | { data: ArrayBuffer, contentType: string },
+        typeHint?: string,
+    ): ISdDtfWriteableAttribute {
         const attribute = new SdDtfWriteableAttribute()
-        attribute.value = value
+
+        if (content) {
+            if (this.isBufferContent(content)) attribute.accessor = this.createAccessor(content)
+            else attribute.value = content
+        }
+
         if (typeHint !== undefined) attribute.typeHint = this.createTypeHint(typeHint)
+
         return attribute
     }
 
-    createAttributes (content?: Record<string, [ value: unknown, typeHint?: string ]>): ISdDtfWriteableAttributes {
+    createAttributes (
+        content?: Record<string, [ value: unknown | { data: ArrayBuffer, contentType: string }, typeHint?: string ]>,
+    ): ISdDtfWriteableAttributes {
         const attributes = new SdDtfWriteableAttributes()
         Object.entries(content ?? {}).forEach(([ name, attr ]) => attributes.entries[name] = this.createAttribute(...attr))
         return attributes
@@ -61,9 +73,12 @@ export class SdDtfWriteableComponentFactory implements ISdDtfWriteableComponentF
         return buffer
     }
 
-    createBufferView (bufferData?: ArrayBuffer): ISdDtfWriteableBufferView {
+    createBufferView (content?: { data: ArrayBuffer, contentType: string }): ISdDtfWriteableBufferView {
         const bufferView = new SdDtfWriteableBufferView()
-        if (bufferData) bufferView.buffer = this.createBuffer(bufferData)
+        if (content) {
+            bufferView.buffer = this.createBuffer(content.data)
+            bufferView.contentType = content.contentType
+        }
         return bufferView
     }
 
@@ -73,10 +88,19 @@ export class SdDtfWriteableComponentFactory implements ISdDtfWriteableComponentF
         return chunk
     }
 
-    createDataItem (value?: unknown, typeHint?: string): ISdDtfWriteableDataItem {
+    createDataItem (
+        content?: unknown | { data: ArrayBuffer, contentType: string },
+        typeHint?: string,
+    ): ISdDtfWriteableDataItem {
         const dataItem = new SdDtfWriteableDataItem()
-        dataItem.value = value
+
+        if (content) {
+            if (this.isBufferContent(content)) dataItem.accessor = this.createAccessor(content)
+            else dataItem.value = content
+        }
+
         if (typeHint !== undefined) dataItem.typeHint = this.createTypeHint(typeHint)
+
         return dataItem
     }
 
@@ -88,6 +112,14 @@ export class SdDtfWriteableComponentFactory implements ISdDtfWriteableComponentF
         const typeHint = new SdDtfWriteableTypeHint()
         typeHint.name = name
         return typeHint
+    }
+
+    /**
+     * Type guard for buffer content data.
+     * @private
+     */
+    isBufferContent (content: unknown): content is { data: ArrayBuffer, contentType: string } {
+        return !!(isDataObject(content) && content.data && content.contentType)
     }
 
 }

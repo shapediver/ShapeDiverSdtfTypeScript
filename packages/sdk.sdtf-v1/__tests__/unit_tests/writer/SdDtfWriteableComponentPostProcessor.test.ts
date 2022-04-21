@@ -133,9 +133,9 @@ describe("resolveBuffers", function () {
     test("internal buffers only; should merge buffers and set references", () => {
         const asset = factory.createAsset(),
             bufferViews = [
-                factory.createBufferView(new ArrayBuffer(12477)),
-                factory.createBufferView(new ArrayBuffer(2172131)),
-                factory.createBufferView(new ArrayBuffer(173507)),
+                factory.createBufferView({ data: new ArrayBuffer(12477), contentType: "a" }),
+                factory.createBufferView({ data: new ArrayBuffer(2172131), contentType: "b" }),
+                factory.createBufferView({ data: new ArrayBuffer(173507), contentType: "c" }),
             ]
 
         const componentList: ISdDtfWriteableComponentList = {
@@ -163,12 +163,15 @@ describe("resolveBuffers", function () {
         expect(componentList.bufferViews[0].byteOffset).toBe(0)
         expect(componentList.bufferViews[0].byteLength).toBe(12477)
         expect(componentList.bufferViews[0].buffer).toBe(buffer)
+        expect(componentList.bufferViews[0].contentType).toBe("a")
         expect(componentList.bufferViews[1].byteOffset).toBe(12480)
         expect(componentList.bufferViews[1].byteLength).toBe(2172131)
         expect(componentList.bufferViews[1].buffer).toBe(buffer)
+        expect(componentList.bufferViews[1].contentType).toBe("b")
         expect(componentList.bufferViews[2].byteOffset).toBe(2184612)
         expect(componentList.bufferViews[2].byteLength).toBe(173507)
         expect(componentList.bufferViews[2].buffer).toBe(buffer)
+        expect(componentList.bufferViews[2].contentType).toBe("c")
 
     })
 
@@ -186,8 +189,8 @@ describe("resolveBuffers", function () {
         externalBufferView3.buffer = factory.createBuffer(new ArrayBuffer(20))
         externalBufferView3.buffer.uri = "/foo/bar"
 
-        const internalBuffer1 = factory.createBufferView(new ArrayBuffer(30))
-        const internalBuffer2 = factory.createBufferView(new ArrayBuffer(40))
+        const internalBuffer1 = factory.createBufferView({ data: new ArrayBuffer(30), contentType: "a" })
+        const internalBuffer2 = factory.createBufferView({ data: new ArrayBuffer(40), contentType: "a" })
 
         const asset = factory.createAsset()
 
@@ -225,9 +228,9 @@ describe("resolveBuffers", function () {
     test("special cases; should merge all together into a single buffer", () => {
         const asset = factory.createAsset(),
             bufferViews = [
-                factory.createBufferView(new ArrayBuffer(0)),   // empty buffer data
-                factory.createBufferView(),                                // buffer view without a buffer - should be ignored!
-                factory.createBufferView(new ArrayBuffer(10)),  // regular internal buffer
+                factory.createBufferView({ data: new ArrayBuffer(0), contentType: "a" }),   // empty buffer data
+                factory.createBufferView(),                                                            // buffer view without a buffer - should be ignored!
+                factory.createBufferView({ data: new ArrayBuffer(10), contentType: "b" }),  // regular internal buffer
             ]
 
         const componentList: ISdDtfWriteableComponentList = {
@@ -265,8 +268,8 @@ describe("resolveBuffers", function () {
 
     test("buffers with additional properties; should merge additional properties and override duplicated ones", () => {
         const asset = factory.createAsset(),
-            bufferView1 = factory.createBufferView(new ArrayBuffer(1)),
-            bufferView2 = factory.createBufferView(new ArrayBuffer(1))
+            bufferView1 = factory.createBufferView({ data: new ArrayBuffer(1), contentType: "c" }),
+            bufferView2 = factory.createBufferView({ data: new ArrayBuffer(1), contentType: "b" })
 
         // Set additional properties in buffers
         bufferView1.buffer!.additionalProperties.foo = "foo"
