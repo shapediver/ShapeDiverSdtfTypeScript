@@ -1,1 +1,1 @@
-jest ./__tests__
+jest -i ./__tests__
