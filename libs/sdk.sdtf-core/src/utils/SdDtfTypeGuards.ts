@@ -41,6 +41,11 @@ export function isNumberArray (arg: unknown): arg is number[] {
     return Array.isArray(arg) && arg.every(a => isNumber(a))
 }
 
+/** Checks whether the given argument is an array of signed integers. */
+export function isIntArray (arg: unknown): arg is (number | string)[] {
+    return Array.isArray(arg) && arg.every(a => isInt(a))
+}
+
 /** Checks whether the given argument is an array of unsigned integers. */
 export function isUintArray (arg: unknown): arg is (number | string)[] {
     return Array.isArray(arg) && arg.every(a => isUint(a))

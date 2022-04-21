@@ -1,4 +1,6 @@
 import { ISdDtfWriteableAsset, ISdDtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfGrasshopperSdtfBuilder } from "./builder/ISdDtfGrasshopperSdtfBuilder"
+import { SdDtfGrasshopperSdtfBuilder } from "./builder/SdDtfGrasshopperSdtfBuilder"
 import { ISdDtfWriter, ISdDtfWriterAttributes, ISdDtfWriterDataItems } from "./ISdDtfWriter"
 
 export class SdDtfWriter implements ISdDtfWriter {
@@ -28,6 +30,10 @@ export class SdDtfWriter implements ISdDtfWriter {
         asset.chunks.push(chunk)
 
         return asset
+    }
+
+    createGrasshopperSdtfBuilder (): ISdDtfGrasshopperSdtfBuilder {
+        return new SdDtfGrasshopperSdtfBuilder(this.factory)
     }
 
 }

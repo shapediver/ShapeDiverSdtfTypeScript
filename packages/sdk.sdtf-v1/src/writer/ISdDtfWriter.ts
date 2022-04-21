@@ -1,4 +1,5 @@
 import { ISdDtfWriteableAsset, SdDtfTypeHintName } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfGrasshopperSdtfBuilder } from "./builder/ISdDtfGrasshopperSdtfBuilder"
 
 export interface ISdDtfWriterAttributes {
     name: string
@@ -26,5 +27,11 @@ export interface ISdDtfWriter {
      * The given data content is either stored directly in the sdTF JSON content or in the sdTF buffer.
      */
     createSimpleDataSdtf (chunkName: string, data: ISdDtfWriterDataItems[]): ISdDtfWriteableAsset
+
+    /**
+     * Returns a new builder instance to create a grasshopper sdTF asset.
+     * This sdTF asset includes chunks that are readable by the ShapeDiver Grasshopper input component.
+     */
+    createGrasshopperSdtfBuilder (): ISdDtfGrasshopperSdtfBuilder
 
 }
