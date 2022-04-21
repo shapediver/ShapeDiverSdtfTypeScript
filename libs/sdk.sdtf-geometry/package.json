@@ -1,0 +1,50 @@
+{
+  "name": "@shapediver/sdk.sdtf-geometry",
+  "version": "0.0.5",
+  "description": "Extension containing sdTF geometry types",
+  "keywords": [
+    "shapediver",
+    "sdk",
+    "sdTF"
+  ],
+  "author": "ShapeDiver",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "directories": {
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/shapediver"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shapediver/ShapeDiverSdtfTypeScript.git"
+  },
+  "scripts": {
+    "test": "bash ../../scripts/test.sh",
+    "check": "tsc --noEmit",
+    "build": "bash ../../scripts/build.sh",
+    "build-dep": "bash ../../scripts/build-dep.sh"
+  },
+  "bugs": {
+    "url": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/issues"
+  },
+  "homepage": "https://github.com/shapediver/ShapeDiverSdtfTypeScript#readme",
+  "typings": "dist/index.d.ts",
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  },
+  "dependencies": {
+    "@shapediver/sdk.sdtf-core": "^0.0.5"
+  },
+  "devDependencies": {
+    "@shapediver/sdk.sdtf-v1": "^0.0.5",
+    "jest": "^27.5.1",
+    "lerna": "3.22.1",
+    "typescript": "^4.6.2"
+  }
+}
