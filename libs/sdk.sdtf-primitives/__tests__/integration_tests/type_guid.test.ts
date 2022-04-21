@@ -15,7 +15,7 @@ describe("type guid", function () {
 
     test("create via writer; should contain value", () => {
         const constructor = sdk.createConstructor()
-        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [], [ {
+        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
             content: "77bdc9dd-55be-4c90-865d-144da1d6a3ab",
             typeHint: SdDtfPrimitiveTypeHintName.GUID,
         } ])

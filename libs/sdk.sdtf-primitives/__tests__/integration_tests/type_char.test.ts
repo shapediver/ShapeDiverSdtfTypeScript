@@ -15,7 +15,7 @@ describe("type char", function () {
 
     test("create via writer; should contain value", () => {
         const constructor = sdk.createConstructor()
-        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [], [ {
+        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
             content: "C",
             typeHint: SdDtfPrimitiveTypeHintName.CHAR,
         } ])

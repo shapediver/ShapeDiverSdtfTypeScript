@@ -8,18 +8,14 @@ const writer = new SdDtfPrimitiveTypeWriter(factory)
 
 describe("writeComponent", function () {
 
-    let origValidateComponent: any, origCopyDataToBuffer: any
+    let origValidateComponent: any
 
     beforeAll(() => {
         origValidateComponent = SdDtfPrimitiveTypeValidator.prototype.validateComponent
-
-        origCopyDataToBuffer = SdDtfPrimitiveTypeWriter.prototype.copyDataToBuffer
-        SdDtfPrimitiveTypeWriter.prototype.copyDataToBuffer = jest.fn((c) => c.accessor = factory.createAccessor())
     })
 
     afterAll(() => {
         SdDtfPrimitiveTypeValidator.prototype.validateComponent = origValidateComponent
-        SdDtfPrimitiveTypeWriter.prototype.copyDataToBuffer = origCopyDataToBuffer
     })
 
     test("invalid component; should throw", async () => {
@@ -84,41 +80,6 @@ describe("writeComponent", function () {
         writer.writeComponent(component)
         expect(component.value).toBeUndefined()
         expect(component.accessor).toBeDefined()
-    })
-
-    test.each([
-        SdDtfPrimitiveTypeHintName.DATA,
-        SdDtfPrimitiveTypeHintName.IMAGE,
-    ])("component of type %s without accessor; should move value content into accessor", (typeHintName) => {
-        // Mock
-        SdDtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => true)
-
-        let component: ISdDtfWriteableAttribute = {
-            typeHint: factory.createTypeHint(typeHintName),
-            value: "value",
-        }
-
-        writer.writeComponent(component)
-        expect(component.value).toBeUndefined()
-        expect(component.accessor).toBeDefined()    // is created by mock
-    })
-
-})
-
-describe("copyDataToBuffer", function () {
-
-    test("value not an array buffer; should throw", () => {
-        expect(() => writer.copyDataToBuffer({ value: "foobar" })).toThrow()
-    })
-
-    test("value is array buffer; should create accessor/bufferView/buffer to hold content", () => {
-        const component: ISdDtfWriteableAttribute = { value: new ArrayBuffer(123) }
-        writer.copyDataToBuffer(component)
-
-        expect(component.accessor).toBeDefined()
-        expect(component.accessor!.bufferView).toBeDefined()
-        expect(component.accessor!.bufferView!.buffer).toBeDefined()
-        expect(component.accessor!.bufferView!.buffer!.data).toStrictEqual(component.value)
     })
 
 })

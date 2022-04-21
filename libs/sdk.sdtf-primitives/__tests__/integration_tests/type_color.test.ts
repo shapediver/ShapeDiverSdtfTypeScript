@@ -22,7 +22,7 @@ describe("type color", function () {
 
     test("create via writer; should contain value", () => {
         const constructor = sdk.createConstructor()
-        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [], [ {
+        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
             content: [ 0.0, 0.74901960784313726, 1.0, 1.0 ],
             typeHint: SdDtfPrimitiveTypeHintName.COLOR,
         } ])

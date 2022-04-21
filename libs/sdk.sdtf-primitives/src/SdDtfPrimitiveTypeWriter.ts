@@ -39,7 +39,6 @@ export class SdDtfPrimitiveTypeWriter {
                 break
             case SdDtfPrimitiveTypeHintName.DATA:
             case SdDtfPrimitiveTypeHintName.IMAGE:
-                if (!component.accessor) this.copyDataToBuffer(component)
                 delete component.value      // Stored in sdTF buffer
                 break
             default:
@@ -50,22 +49,6 @@ export class SdDtfPrimitiveTypeWriter {
         if (!this.validator.validateComponent(typeHint, component.value, component.accessor)) {
             throw new SdDtfError(`Cannot write component of type '${ typeHint }': Invalid component.`)
         }
-    }
-
-    /**
-     * Convenient function to increase usability of writer that allows users to store buffer data in the `value`
-     * property instead of an accessor object.
-     * This function
-     * @private
-     */
-    copyDataToBuffer (component: ISdDtfWriteableAttribute | ISdDtfWriteableDataItem): void {
-        // We only support array buffer data for now
-        if (!(component.value instanceof ArrayBuffer)) {
-            throw new SdDtfError(`Cannot write component of type '${ component.typeHint?.name }': Content not an ArrayBuffer.`)
-        }
-
-        // Create accessor/bufferView/buffer chain that holds the content
-        component.accessor = this.factory.createAccessor(component.value)
     }
 
 }

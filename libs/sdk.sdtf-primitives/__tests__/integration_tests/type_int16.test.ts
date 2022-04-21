@@ -15,7 +15,7 @@ describe("type int16", function () {
 
     test("create via writer; should contain value", () => {
         const constructor = sdk.createConstructor()
-        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [], [ {
+        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
             content: -42,
             typeHint: SdDtfPrimitiveTypeHintName.INT16,
         } ])

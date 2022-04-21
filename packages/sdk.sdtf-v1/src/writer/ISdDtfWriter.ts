@@ -2,13 +2,15 @@ import { ISdDtfWriteableAsset, SdDtfTypeHintName } from "@shapediver/sdk.sdtf-co
 
 export interface ISdDtfWriterAttributes {
     name: string
-    content: unknown,
-    typeHint?: string,
+
+    content: unknown | { data: ArrayBuffer, contentType: string },
+
+    typeHint?: SdDtfTypeHintName | string,
 }
 
 export interface ISdDtfWriterDataItems {
 
-    content: unknown,
+    content: unknown | { data: ArrayBuffer, contentType: string },
 
     typeHint?: SdDtfTypeHintName | string,
 
@@ -20,11 +22,9 @@ export interface ISdDtfWriterDataItems {
 export interface ISdDtfWriter {
 
     /**
-     * TODO reformulate!
-     * Creates a simple linear sdTF that consists of a single sdTF chunk that holds all data.
-     * The data content is either stored directly in the sdTF JSON content or in the sdTF buffer, depending on the
-     * type Hint of the respective content item and the loaded integrations.
+     * Creates a simple linear sdTF that consists of a single chunk with one or more data nodes.
+     * The given data content is either stored directly in the sdTF JSON content or in the sdTF buffer.
      */
-    createSimpleDataSdtf (chunkName: string, chunkAttributes: ISdDtfWriterAttributes[], data: ISdDtfWriterDataItems[]): ISdDtfWriteableAsset
+    createSimpleDataSdtf (chunkName: string, data: ISdDtfWriterDataItems[]): ISdDtfWriteableAsset
 
 }

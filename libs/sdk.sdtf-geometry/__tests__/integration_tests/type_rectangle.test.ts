@@ -21,7 +21,7 @@ describe("type rectangle", function () {
 
     test("create via writer; should contain value", () => {
         const constructor = sdk.createConstructor()
-        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [], [ {
+        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
             content,
             typeHint: SdDtfGeometryTypeHintName.GEOMETRY_RECTANGLE,
         } ])

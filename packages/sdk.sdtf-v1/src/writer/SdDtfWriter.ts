@@ -8,7 +8,7 @@ export class SdDtfWriter implements ISdDtfWriter {
     ) {
     }
 
-    createSimpleDataSdtf (chunkName: string, chunkAttributes: ISdDtfWriterAttributes[], data: ISdDtfWriterDataItems[]): ISdDtfWriteableAsset {
+    createSimpleDataSdtf (chunkName: string, data: ISdDtfWriterDataItems[]): ISdDtfWriteableAsset {
         // Helper to convert the format of attributes data
         const mapAttributesData = (attr: ISdDtfWriterAttributes[]): Record<string, [ unknown, string | undefined ]> => {
             const res: Record<string, [ unknown, string | undefined ]> = {}
@@ -17,7 +17,6 @@ export class SdDtfWriter implements ISdDtfWriter {
         }
 
         const chunk = this.factory.createChunk(chunkName)
-        chunk.attributes = this.factory.createAttributes(mapAttributesData(chunkAttributes))
 
         data.forEach(d => {
             const dataItem = this.factory.createDataItem(d.content, d.typeHint)

@@ -15,7 +15,7 @@ describe("type double", function () {
 
     test("create via writer; should contain value", () => {
         const constructor = sdk.createConstructor()
-        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [], [ {
+        const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
             content: 3.1415926535897931,
             typeHint: SdDtfPrimitiveTypeHintName.DOUBLE,
         } ])
