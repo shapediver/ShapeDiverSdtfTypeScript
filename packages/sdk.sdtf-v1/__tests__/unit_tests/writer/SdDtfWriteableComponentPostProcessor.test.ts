@@ -22,6 +22,8 @@ describe("processDataComponents", () => {
             writeComponent () {
                 spyWriteComponent = true
             },
+            postProcessComponents () {
+            },
         },
         dummyIntegration: ISdDtfIntegration = {
             isTypeHintSupported () {
@@ -32,6 +34,8 @@ describe("processDataComponents", () => {
             },
             getWriter () {
                 return dummyWriter
+            },
+            async init () {
             },
         }
 
@@ -54,6 +58,54 @@ describe("processDataComponents", () => {
         isSupported = true
         new SdDtfWriteableComponentPostProcessor([ dummyIntegration ]).processDataComponents([ {} ])
         expect(spyWriteComponent).toBeTruthy()
+    })
+
+})
+
+describe("postProcessDataComponents", function () {
+
+    let isSupported: boolean, spyPostProcessComponents: boolean
+
+    const dummyWriter: ISdDtfTypeWriter = {
+            writeComponent () {
+            },
+            postProcessComponents () {
+                spyPostProcessComponents = true
+            },
+        },
+        dummyIntegration: ISdDtfIntegration = {
+            isTypeHintSupported () {
+                return isSupported
+            },
+            getReader: function (): ISdDtfTypeReader {
+                throw new Error("Should not be called in this test.")
+            },
+            getWriter () {
+                return dummyWriter
+            },
+            async init () {
+            },
+        }
+
+    beforeEach(() => {
+        spyPostProcessComponents = false
+    })
+
+    test("no integrations; should return", async () => {
+        postProcessor.postProcessDataComponents([ {} ])
+        expect(spyPostProcessComponents).toBeFalsy()
+    })
+
+    test("type hint is not supported; should return", async () => {
+        isSupported = false
+        new SdDtfWriteableComponentPostProcessor([ dummyIntegration ]).postProcessDataComponents([ {} ])
+        expect(spyPostProcessComponents).toBeFalsy()
+    })
+
+    test("type hint is supported; should call postProcessComponents", async () => {
+        isSupported = true
+        new SdDtfWriteableComponentPostProcessor([ dummyIntegration ]).postProcessDataComponents([ {} ])
+        expect(spyPostProcessComponents).toBeTruthy()
     })
 
 })

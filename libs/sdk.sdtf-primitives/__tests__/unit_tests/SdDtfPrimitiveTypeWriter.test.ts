@@ -1,5 +1,5 @@
 import { ISdDtfWriteableAttribute, SdDtfPrimitiveTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { SdDtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-v1/dist/writer/SdDtfWriteableComponentFactory"
+import { SdDtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-v1/src/writer/SdDtfWriteableComponentFactory"
 import { SdDtfPrimitiveTypeValidator } from "../../src/SdDtfPrimitiveTypeValidator"
 import { SdDtfPrimitiveTypeWriter } from "../../src/SdDtfPrimitiveTypeWriter"
 
@@ -18,18 +18,18 @@ describe("writeComponent", function () {
         SdDtfPrimitiveTypeValidator.prototype.validateComponent = origValidateComponent
     })
 
-    test("invalid component; should throw", async () => {
+    test("invalid component; should throw", () => {
         // Mock
         SdDtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => false)
 
-        expect(async () => writer.writeComponent({})).rejects.toThrow()
+        expect(() => writer.writeComponent({})).toThrow()
     })
 
-    test("unsupported type hint name; should throw", async () => {
+    test("unsupported type hint name; should throw", () => {
         // Mock
         SdDtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => true)
 
-        expect(async () => writer.writeComponent({})).rejects.toThrow()
+        expect(() => writer.writeComponent({})).toThrow()
     })
 
     test.each([

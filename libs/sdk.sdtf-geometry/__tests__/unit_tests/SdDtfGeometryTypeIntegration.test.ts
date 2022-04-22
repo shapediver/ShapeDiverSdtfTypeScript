@@ -5,28 +5,30 @@ const integration = new SdDtfGeometryTypeIntegration()
 
 describe("isTypeHintSupported", function () {
 
-    test("supported types; should return true", () => {
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_ARC)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_BOUNDING_BOX)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_BOX)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_CIRCLE)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_COMPLEX)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_CONE)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_CYLINDER)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_ELLIPSE)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_INTERVAL)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_INTERVAL2)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_LINE)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_MATRIX)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_PLANE)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_POINT)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_POLYLINE)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_RAY)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_RECTANGLE)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_SPHERE)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_TORUS)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_TRANSFORM)).toBeTruthy()
-        expect(integration.isTypeHintSupported(SdDtfGeometryTypeHintName.GEOMETRY_VECTOR)).toBeTruthy()
+    test.each([
+        SdDtfGeometryTypeHintName.GEOMETRY_ARC,
+        SdDtfGeometryTypeHintName.GEOMETRY_BOUNDING_BOX,
+        SdDtfGeometryTypeHintName.GEOMETRY_BOX,
+        SdDtfGeometryTypeHintName.GEOMETRY_CIRCLE,
+        SdDtfGeometryTypeHintName.GEOMETRY_COMPLEX,
+        SdDtfGeometryTypeHintName.GEOMETRY_CONE,
+        SdDtfGeometryTypeHintName.GEOMETRY_CYLINDER,
+        SdDtfGeometryTypeHintName.GEOMETRY_ELLIPSE,
+        SdDtfGeometryTypeHintName.GEOMETRY_INTERVAL,
+        SdDtfGeometryTypeHintName.GEOMETRY_INTERVAL2,
+        SdDtfGeometryTypeHintName.GEOMETRY_LINE,
+        SdDtfGeometryTypeHintName.GEOMETRY_MATRIX,
+        SdDtfGeometryTypeHintName.GEOMETRY_PLANE,
+        SdDtfGeometryTypeHintName.GEOMETRY_POINT,
+        SdDtfGeometryTypeHintName.GEOMETRY_POLYLINE,
+        SdDtfGeometryTypeHintName.GEOMETRY_RAY,
+        SdDtfGeometryTypeHintName.GEOMETRY_RECTANGLE,
+        SdDtfGeometryTypeHintName.GEOMETRY_SPHERE,
+        SdDtfGeometryTypeHintName.GEOMETRY_TORUS,
+        SdDtfGeometryTypeHintName.GEOMETRY_TRANSFORM,
+        SdDtfGeometryTypeHintName.GEOMETRY_VECTOR,
+    ])("supported type %s; should return true", (type) => {
+        expect(integration.isTypeHintSupported(type)).toBeTruthy()
     })
 
     test("unsupported type; should return false", () => {

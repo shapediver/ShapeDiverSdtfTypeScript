@@ -49,7 +49,6 @@ export enum SdDtfGrasshopperTypeHintName {
 
 export enum SdDtfRhinoTypeHintName {
     RHINO_ARC_CURVE = "rhino.arccurve",
-    RHINO_BEZIER_CURVE = "rhino.beziercurve",
     RHINO_BREP = "rhino.brep",
     RHINO_CURVE = "rhino.curve",
     RHINO_EXTRUSION = "rhino.extrusion",
@@ -61,6 +60,9 @@ export enum SdDtfRhinoTypeHintName {
     RHINO_POINT = "rhino.point",
     RHINO_POLY_CURVE = "rhino.polycurve",
     RHINO_POLYLINE_CURVE = "rhino.polylinecurve",
+    RHINO_REV_SURFACE = "rhino.revsurface",
+    RHINO_SUBD = "rhino.subd",
+    RHINO_SURFACE = "rhino.surface",
 }
 
 /** Holds all supported type hints. */

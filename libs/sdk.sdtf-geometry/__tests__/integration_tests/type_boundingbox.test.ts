@@ -1,15 +1,18 @@
 import { ISdDtfReadableContentComponent, SdDtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { create } from "@shapediver/sdk.sdtf-v1"
+import { create, SdDtfSdk } from "@shapediver/sdk.sdtf-v1"
 import { SdDtfGeometryBoundingBoxType, SdDtfGeometryTypeGuard, SdDtfGeometryTypeIntegration } from "../../src"
-
-const sdk = create({ integrations: [ new SdDtfGeometryTypeIntegration() ] })
 
 describe("type bounding box", function () {
 
+    let sdk: SdDtfSdk
     const content: SdDtfGeometryBoundingBoxType = {
         min: [ -1.0, -2.0, -3.0 ],
         max: [ 4.0, 5.0, 6.0 ],
     }
+
+    beforeAll(async () => {
+        sdk = await create({ integrations: [ new SdDtfGeometryTypeIntegration() ] })
+    })
 
     test("read and get content; should not throw", async () => {
         const asset = await sdk.createParser().readFromFile("./test_data/geometry_boundingbox.sdtf")

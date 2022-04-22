@@ -1,5 +1,5 @@
 import { ISdDtfWriteableAttribute, SdDtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { SdDtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-v1/dist/writer/SdDtfWriteableComponentFactory"
+import { SdDtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-v1/src/writer/SdDtfWriteableComponentFactory"
 import { SdDtfGeometryTypeValidator } from "../../src/SdDtfGeometryTypeValidator"
 import { SdDtfGeometryTypeWriter } from "../../src/SdDtfGeometryTypeWriter"
 
@@ -18,18 +18,18 @@ describe("writeComponent", function () {
         SdDtfGeometryTypeValidator.prototype.validateComponent = origValidateComponent
     })
 
-    test("invalid component; should throw", async () => {
+    test("invalid component; should throw", () => {
         // Mock
         SdDtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => false)
 
-        expect(async () => writer.writeComponent({})).rejects.toThrow()
+        expect(() => writer.writeComponent({})).toThrow()
     })
 
-    test("unsupported type hint name; should throw", async () => {
+    test("unsupported type hint name; should throw", () => {
         // Mock
         SdDtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => true)
 
-        expect(async () => writer.writeComponent({})).rejects.toThrow()
+        expect(() => writer.writeComponent({})).toThrow()
     })
 
     test.each([

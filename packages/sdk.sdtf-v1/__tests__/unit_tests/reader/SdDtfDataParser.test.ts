@@ -33,6 +33,8 @@ describe("parseValue", function () {
             getWriter: function (): ISdDtfTypeWriter {
                 throw new Error("Should not be called in this test.")
             },
+            async init () {
+            },
         }
 
     beforeAll(() => {

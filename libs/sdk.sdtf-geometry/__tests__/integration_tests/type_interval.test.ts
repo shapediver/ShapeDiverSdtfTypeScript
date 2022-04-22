@@ -1,12 +1,15 @@
 import { ISdDtfReadableContentComponent, SdDtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { create } from "@shapediver/sdk.sdtf-v1"
+import { create, SdDtfSdk } from "@shapediver/sdk.sdtf-v1"
 import { SdDtfGeometryIntervalType, SdDtfGeometryTypeGuard, SdDtfGeometryTypeIntegration } from "../../src"
-
-const sdk = create({ integrations: [ new SdDtfGeometryTypeIntegration() ] })
 
 describe("type interval", function () {
 
+    let sdk: SdDtfSdk
     const content: SdDtfGeometryIntervalType = [ 1.0, 2.0 ]
+
+    beforeAll(async () => {
+        sdk = await create({ integrations: [ new SdDtfGeometryTypeIntegration() ] })
+    })
 
     test("read and get content; should not throw", async () => {
         const asset = await sdk.createParser().readFromFile("./test_data/geometry_interval.sdtf")

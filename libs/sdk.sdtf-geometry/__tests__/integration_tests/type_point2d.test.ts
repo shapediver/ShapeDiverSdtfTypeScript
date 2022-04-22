@@ -1,12 +1,15 @@
 import { ISdDtfReadableContentComponent, SdDtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { create } from "@shapediver/sdk.sdtf-v1"
+import { create, SdDtfSdk } from "@shapediver/sdk.sdtf-v1"
 import { SdDtfGeometryPoint2d, SdDtfGeometryTypeGuard, SdDtfGeometryTypeIntegration } from "../../src"
-
-const sdk = create({ integrations: [ new SdDtfGeometryTypeIntegration() ] })
 
 describe("type point2d", function () {
 
+    let sdk: SdDtfSdk
     const content: SdDtfGeometryPoint2d = [ 1.0, 2.0 ]
+
+    beforeAll(async () => {
+        sdk = await create({ integrations: [ new SdDtfGeometryTypeIntegration() ] })
+    })
 
     test.each([
         "geometry_point2d.sdtf",

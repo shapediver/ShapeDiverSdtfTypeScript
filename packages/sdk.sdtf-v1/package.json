@@ -1,6 +1,6 @@
 {
   "name": "@shapediver/sdk.sdtf-v1",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Official sdTF SDK for TypeScript",
   "keywords": [
     "shapediver",
@@ -51,7 +51,7 @@
     ]
   },
   "dependencies": {
-    "@shapediver/sdk.sdtf-core": "^0.0.5",
+    "@shapediver/sdk.sdtf-core": "^0.0.6",
     "axios": "^0.26.1",
     "browser-or-node": "^2.0.0"
   },

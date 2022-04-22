@@ -28,6 +28,12 @@ export class SdDtfWriteableComponentPostProcessor implements ISdDtfWriteableComp
         this.processDataComponents(componentList.attributes.flatMap(a => Object.values(a.entries)))
         this.processDataComponents(componentList.items)
 
+        // Apply integration post-processor on data components
+        this.postProcessDataComponents([
+            ...componentList.attributes.flatMap(a => Object.values(a.entries)),
+            ...componentList.items,
+        ])
+
         // `processDataComponents` might create new components.
         // Thus, we generate the component list again to include those new components as well.
         componentList = writeableComponentListFromAsset(asset)
@@ -40,7 +46,8 @@ export class SdDtfWriteableComponentPostProcessor implements ISdDtfWriteableComp
     }
 
     /**
-     * Tries to find a suitable registered integration for each given component and runs the integration's writer.
+     * Tries to find a suitable registered integration for each given component and runs the integration's writer for
+     * each individual component.
      * @private
      */
     processDataComponents (components: (ISdDtfWriteableAttribute | ISdDtfWriteableDataItem)[]): void {
@@ -51,8 +58,26 @@ export class SdDtfWriteableComponentPostProcessor implements ISdDtfWriteableComp
             // Stop when no integration was found for this type hint
             if (!integration) return
 
-            // Post-process component
+            // Post-process single component
             integration.getWriter(this.factory).writeComponent(component)
+        })
+    }
+
+    /**
+     * Tries to find a suitable registered integration for all given components and runs the integration's
+     * post-processor for all supported component (grouped).
+     * @private
+     */
+    postProcessDataComponents (components: (ISdDtfWriteableAttribute | ISdDtfWriteableDataItem)[]): void {
+        this.integrations.forEach(integration => {
+            // Find all components that are supported by this integration
+            const supportedComponents = components.filter(component => integration.isTypeHintSupported(component.typeHint?.name ?? ""))
+
+            // Stop when no components were found for this integration
+            if (supportedComponents.length === 0)   return
+
+            // Post-process collective component
+            integration.getWriter(this.factory).postProcessComponents(supportedComponents)
         })
     }
 

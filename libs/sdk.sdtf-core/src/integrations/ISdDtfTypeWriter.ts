@@ -5,4 +5,6 @@ export interface ISdDtfTypeWriter {
 
     writeComponent (component: ISdDtfWriteableAttribute | ISdDtfWriteableDataItem): void
 
+    postProcessComponents (components: (ISdDtfWriteableAttribute | ISdDtfWriteableDataItem)[]): void
+
 }

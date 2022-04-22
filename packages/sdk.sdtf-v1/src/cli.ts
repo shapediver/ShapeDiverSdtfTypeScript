@@ -14,7 +14,7 @@ const command_jsonContent = {
 
 (async () => {
     try {
-        const sdk = create()
+        const sdk = await create()
 
         if (
             process.argv.length < 3 ||

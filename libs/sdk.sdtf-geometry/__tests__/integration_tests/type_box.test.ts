@@ -1,15 +1,18 @@
 import { ISdDtfReadableContentComponent, SdDtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { create } from "@shapediver/sdk.sdtf-v1"
+import { create, SdDtfSdk } from "@shapediver/sdk.sdtf-v1"
 import { SdDtfGeometryBoxType, SdDtfGeometryTypeGuard, SdDtfGeometryTypeIntegration } from "../../src"
-
-const sdk = create({ integrations: [ new SdDtfGeometryTypeIntegration() ] })
 
 describe("type box", function () {
 
+    let sdk: SdDtfSdk
     const content: SdDtfGeometryBoxType = {
         plane: [ [ 1, 2, 3 ], [ 4, 5, 6 ], [ 7, 8, 9 ] ],
         extents: [ [ 1, 2 ], [ 3, 4 ], [ 5, 6 ] ],
     }
+
+    beforeAll(async () => {
+        sdk = await create({ integrations: [ new SdDtfGeometryTypeIntegration() ] })
+    })
 
     test("read and get content; should not throw", async () => {
         const asset = await sdk.createParser().readFromFile("./test_data/geometry_box.sdtf")

@@ -15,6 +15,9 @@ export class SdDtfGeometryTypeIntegration implements ISdDtfIntegration {
         return enumValues(SdDtfGeometryTypeHintName).includes(typeHintName)
     }
 
+    async init (): Promise<void> {
+    }
+
     getReader (): ISdDtfTypeReader {
         return new SdDtfGeometryTypeReader()
     }

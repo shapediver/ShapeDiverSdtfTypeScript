@@ -1,6 +1,6 @@
 {
   "name": "@shapediver/sdk.sdtf-primitives",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Extension containing sdTF primitive types",
   "keywords": [
     "shapediver",
@@ -39,11 +39,11 @@
     "testEnvironment": "node"
   },
   "dependencies": {
-    "@shapediver/sdk.sdtf-core": "^0.0.5",
+    "@shapediver/sdk.sdtf-core": "^0.0.6",
     "decimal.js": "^10.3.1"
   },
   "devDependencies": {
-    "@shapediver/sdk.sdtf-v1": "^0.0.5",
+    "@shapediver/sdk.sdtf-v1": "^0.0.6",
     "jest": "^27.5.1",
     "lerna": "3.22.1",
     "typescript": "^4.6.2"

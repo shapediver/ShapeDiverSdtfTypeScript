@@ -15,6 +15,9 @@ export class SdDtfPrimitiveTypeIntegration implements ISdDtfIntegration {
         return enumValues(SdDtfPrimitiveTypeHintName).includes(typeHintName)
     }
 
+    async init (): Promise<void> {
+    }
+
     getReader (): ISdDtfTypeReader {
         return new SdDtfPrimitiveTypeReader()
     }

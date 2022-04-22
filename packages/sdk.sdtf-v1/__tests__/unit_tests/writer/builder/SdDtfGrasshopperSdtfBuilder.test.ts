@@ -1,9 +1,14 @@
+import { ISdDtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-core"
 import { create } from "../../../../src"
 import { SdDtfGrasshopperSdtfBuilder } from "../../../../src/writer/builder/SdDtfGrasshopperSdtfBuilder"
 
-const factory = create().createConstructor().getFactory()
-
 describe("addChunkForListData", function () {
+
+    let factory: ISdDtfWriteableComponentFactory
+
+    beforeAll(async () => {
+        factory = (await create()).createConstructor().getFactory()
+    })
 
     test("list given; should create a chunk with a single node that holds all data", () => {
         const list = [
@@ -31,6 +36,12 @@ describe("addChunkForListData", function () {
 })
 
 describe("addChunkForTreeData", function () {
+
+    let factory: ISdDtfWriteableComponentFactory
+
+    beforeAll(async () => {
+        factory = (await create()).createConstructor().getFactory()
+    })
 
     test("invalid tree - branches and paths are not equal; should throw", () => {
         const branches = [ [ factory.createDataItem("foo", "bar") ] ]

@@ -1,4 +1,4 @@
-import { ISdDtfIntegration, ISdDtfParser } from "@shapediver/sdk.sdtf-core"
+import { ISdDtfIntegration, ISdDtfParser, SdDtfError } from "@shapediver/sdk.sdtf-core"
 import { ISdDtfFormatter } from "./formatter/ISdDtfFormatter"
 import { SdDtfFormatter } from "./formatter/SdDtfFormatter"
 import { SdDtfParser } from "./reader/SdDtfParser"
@@ -12,8 +12,10 @@ export interface ISdDtfConfig {
 }
 
 /** Returns a new instance of the ShapeDiver sdTf SDK. */
-export function create (config?: ISdDtfConfig): SdDtfSdk {
-    return new SdDtfSdk(config)
+export async function create (config?: ISdDtfConfig): Promise<SdDtfSdk> {
+    const sdk = new SdDtfSdk(config)
+    await sdk.init()
+    return sdk
 }
 
 export class SdDtfSdk {
@@ -41,6 +43,20 @@ export class SdDtfSdk {
     /** Instantiates and returns a new formatter to convert sdTF components into prettified JSON data. */
     createFormatter (): ISdDtfFormatter {
         return new SdDtfFormatter(this.config.integrations ?? [])
+    }
+
+    /** Initializes all specified sdTF integrations. */
+    async init (): Promise<void> {
+        const promiseArray: Promise<void>[] = []
+        this.config.integrations?.forEach(integration => promiseArray.push(integration.init()))
+        const res = await Promise.allSettled(promiseArray)
+
+        res.forEach(promiseRes => {
+            if (promiseRes.status === "rejected") {
+                const e = promiseRes.reason
+                throw new SdDtfError(`Could not initialize all integrations: ${ e }`)
+            }
+        })
     }
 
 }

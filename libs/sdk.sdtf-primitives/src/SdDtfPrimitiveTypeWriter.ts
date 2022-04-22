@@ -1,4 +1,5 @@
 import {
+    ISdDtfTypeWriter,
     ISdDtfWriteableAttribute,
     ISdDtfWriteableComponentFactory,
     ISdDtfWriteableDataItem,
@@ -8,7 +9,7 @@ import {
 } from "@shapediver/sdk.sdtf-core"
 import { SdDtfPrimitiveTypeValidator } from "./SdDtfPrimitiveTypeValidator"
 
-export class SdDtfPrimitiveTypeWriter {
+export class SdDtfPrimitiveTypeWriter implements ISdDtfTypeWriter {
 
     private readonly validator = new SdDtfPrimitiveTypeValidator()
 
@@ -49,6 +50,10 @@ export class SdDtfPrimitiveTypeWriter {
         if (!this.validator.validateComponent(typeHint, component.value, component.accessor)) {
             throw new SdDtfError(`Cannot write component of type '${ typeHint }': Invalid component.`)
         }
+    }
+
+    postProcessComponents (components: (ISdDtfWriteableAttribute | ISdDtfWriteableDataItem)[]): void {
+        // Nothing to do here
     }
 
 }

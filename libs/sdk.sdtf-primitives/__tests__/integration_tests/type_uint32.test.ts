@@ -1,10 +1,14 @@
 import { ISdDtfReadableContentComponent, SdDtfPrimitiveTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { create } from "@shapediver/sdk.sdtf-v1"
+import { create, SdDtfSdk } from "@shapediver/sdk.sdtf-v1"
 import { SdDtfPrimitiveTypeGuard, SdDtfPrimitiveTypeIntegration } from "../../src"
 
-const sdk = create({ integrations: [ new SdDtfPrimitiveTypeIntegration() ] })
-
 describe("type uint32", function () {
+
+    let sdk: SdDtfSdk
+
+    beforeAll(async () => {
+        sdk = await create({ integrations: [ new SdDtfPrimitiveTypeIntegration() ] })
+    })
 
     test("read and get content; should not throw", async () => {
         const asset = await sdk.createParser().readFromFile("./test_data/uint32.sdtf")
