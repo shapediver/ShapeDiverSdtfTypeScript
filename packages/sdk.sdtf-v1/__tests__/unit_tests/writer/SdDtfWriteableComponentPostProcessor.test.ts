@@ -1,10 +1,17 @@
-import { ISdDtfIntegration, ISdDtfTypeReader, ISdDtfTypeWriter } from "@shapediver/sdk.sdtf-core"
+import {
+    ISdDtfIntegration,
+    ISdDtfTypeReader,
+    ISdDtfTypeWriter,
+    ISdDtfWriteableChunk,
+    ISdDtfWriteableDataItem,
+    ISdDtfWriteableNode,
+} from "@shapediver/sdk.sdtf-core"
 import { ISdDtfWriteableComponentFactory } from "../../../src"
 import { ISdDtfWriteableComponentList } from "../../../src/writer/ISdDtfWriteableComponentList"
 import { SdDtfWriteableComponentFactory } from "../../../src/writer/SdDtfWriteableComponentFactory"
 import { SdDtfWriteableComponentPostProcessor } from "../../../src/writer/SdDtfWriteableComponentPostProcessor"
 
-const optimizer = new SdDtfWriteableComponentPostProcessor([])
+const postProcessor = new SdDtfWriteableComponentPostProcessor([])
 const factory: ISdDtfWriteableComponentFactory = new SdDtfWriteableComponentFactory()
 
 describe("processDataComponents", () => {
@@ -33,7 +40,7 @@ describe("processDataComponents", () => {
     })
 
     test("no integrations; should return", async () => {
-        optimizer.processDataComponents([ {} ])
+        postProcessor.processDataComponents([ {} ])
         expect(spyWriteComponent).toBeFalsy()
     })
 
@@ -47,6 +54,94 @@ describe("processDataComponents", () => {
         isSupported = true
         new SdDtfWriteableComponentPostProcessor([ dummyIntegration ]).processDataComponents([ {} ])
         expect(spyWriteComponent).toBeTruthy()
+    })
+
+})
+
+describe("complementTypeHints", function () {
+
+    const createNodeOfType = (typeHint: string): ISdDtfWriteableNode => {
+        const node = factory.createNode()
+        node.typeHint = factory.createTypeHint(typeHint)
+        return node
+    }
+
+    test("node with no items; should return", () => {
+        const node = factory.createNode()
+        const componentList = createComponentListWithNodesAndItems([ node ], [])
+        postProcessor.complementTypeHints(componentList)
+        expect(node.typeHint).toBeUndefined()
+        expect(componentList.typeHints.length).toBe(0)
+    })
+
+    test("node with items of different types; should return", () => {
+        const node = factory.createNode()
+        node.items.push(factory.createDataItem("", "foo"))
+        node.items.push(factory.createDataItem("", "bar"))
+        const componentList = createComponentListWithNodesAndItems([ node ], [ ...node.items ])
+        postProcessor.complementTypeHints(componentList)
+        expect(node.typeHint).toBeUndefined()
+        expect(componentList.typeHints.length).toBe(0)
+    })
+
+    test("node with items of similar type; should add type hint to node", () => {
+        const node = factory.createNode()
+        node.items.push(factory.createDataItem("", "foobar"))
+        node.items.push(factory.createDataItem("", "foobar"))
+        const componentList = createComponentListWithNodesAndItems([ node ], [ ...node.items ])
+        postProcessor.complementTypeHints(componentList)
+        expect(node.typeHint?.name).toBe("foobar")
+        expect(componentList.typeHints.length).toBe(1)
+        expect(componentList.typeHints[0].name).toBe("foobar")
+    })
+
+    test("node with type hint and items of similar type; should return", () => {
+        const node = createNodeOfType("something else")
+        node.items.push(factory.createDataItem("", "foobar"))
+        node.items.push(factory.createDataItem("", "foobar"))
+        const componentList = createComponentListWithNodesAndItems([ node ], [ ...node.items ])
+        postProcessor.complementTypeHints(componentList)
+        expect(node.typeHint?.name).toBe("something else")
+        expect(componentList.typeHints.length).toBe(0)
+    })
+
+    test("chunk with no nodes; should return", () => {
+        const chunk = factory.createChunk()
+        const componentList = createComponentListWithChunksAndNodes([ chunk ], [])
+        postProcessor.complementTypeHints(componentList)
+        expect(chunk.typeHint).toBeUndefined()
+        expect(componentList.typeHints.length).toBe(0)
+    })
+
+    test("chunk with nodes of different types; should return", () => {
+        const chunk = factory.createChunk()
+        chunk.nodes.push(createNodeOfType("foo"))
+        chunk.nodes.push(createNodeOfType("bar"))
+        const componentList = createComponentListWithChunksAndNodes([ chunk ], [ ...chunk.nodes ])
+        postProcessor.complementTypeHints(componentList)
+        expect(chunk.typeHint).toBeUndefined()
+        expect(componentList.typeHints.length).toBe(0)
+    })
+
+    test("chunk with nodes of similar type; should add type hint to chunk", () => {
+        const chunk = factory.createChunk()
+        chunk.nodes.push(createNodeOfType("foobar"))
+        chunk.nodes.push(createNodeOfType("foobar"))
+        const componentList = createComponentListWithChunksAndNodes([ chunk ], [ ...chunk.nodes ])
+        postProcessor.complementTypeHints(componentList)
+        expect(chunk.typeHint?.name).toBe("foobar")
+        expect(componentList.typeHints.length).toBe(1)
+        expect(componentList.typeHints[0].name).toBe("foobar")
+    })
+
+    test("chunk with type hint and nodes of similar type; should return", () => {
+        const chunk = createNodeOfType("something else")
+        chunk.nodes.push(createNodeOfType("foobar"))
+        chunk.nodes.push(createNodeOfType("foobar"))
+        const componentList = createComponentListWithChunksAndNodes([ chunk ], [ ...chunk.nodes ])
+        postProcessor.complementTypeHints(componentList)
+        expect(chunk.typeHint?.name).toBe("something else")
+        expect(componentList.typeHints.length).toBe(0)
     })
 
 })
@@ -76,7 +171,7 @@ describe("removeDuplicatedTypeHints", function () {
             fileInfo: asset.fileInfo,
         }
 
-        optimizer.removeDuplicatedTypeHints(componentList)
+        postProcessor.removeDuplicatedTypeHints(componentList)
 
         expect(componentList.typeHints.length).toBe(1)
         const typeHintId = componentList.typeHints[0].componentId
@@ -115,7 +210,7 @@ describe("removeDuplicatedTypeHints", function () {
             fileInfo: asset.fileInfo,
         }
 
-        optimizer.removeDuplicatedTypeHints(componentList)
+        postProcessor.removeDuplicatedTypeHints(componentList)
 
         expect(componentList.typeHints.length).toBe(2)
         const typeHintIdA = componentList.typeHints[0].componentId,
@@ -151,7 +246,7 @@ describe("resolveBuffers", function () {
             fileInfo: asset.fileInfo,
         }
 
-        optimizer.resolveBuffers(componentList)
+        postProcessor.resolveBuffers(componentList)
 
         expect(componentList.buffers.length).toBe(1)
         const buffer = componentList.buffers[0]
@@ -207,7 +302,7 @@ describe("resolveBuffers", function () {
             fileInfo: asset.fileInfo,
         }
 
-        optimizer.resolveBuffers(componentList)
+        postProcessor.resolveBuffers(componentList)
 
         expect(componentList.buffers.length).toBe(3)
         const internalBuffer = componentList.buffers[0]
@@ -246,7 +341,7 @@ describe("resolveBuffers", function () {
             fileInfo: asset.fileInfo,
         }
 
-        optimizer.resolveBuffers(componentList)
+        postProcessor.resolveBuffers(componentList)
 
         expect(componentList.buffers.length).toBe(1)
         const buffer = componentList.buffers[0]
@@ -290,7 +385,7 @@ describe("resolveBuffers", function () {
             fileInfo: asset.fileInfo,
         }
 
-        optimizer.resolveBuffers(componentList)
+        postProcessor.resolveBuffers(componentList)
 
         expect(componentList.buffers.length).toBe(1)
         expect(Object.keys(componentList.buffers[0].additionalProperties).length).toBe(3)
@@ -300,3 +395,36 @@ describe("resolveBuffers", function () {
     })
 
 })
+
+/* Helper functions */
+function createComponentListWithNodesAndItems (nodes: ISdDtfWriteableNode[], items: ISdDtfWriteableDataItem[]): ISdDtfWriteableComponentList {
+    const asset = factory.createAsset()
+    return {
+        accessors: [],
+        asset,
+        attributes: [],
+        bufferViews: [],
+        buffers: [],
+        chunks: [],
+        fileInfo: asset.fileInfo,
+        items: items,
+        nodes: nodes,
+        typeHints: [],
+    }
+}
+
+function createComponentListWithChunksAndNodes (chunks: ISdDtfWriteableChunk[], nodes: ISdDtfWriteableNode[]): ISdDtfWriteableComponentList {
+    const asset = factory.createAsset()
+    return {
+        accessors: [],
+        asset,
+        attributes: [],
+        bufferViews: [],
+        buffers: [],
+        chunks: chunks,
+        fileInfo: asset.fileInfo,
+        items: [],
+        nodes: nodes,
+        typeHints: [],
+    }
+}

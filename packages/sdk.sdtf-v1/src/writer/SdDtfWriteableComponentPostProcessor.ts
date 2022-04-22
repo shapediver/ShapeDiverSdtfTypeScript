@@ -32,6 +32,7 @@ export class SdDtfWriteableComponentPostProcessor implements ISdDtfWriteableComp
         // Thus, we generate the component list again to include those new components as well.
         componentList = writeableComponentListFromAsset(asset)
 
+        this.complementTypeHints(componentList)
         this.removeDuplicatedTypeHints(componentList)
         this.resolveBuffers(componentList)
 
@@ -53,6 +54,40 @@ export class SdDtfWriteableComponentPostProcessor implements ISdDtfWriteableComp
             // Post-process component
             integration.getWriter(this.factory).writeComponent(component)
         })
+    }
+
+    /**
+     * Bottom-up approach to complement a missing type hint in node and chunk components.
+     * When all data items of a node are of a similar type hint, the respective type hint will be added to the node.
+     * When all nodes of a chunk are of a similar type hint, the respective type hint will be added to the chunk.
+     * @private
+     */
+    complementTypeHints (componentList: ISdDtfWriteableComponentList): void {
+        // Helper function to complement
+        const complement = (base: { typeHint?: ISdDtfWriteableTypeHint }, list: { typeHint?: ISdDtfWriteableTypeHint }[]): void => {
+            // Stop if the base has already a type hint with a name assigned
+            if (base.typeHint?.name !== undefined) return
+
+            // Stop if the list is empty
+            if (list.length === 0) return
+
+            let typeHintName = list[0].typeHint?.name
+
+            // Stop if the type hint is undefined
+            if (typeHintName === undefined) return
+
+            // Set type hint and update component list.
+            if (list.every(i => i.typeHint?.name === typeHintName)) {
+                base.typeHint = this.factory.createTypeHint(typeHintName)
+                componentList.typeHints.push(base.typeHint)
+            }
+        }
+
+        // Check every node whether their respective data items are of similar a type hint
+        componentList.nodes.forEach(node => complement(node, componentList.items))
+
+        // Check every chunk whether their respective nodes are of similar a type hint
+        componentList.chunks.forEach(chunk => complement(chunk, componentList.nodes))
     }
 
     /**
