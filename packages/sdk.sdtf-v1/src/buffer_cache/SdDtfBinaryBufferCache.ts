@@ -58,8 +58,11 @@ export class SdDtfBinaryBufferCache implements ISdDtfBufferCache {
         }
 
         if (item[this.cacheIdFullBuffer]) {
-            // Entire buffer object stored for this key - return range
-            return new DataView(item[this.cacheIdFullBuffer].buffer, offset, length)
+            // Entire buffer object stored for this key - return range.
+            const buffer = item[this.cacheIdFullBuffer]
+
+            // However, the internally stored buffer might already contain a byte offset - take this into account!
+            return new DataView(buffer.buffer, buffer.byteOffset + offset, length)
         }
     }
 
