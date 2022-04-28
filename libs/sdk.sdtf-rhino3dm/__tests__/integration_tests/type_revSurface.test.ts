@@ -1,18 +1,18 @@
-import { ISdDtfReadableContentComponent, SdDtfRhinoTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { create, SdDtfSdk } from "@shapediver/sdk.sdtf-v1"
-import { SdDtfRhino3dmTypeGuard, SdDtfRhino3dmTypeIntegration } from "../../src"
-import { SdDtfRhino3dmSingleton } from "../../src/SdDtfRhino3dmSingleton"
+import { ISdtfReadableContentComponent, SdtfRhinoTypeHintName } from "@shapediver/sdk.sdtf-core"
+import { create, SdtfSdk } from "@shapediver/sdk.sdtf-v1"
+import { SdtfRhino3dmTypeGuard, SdtfRhino3dmTypeIntegration } from "../../src"
+import { SdtfRhino3dmSingleton } from "../../src/SdtfRhino3dmSingleton"
 
 describe("type rev-surface", function () {
 
-    let sdk: SdDtfSdk
+    let sdk: SdtfSdk
 
     beforeAll(async () => {
-        sdk = await create({ integrations: [ new SdDtfRhino3dmTypeIntegration() ] })
+        sdk = await create({ integrations: [ new SdtfRhino3dmTypeIntegration() ] })
     })
 
     test("create sdTF, read and extract content; should return valid rhino component instance", async () => {
-        const rhino = SdDtfRhino3dmSingleton.getInstance()
+        const rhino = SdtfRhino3dmSingleton.getInstance()
         const constructor = sdk.createConstructor()
 
         const content = rhino.RevSurface.create(
@@ -25,16 +25,16 @@ describe("type rev-surface", function () {
 
         const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
             content,
-            typeHint: SdDtfRhinoTypeHintName.RHINO_REV_SURFACE,
+            typeHint: SdtfRhinoTypeHintName.RHINO_REV_SURFACE,
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)
-        expect((<ISdDtfReadableContentComponent>readableAsset.items[0]).value).toBeUndefined()
-        expect((<ISdDtfReadableContentComponent>readableAsset.items[0]).accessor).toBeDefined()
+        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).value).toBeUndefined()
+        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).accessor).toBeDefined()
 
         const contentInstance = await readableAsset.items[0].getContent()
-        SdDtfRhino3dmTypeGuard.assertSurface(contentInstance)
-        SdDtfRhino3dmTypeGuard.assertRevSurface(contentInstance)
+        SdtfRhino3dmTypeGuard.assertSurface(contentInstance)
+        SdtfRhino3dmTypeGuard.assertRevSurface(contentInstance)
     })
 
 })

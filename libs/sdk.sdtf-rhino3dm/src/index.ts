@@ -1,2 +1,2 @@
-export { SdDtfRhino3dmTypeGuard } from "./SdDtfRhino3dmTypeGuard"
-export { ISdDtfRhino3dmTypeConfig, SdDtfRhino3dmTypeIntegration } from "./SdDtfRhino3dmTypeIntegration"
+export { SdtfRhino3dmTypeGuard } from "./SdtfRhino3dmTypeGuard"
+export { ISdtfRhino3dmTypeConfig, SdtfRhino3dmTypeIntegration } from "./SdtfRhino3dmTypeIntegration"

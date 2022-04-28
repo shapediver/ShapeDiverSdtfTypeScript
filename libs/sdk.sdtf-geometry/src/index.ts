@@ -1,3 +1,3 @@
-export * from "./ISdDtfGeometryTypes"
-export * from "./SdDtfGeometryTypeGuard"
-export * from "./SdDtfGeometryTypeIntegration"
+export * from "./ISdtfGeometryTypes"
+export * from "./SdtfGeometryTypeGuard"
+export * from "./SdtfGeometryTypeIntegration"

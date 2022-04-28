@@ -1,5 +1,5 @@
 import * as process from "process"
-import { create } from "./SdDtfSdk"
+import { create } from "./SdtfSdk"
 
 const general = {
     help: [ "-h", "--help" ],

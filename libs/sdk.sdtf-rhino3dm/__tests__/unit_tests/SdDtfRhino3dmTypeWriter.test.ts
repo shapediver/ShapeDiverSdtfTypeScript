@@ -1,28 +1,24 @@
-import {
-    ISdDtfWriteableAttribute,
-    SdDtfGrasshopperTypeHintName,
-    SdDtfRhinoTypeHintName,
-} from "@shapediver/sdk.sdtf-core"
-import { SdDtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-v1/src/writer/SdDtfWriteableComponentFactory"
+import { ISdtfWriteableAttribute, SdtfGrasshopperTypeHintName, SdtfRhinoTypeHintName } from "@shapediver/sdk.sdtf-core"
+import { SdtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-v1/src/writer/SdtfWriteableComponentFactory"
 import { RhinoModule } from "rhino3dm"
-import { SdDtfRhino3dmSingleton } from "../../src/SdDtfRhino3dmSingleton"
-import { SdDtfRhino3dmTypeConfig } from "../../src/SdDtfRhino3dmTypeConfig"
-import { SdDtfRhino3dmTypeValidator } from "../../src/SdDtfRhino3dmTypeValidator"
-import { SdDtfRhino3dmTypeWriter } from "../../src/SdDtfRhino3dmTypeWriter"
+import { SdtfRhino3dmSingleton } from "../../src/SdtfRhino3dmSingleton"
+import { SdtfRhino3dmTypeConfig } from "../../src/SdtfRhino3dmTypeConfig"
+import { SdtfRhino3dmTypeValidator } from "../../src/SdtfRhino3dmTypeValidator"
+import { SdtfRhino3dmTypeWriter } from "../../src/SdtfRhino3dmTypeWriter"
 
-const factory = new SdDtfWriteableComponentFactory()
-const writer = new SdDtfRhino3dmTypeWriter(new SdDtfRhino3dmTypeConfig(), factory)
+const factory = new SdtfWriteableComponentFactory()
+const writer = new SdtfRhino3dmTypeWriter(new SdtfRhino3dmTypeConfig(), factory)
 
 describe("writeComponent", function () {
 
     let origValidateExternalRepresentationOfComponent: any
 
     beforeAll(() => {
-        origValidateExternalRepresentationOfComponent = SdDtfRhino3dmTypeValidator.prototype.validateExternalRepresentationOfComponent
+        origValidateExternalRepresentationOfComponent = SdtfRhino3dmTypeValidator.prototype.validateExternalRepresentationOfComponent
     })
 
     afterAll(() => {
-        SdDtfRhino3dmTypeValidator.prototype.validateExternalRepresentationOfComponent = origValidateExternalRepresentationOfComponent
+        SdtfRhino3dmTypeValidator.prototype.validateExternalRepresentationOfComponent = origValidateExternalRepresentationOfComponent
     })
 
     test("unsupported type hint name; should throw", () => {
@@ -31,19 +27,19 @@ describe("writeComponent", function () {
 
     test("invalid grasshopper component; should throw", () => {
         // @ts-ignore: Mock
-        SdDtfRhino3dmTypeValidator.prototype.validateExternalRepresentationOfComponent = jest.fn(() => false)
+        SdtfRhino3dmTypeValidator.prototype.validateExternalRepresentationOfComponent = jest.fn(() => false)
 
-        const component = factory.createDataItem("value", SdDtfGrasshopperTypeHintName.GRASSHOPPER_PATH)
+        const component = factory.createDataItem("value", SdtfGrasshopperTypeHintName.GRASSHOPPER_PATH)
         expect(() => writer.writeComponent(component)).toThrow()
     })
 
     test("valid grasshopper component; should remove accessor component", () => {
         // Mock
-        SdDtfRhino3dmTypeValidator.prototype.validateExternalRepresentationOfComponent = jest.fn(() => true)
+        SdtfRhino3dmTypeValidator.prototype.validateExternalRepresentationOfComponent = jest.fn(() => true)
 
-        let component: ISdDtfWriteableAttribute = {
+        let component: ISdtfWriteableAttribute = {
             accessor: factory.createAccessor(),
-            typeHint: factory.createTypeHint(SdDtfGrasshopperTypeHintName.GRASSHOPPER_PATH),
+            typeHint: factory.createTypeHint(SdtfGrasshopperTypeHintName.GRASSHOPPER_PATH),
             value: "value",
         }
 
@@ -59,8 +55,8 @@ describe("postProcessComponents", function () {
     let rhino: RhinoModule
 
     beforeAll(async () => {
-        await SdDtfRhino3dmSingleton.init()
-        rhino = SdDtfRhino3dmSingleton.getInstance()
+        await SdtfRhino3dmSingleton.init()
+        rhino = SdtfRhino3dmSingleton.getInstance()
     })
 
     test("no rhino components; should return", () => {
@@ -73,21 +69,21 @@ describe("postProcessComponents", function () {
     })
 
     test.each([
-        [ SdDtfRhinoTypeHintName.RHINO_ARC_CURVE, () => new rhino.ArcCurve() ],
-        [ SdDtfRhinoTypeHintName.RHINO_BREP, () => new rhino.Brep() ],
-        [ SdDtfRhinoTypeHintName.RHINO_CURVE, () => new rhino.NurbsCurve(1, 2) ],
-        [ SdDtfRhinoTypeHintName.RHINO_EXTRUSION, () => new rhino.Extrusion() ],
-        [ SdDtfRhinoTypeHintName.RHINO_LINE_CURVE, () => new rhino.LineCurve([ 0, 0, 0 ], [ 1, 1, 1 ]) ],
-        [ SdDtfRhinoTypeHintName.RHINO_MESH, () => new rhino.Mesh() ],
-        [ SdDtfRhinoTypeHintName.RHINO_NURBS_CURVE, () => new rhino.NurbsCurve(1, 2) ],
-        [ SdDtfRhinoTypeHintName.RHINO_NURBS_SURFACE, () => rhino.NurbsSurface.create(0, false, 1, 2, 3, 4) ],
-        [ SdDtfRhinoTypeHintName.RHINO_PLANE_SURFACE, () => new rhino.PlaneSurface() ],
-        [ SdDtfRhinoTypeHintName.RHINO_POINT, () => new rhino.Point([ 1, 2, 3 ]) ],
-        [ SdDtfRhinoTypeHintName.RHINO_POLY_CURVE, () => new rhino.PolyCurve() ],
-        [ SdDtfRhinoTypeHintName.RHINO_POLYLINE_CURVE, () => new rhino.PolylineCurve() ],
-        [ SdDtfRhinoTypeHintName.RHINO_REV_SURFACE, () => new rhino.RevSurface() ],
-        [ SdDtfRhinoTypeHintName.RHINO_SUBD, () => new rhino.SubD() ],
-        [ SdDtfRhinoTypeHintName.RHINO_SURFACE, () => new rhino.PlaneSurface() ],
+        [ SdtfRhinoTypeHintName.RHINO_ARC_CURVE, () => new rhino.ArcCurve() ],
+        [ SdtfRhinoTypeHintName.RHINO_BREP, () => new rhino.Brep() ],
+        [ SdtfRhinoTypeHintName.RHINO_CURVE, () => new rhino.NurbsCurve(1, 2) ],
+        [ SdtfRhinoTypeHintName.RHINO_EXTRUSION, () => new rhino.Extrusion() ],
+        [ SdtfRhinoTypeHintName.RHINO_LINE_CURVE, () => new rhino.LineCurve([ 0, 0, 0 ], [ 1, 1, 1 ]) ],
+        [ SdtfRhinoTypeHintName.RHINO_MESH, () => new rhino.Mesh() ],
+        [ SdtfRhinoTypeHintName.RHINO_NURBS_CURVE, () => new rhino.NurbsCurve(1, 2) ],
+        [ SdtfRhinoTypeHintName.RHINO_NURBS_SURFACE, () => rhino.NurbsSurface.create(0, false, 1, 2, 3, 4) ],
+        [ SdtfRhinoTypeHintName.RHINO_PLANE_SURFACE, () => new rhino.PlaneSurface() ],
+        [ SdtfRhinoTypeHintName.RHINO_POINT, () => new rhino.Point([ 1, 2, 3 ]) ],
+        [ SdtfRhinoTypeHintName.RHINO_POLY_CURVE, () => new rhino.PolyCurve() ],
+        [ SdtfRhinoTypeHintName.RHINO_POLYLINE_CURVE, () => new rhino.PolylineCurve() ],
+        [ SdtfRhinoTypeHintName.RHINO_REV_SURFACE, () => new rhino.RevSurface() ],
+        [ SdtfRhinoTypeHintName.RHINO_SUBD, () => new rhino.SubD() ],
+        [ SdtfRhinoTypeHintName.RHINO_SURFACE, () => new rhino.PlaneSurface() ],
     ])("single component of type %s; should store rhino component in single buffer", (type, createComponent) => {
         const components = [ factory.createDataItem(createComponent(), type) ]
         writer.postProcessComponents(components)
@@ -107,8 +103,8 @@ describe("postProcessComponents", function () {
     test("mixed components; should store rhino components in single buffer and link them", () => {
         const components = [
             factory.createDataItem("value", "string"),
-            factory.createDataItem(new rhino.Mesh(), SdDtfRhinoTypeHintName.RHINO_MESH),
-            factory.createDataItem(new rhino.Point([ 5, 6, 7 ]), SdDtfRhinoTypeHintName.RHINO_POINT),
+            factory.createDataItem(new rhino.Mesh(), SdtfRhinoTypeHintName.RHINO_MESH),
+            factory.createDataItem(new rhino.Point([ 5, 6, 7 ]), SdtfRhinoTypeHintName.RHINO_POINT),
         ]
 
         writer.postProcessComponents(components)
@@ -120,12 +116,12 @@ describe("postProcessComponents", function () {
         expect(components[1].accessor!.componentId).toBeDefined()
         expect(components[1].accessor!.bufferView).toBeDefined()
         expect(components[1].value).toBeUndefined()
-        expect(components[1].typeHint?.name).toBe(SdDtfRhinoTypeHintName.RHINO_MESH)
+        expect(components[1].typeHint?.name).toBe(SdtfRhinoTypeHintName.RHINO_MESH)
         expect(components[2].accessor).toBeDefined()
         expect(components[2].accessor!.componentId).toBeDefined()
         expect(components[2].accessor!.bufferView).toBeDefined()
         expect(components[2].value).toBeUndefined()
-        expect(components[2].typeHint?.name).toBe(SdDtfRhinoTypeHintName.RHINO_POINT)
+        expect(components[2].typeHint?.name).toBe(SdtfRhinoTypeHintName.RHINO_POINT)
 
         // Both rhino components should share the same buffer view but not the same accessor
         expect(components[1].accessor !== components[2].accessor).toBeTruthy()

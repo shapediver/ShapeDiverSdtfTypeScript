@@ -1,14 +1,14 @@
-import { ISdDtfReadableContentComponent, SdDtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { create, SdDtfSdk } from "@shapediver/sdk.sdtf-v1"
-import { SdDtfGeometryTypeGuard, SdDtfGeometryTypeIntegration, SdDtfGeometryVector2d } from "../../src"
+import { ISdtfReadableContentComponent, SdtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
+import { create, SdtfSdk } from "@shapediver/sdk.sdtf-v1"
+import { SdtfGeometryTypeGuard, SdtfGeometryTypeIntegration, SdtfGeometryVector2d } from "../../src"
 
 describe("type vector2d", function () {
 
-    let sdk: SdDtfSdk
-    const content: SdDtfGeometryVector2d = [ 1.0, 2.0 ]
+    let sdk: SdtfSdk
+    const content: SdtfGeometryVector2d = [ 1.0, 2.0 ]
 
     beforeAll(async () => {
-        sdk = await create({ integrations: [ new SdDtfGeometryTypeIntegration() ] })
+        sdk = await create({ integrations: [ new SdtfGeometryTypeIntegration() ] })
     })
 
     test.each([
@@ -18,20 +18,20 @@ describe("type vector2d", function () {
         const asset = await sdk.createParser().readFromFile("./test_data/" + file)
         const content = await asset.items[0].getContent()
         expect(content).toStrictEqual(content)
-        SdDtfGeometryTypeGuard.assertVector(content)
-        SdDtfGeometryTypeGuard.assertVector2d(content)
+        SdtfGeometryTypeGuard.assertVector(content)
+        SdtfGeometryTypeGuard.assertVector2d(content)
     })
 
     test("create via writer; should contain value", () => {
         const constructor = sdk.createConstructor()
         const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
             content,
-            typeHint: SdDtfGeometryTypeHintName.GEOMETRY_VECTOR,
+            typeHint: SdtfGeometryTypeHintName.GEOMETRY_VECTOR,
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)
-        expect((<ISdDtfReadableContentComponent>readableAsset.items[0]).value).toStrictEqual(content)
-        expect((<ISdDtfReadableContentComponent>readableAsset.items[0]).accessor).toBeUndefined()
+        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).value).toStrictEqual(content)
+        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).accessor).toBeUndefined()
     })
 
 })

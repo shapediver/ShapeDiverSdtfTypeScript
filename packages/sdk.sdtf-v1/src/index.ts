@@ -1,8 +1,8 @@
 export * from "@shapediver/sdk.sdtf-core"
 
-export { create, ISdDtfConfig, SdDtfSdk } from "./SdDtfSdk"
-export { ISdDtfFormatter } from "./formatter/ISdDtfFormatter"
+export { create, ISdtfConfig, SdtfSdk } from "./SdtfSdk"
+export { ISdtfFormatter } from "./formatter/ISdtfFormatter"
 
-export { ISdDtfConstructor } from "./writer/ISdDtfConstructor"
-export { ISdDtfWriter, ISdDtfWriterAttributes, ISdDtfWriterDataItems } from "./writer/ISdDtfWriter"
-export * from "./writer/builder/ISdDtfGrasshopperSdtfBuilder"
+export { ISdtfConstructor } from "./writer/ISdtfConstructor"
+export { ISdtfWriter, ISdtfWriterAttributes, ISdtfWriterDataItems } from "./writer/ISdtfWriter"
+export * from "./writer/builder/ISdtfGrasshopperSdtfBuilder"

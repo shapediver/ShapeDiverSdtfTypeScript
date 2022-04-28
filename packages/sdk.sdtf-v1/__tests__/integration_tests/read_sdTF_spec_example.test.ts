@@ -1,7 +1,7 @@
-import { ISdDtfBufferValue } from "@shapediver/sdk.sdtf-core"
+import { ISdtfBufferValue } from "@shapediver/sdk.sdtf-core"
 import { create } from "../../src"
-import { readableComponentListFromAsset } from "../../src/reader/ISdDtfReadableComponentList"
-import { SdDtfComponentFactoryWrapper } from "../../src/structure/SdDtfComponentFactoryWrapper"
+import { readableComponentListFromAsset } from "../../src/reader/ISdtfReadableComponentList"
+import { SdtfComponentFactoryWrapper } from "../../src/structure/SdtfComponentFactoryWrapper"
 
 describe("read_sdTF_spec_example", () => {
 
@@ -10,7 +10,7 @@ describe("read_sdTF_spec_example", () => {
         expect(asset).toBeDefined()
 
         const readableList = readableComponentListFromAsset(asset)
-        const componentList = new SdDtfComponentFactoryWrapper().createFromReadable(readableList)
+        const componentList = new SdtfComponentFactoryWrapper().createFromReadable(readableList)
 
         expect(componentList.asset.fileInfo).toBe(0)
         expect(componentList.asset.additionalProperties).toStrictEqual({})
@@ -222,13 +222,13 @@ describe("read_sdTF_spec_example", () => {
         expect(asset).toBeDefined()
 
         // Data item content
-        let itemBufferData0 = (await asset.items[0].getContent()) as ISdDtfBufferValue
+        let itemBufferData0 = (await asset.items[0].getContent()) as ISdtfBufferValue
         expect(itemBufferData0.id).toBe("d16103f1-f64f-4dd6-9d87-924520d554cd")
         expect(itemBufferData0.data.byteLength).toBe(11590)
-        let itemBufferData1 = (await asset.items[1].getContent()) as ISdDtfBufferValue
+        let itemBufferData1 = (await asset.items[1].getContent()) as ISdtfBufferValue
         expect(itemBufferData1.id).toBe("e2bb8f80-5df3-41a4-b6ad-ce5e71f2bd06")
         expect(itemBufferData1.data.byteLength).toBe(11590)
-        let itemBufferData2 = (await asset.items[2].getContent()) as ISdDtfBufferValue
+        let itemBufferData2 = (await asset.items[2].getContent()) as ISdtfBufferValue
         expect(itemBufferData2.id).toBeUndefined()
         expect(itemBufferData2.data.byteLength).toBe(2172131)
         expect(await asset.items[3].getContent()).toBe(0.0)
@@ -254,7 +254,7 @@ describe("read_sdTF_spec_example", () => {
         expect(await asset.attributes[0].entries["Name"].getContent()).toBe("Mesh sphere")
         expect(await asset.attributes[0].entries["Color"].getContent()).toBe("126, 156, 255")
         expect(await asset.attributes[0].entries["Layer"].getContent()).toBe("Some layer")
-        let attributeBufferData2 = (await asset.attributes[0].entries["Preview"].getContent()) as ISdDtfBufferValue
+        let attributeBufferData2 = (await asset.attributes[0].entries["Preview"].getContent()) as ISdtfBufferValue
         expect(attributeBufferData2.id).toBeUndefined()
         expect(attributeBufferData2.data.byteLength).toBe(173507)
         expect(await asset.attributes[1].entries["Id"].getContent()).toBe("57e60008-ee18-4864-8711-1cbc8adfc821")
