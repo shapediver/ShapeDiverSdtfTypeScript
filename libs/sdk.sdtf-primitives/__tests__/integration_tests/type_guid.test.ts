@@ -25,8 +25,10 @@ describe("type guid", function () {
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)
-        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).value).toBe("77bdc9dd-55be-4c90-865d-144da1d6a3ab")
-        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).accessor).toBeUndefined()
+        const item = readableAsset.items[0] as ISdtfReadableContentComponent
+        expect(SdtfPrimitiveTypeGuard.isStringType(item.typeHint?.name)).toBeTruthy()
+        expect(item.value).toBe("77bdc9dd-55be-4c90-865d-144da1d6a3ab")
+        expect(item.accessor).toBeUndefined()
     })
 
 })

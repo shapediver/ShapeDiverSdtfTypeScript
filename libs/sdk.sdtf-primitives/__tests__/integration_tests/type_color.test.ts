@@ -32,8 +32,10 @@ describe("type color", function () {
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)
-        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).value).toStrictEqual([ 0.0, 0.74901960784313726, 1.0, 1.0 ])
-        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).accessor).toBeUndefined()
+        const item = readableAsset.items[0] as ISdtfReadableContentComponent
+        expect(SdtfPrimitiveTypeGuard.isColorType(item.typeHint?.name)).toBeTruthy()
+        expect(item.value).toStrictEqual([ 0.0, 0.74901960784313726, 1.0, 1.0 ])
+        expect(item.accessor).toBeUndefined()
     })
 
 })

@@ -1,4 +1,4 @@
-import { isNumber, isNumberArray, SdtfError } from "@shapediver/sdk.sdtf-core"
+import { isNumber, isNumberArray, SdtfError, SdtfPrimitiveTypeHintName } from "@shapediver/sdk.sdtf-core"
 import { SdtfPrimitiveColorType } from "./ISdtfPrimitiveTypes"
 
 export class SdtfPrimitiveTypeGuard {
@@ -14,6 +14,11 @@ export class SdtfPrimitiveTypeGuard {
     /** Returns `true` when the given value is of type `SdtfPrimitiveTypeHintName.BOOLEAN`. */
     static isBoolean (value: unknown): value is boolean {
         return typeof value === "boolean"
+    }
+
+    /** Returns `true` when the given type hint name is of type `SdtfPrimitiveTypeHintName.BOOLEAN`. */
+    static isBooleanType (typeHint: string | undefined): typeHint is SdtfPrimitiveTypeHintName.BOOLEAN {
+        return typeHint === SdtfPrimitiveTypeHintName.BOOLEAN
     }
 
     /**
@@ -35,6 +40,20 @@ export class SdtfPrimitiveTypeGuard {
      */
     static isString (value: unknown): value is string {
         return typeof value === "string"
+    }
+
+    /**
+     * Returns `true` when the given type hint name is of type:
+     *   * `SdtfPrimitiveTypeHintName.CHAR`
+     *   * `SdtfPrimitiveTypeHintName.GUID`
+     *   * `SdtfPrimitiveTypeHintName.STRING`
+     */
+    static isStringType (typeHint: string | undefined): typeHint is SdtfPrimitiveTypeHintName.CHAR | SdtfPrimitiveTypeHintName.GUID | SdtfPrimitiveTypeHintName.STRING {
+        return [
+            SdtfPrimitiveTypeHintName.CHAR,
+            SdtfPrimitiveTypeHintName.GUID,
+            SdtfPrimitiveTypeHintName.STRING,
+        ].includes(typeHint as SdtfPrimitiveTypeHintName)
     }
 
     /**
@@ -75,6 +94,36 @@ export class SdtfPrimitiveTypeGuard {
     }
 
     /**
+     * Returns `true` when the given type hint name is of type:
+     *   * `SdtfPrimitiveTypeHintName.DECIMAL`
+     *   * `SdtfPrimitiveTypeHintName.DOUBLE`
+     *   * `SdtfPrimitiveTypeHintName.SINGLE`
+     *   * `SdtfPrimitiveTypeHintName.INT8`
+     *   * `SdtfPrimitiveTypeHintName.INT16`
+     *   * `SdtfPrimitiveTypeHintName.INT32`
+     *   * `SdtfPrimitiveTypeHintName.INT64`
+     *   * `SdtfPrimitiveTypeHintName.UINT8`
+     *   * `SdtfPrimitiveTypeHintName.UINT16`
+     *   * `SdtfPrimitiveTypeHintName.UINT32`
+     *   * `SdtfPrimitiveTypeHintName.UINT64`
+     */
+    static isNumberType (typeHint: string | undefined): typeHint is SdtfPrimitiveTypeHintName.DECIMAL | SdtfPrimitiveTypeHintName.DOUBLE | SdtfPrimitiveTypeHintName.SINGLE | SdtfPrimitiveTypeHintName.INT8 | SdtfPrimitiveTypeHintName.INT16 | SdtfPrimitiveTypeHintName.INT32 | SdtfPrimitiveTypeHintName.INT64 | SdtfPrimitiveTypeHintName.UINT8 | SdtfPrimitiveTypeHintName.UINT16 | SdtfPrimitiveTypeHintName.UINT32 | SdtfPrimitiveTypeHintName.UINT64 {
+        return [
+            SdtfPrimitiveTypeHintName.DECIMAL,
+            SdtfPrimitiveTypeHintName.DOUBLE,
+            SdtfPrimitiveTypeHintName.SINGLE,
+            SdtfPrimitiveTypeHintName.INT8,
+            SdtfPrimitiveTypeHintName.INT16,
+            SdtfPrimitiveTypeHintName.INT32,
+            SdtfPrimitiveTypeHintName.INT64,
+            SdtfPrimitiveTypeHintName.UINT8,
+            SdtfPrimitiveTypeHintName.UINT16,
+            SdtfPrimitiveTypeHintName.UINT32,
+            SdtfPrimitiveTypeHintName.UINT64,
+        ].includes(typeHint as SdtfPrimitiveTypeHintName)
+    }
+
+    /**
      * Runtime check that raises an error when the given value is not of type `SdtfPrimitiveTypeHintName.COLOR`.
      * @throws {@link SdtfError} when the invariant is not met.
      */
@@ -85,6 +134,11 @@ export class SdtfPrimitiveTypeGuard {
     /** Returns `true` when the given value is of type `SdtfPrimitiveTypeHintName.COLOR`. */
     static isColor (value: unknown): value is SdtfPrimitiveColorType {
         return isNumberArray(value) && value.length === 4
+    }
+
+    /** Returns `true` when the given type hint name is of type `SdtfPrimitiveTypeHintName.COLOR`. */
+    static isColorType (typeHint: string | undefined): typeHint is SdtfPrimitiveTypeHintName.COLOR {
+        return typeHint === SdtfPrimitiveTypeHintName.COLOR
     }
 
     /**
@@ -104,6 +158,18 @@ export class SdtfPrimitiveTypeGuard {
      */
     static isDataView (value: unknown): value is DataView {
         return ArrayBuffer.isView(value)
+    }
+
+    /**
+     * Returns `true` when the given type hint name is of type:
+     *   * `SdtfPrimitiveTypeHintName.DATA`
+     *   * `SdtfPrimitiveTypeHintName.IMAGE`
+     */
+    static isDataViewType (typeHint: string | undefined): typeHint is SdtfPrimitiveTypeHintName.DATA | SdtfPrimitiveTypeHintName.IMAGE {
+        return [
+            SdtfPrimitiveTypeHintName.DATA,
+            SdtfPrimitiveTypeHintName.IMAGE,
+        ].includes(typeHint as SdtfPrimitiveTypeHintName)
     }
 
 }

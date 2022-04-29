@@ -25,8 +25,10 @@ describe("type single", function () {
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)
-        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).value).toBe(3.14159274)
-        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).accessor).toBeUndefined()
+        const item = readableAsset.items[0] as ISdtfReadableContentComponent
+        expect(SdtfPrimitiveTypeGuard.isNumberType(item.typeHint?.name)).toBeTruthy()
+        expect(item.value).toBe(3.14159274)
+        expect(item.accessor).toBeUndefined()
     })
 
 })

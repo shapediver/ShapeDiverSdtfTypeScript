@@ -25,8 +25,10 @@ describe("type char", function () {
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)
-        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).value).toBe("C")
-        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).accessor).toBeUndefined()
+        const item = readableAsset.items[0] as ISdtfReadableContentComponent
+        expect(SdtfPrimitiveTypeGuard.isStringType(item.typeHint?.name)).toBeTruthy()
+        expect(item.value).toBe("C")
+        expect(item.accessor).toBeUndefined()
     })
 
 })

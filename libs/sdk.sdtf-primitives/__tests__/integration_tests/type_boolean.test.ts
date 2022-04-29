@@ -25,8 +25,10 @@ describe("type boolean", function () {
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)
-        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).value).toBe(true)
-        expect((<ISdtfReadableContentComponent>readableAsset.items[0]).accessor).toBeUndefined()
+        const item = readableAsset.items[0] as ISdtfReadableContentComponent
+        expect(SdtfPrimitiveTypeGuard.isBooleanType(item.typeHint?.name)).toBeTruthy()
+        expect(item.value).toBe(true)
+        expect(item.accessor).toBeUndefined()
     })
 
 })
