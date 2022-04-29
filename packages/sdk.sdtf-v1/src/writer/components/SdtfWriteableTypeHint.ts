@@ -7,4 +7,14 @@ export class SdtfWriteableTypeHint extends SdtfBaseWriteableComponent implements
 
     additionalProperties: Record<string, unknown> = {}
 
+    static clone (orig: ISdtfWriteableTypeHint): ISdtfWriteableTypeHint {
+        const clone = new SdtfWriteableTypeHint()
+
+        clone.name = orig.name
+
+        clone.additionalProperties = { ...orig.additionalProperties }
+
+        return clone
+    }
+
 }

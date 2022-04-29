@@ -19,3 +19,15 @@ export function enumKeys<O extends object, K extends keyof O = keyof O> (o: O): 
 export function enumValues (o: object): (string | number)[] {
     return enumKeys(o).map(k => o[k])
 }
+
+/**
+ * Tries to deep copy the given value.
+ * Returns the original value if the used Node.js or Browser version does not support `structuredClone`.
+ */
+export function tryDeepCopy<T> (original: T): T {
+    try {
+        return structuredClone(original)
+    } catch (e) {
+        return original
+    }
+}

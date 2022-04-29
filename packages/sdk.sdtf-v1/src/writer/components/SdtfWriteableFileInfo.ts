@@ -14,4 +14,15 @@ export class SdtfWriteableFileInfo extends SdtfBaseWriteableComponent implements
         super()
     }
 
+    static clone (original: ISdtfWriteableFileInfo): ISdtfWriteableFileInfo {
+        const clone = new SdtfWriteableFileInfo(original.version)
+
+        clone.copyright = original.copyright
+        clone.generator = original.generator
+
+        clone.additionalProperties = { ...original.additionalProperties }
+
+        return clone
+    }
+
 }

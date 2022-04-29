@@ -8,6 +8,7 @@ import {
     ISdtfWriteableDataItem,
     ISdtfWriteableTypeHint,
 } from "@shapediver/sdk.sdtf-core"
+import { SdtfWriteableAsset } from "./components/SdtfWriteableAsset"
 import { SdtfWriteableBuffer } from "./components/SdtfWriteableBuffer"
 import { ISdtfWriteableComponentList, writeableComponentListFromAsset } from "./ISdtfWriteableComponentList"
 import { ISdtfWriteableComponentPostProcessor } from "./ISdtfWriteableComponentPostProcessor"
@@ -22,7 +23,11 @@ export class SdtfWriteableComponentPostProcessor implements ISdtfWriteableCompon
     }
 
     optimize (asset: ISdtfWriteableAsset): ISdtfWriteableComponentList {
-        let componentList = writeableComponentListFromAsset(asset)
+        // The optimization step will most likely change the given writeable objects.
+        // Without cloning, this function would consume the given asset and might make it's inner structure invalid.
+        const clonedAsset = SdtfWriteableAsset.clone(asset)
+
+        let componentList = writeableComponentListFromAsset(clonedAsset)
 
         // Apply integration writers on data components
         this.processDataComponents(componentList.attributes.flatMap(a => Object.values(a.entries)))
@@ -36,7 +41,7 @@ export class SdtfWriteableComponentPostProcessor implements ISdtfWriteableCompon
 
         // `processDataComponents` might create new components.
         // Thus, we generate the component list again to include those new components as well.
-        componentList = writeableComponentListFromAsset(asset)
+        componentList = writeableComponentListFromAsset(clonedAsset)
 
         this.complementTypeHints(componentList)
         this.removeDuplicatedTypeHints(componentList)
