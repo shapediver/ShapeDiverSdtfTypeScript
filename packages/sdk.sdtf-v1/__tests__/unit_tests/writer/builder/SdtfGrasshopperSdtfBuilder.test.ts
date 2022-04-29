@@ -7,7 +7,7 @@ describe("addChunkForListData", function () {
     let factory: ISdtfWriteableComponentFactory
 
     beforeAll(async () => {
-        factory = (await create()).createConstructor().getFactory()
+        factory = (await create({ integrations: [] })).createConstructor().getFactory()
     })
 
     test("list given; should create a chunk with a single node that holds all data", () => {
@@ -40,7 +40,7 @@ describe("addChunkForTreeData", function () {
     let factory: ISdtfWriteableComponentFactory
 
     beforeAll(async () => {
-        factory = (await create()).createConstructor().getFactory()
+        factory = (await create({ integrations: [] })).createConstructor().getFactory()
     })
 
     test("invalid tree - branches and paths are not equal; should throw", () => {
