@@ -1,6 +1,6 @@
 {
   "name": "@shapediver/sdk.sdtf-rhino3dm",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Extension containing Rhino3dm and Grasshopper types",
   "keywords": [
     "shapediver",
@@ -39,12 +39,12 @@
     "testEnvironment": "node"
   },
   "dependencies": {
-    "@shapediver/sdk.sdtf-core": "^0.0.6",
+    "@shapediver/sdk.sdtf-core": "^0.0.7",
     "pako": "^2.0.4",
     "rhino3dm": "^7.14.0"
   },
   "devDependencies": {
-    "@shapediver/sdk.sdtf-v1": "^0.0.6",
+    "@shapediver/sdk.sdtf-v1": "^0.0.7",
     "jest": "^27.5.1",
     "lerna": "3.22.1",
     "typescript": "^4.6.4"
