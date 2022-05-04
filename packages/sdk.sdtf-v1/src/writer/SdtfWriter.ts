@@ -1,7 +1,7 @@
 import { ISdtfWriteableAsset, ISdtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-core"
 import { ISdtfGrasshopperSdtfBuilder } from "./builder/ISdtfGrasshopperSdtfBuilder"
 import { SdtfGrasshopperSdtfBuilder } from "./builder/SdtfGrasshopperSdtfBuilder"
-import { ISdtfWriter, ISdtfWriterAttributes, ISdtfWriterDataItems } from "./ISdtfWriter"
+import { ISdtfWriter, ISdtfWriterAttributes, ISdtfWriterDataItem } from "./ISdtfWriter"
 
 export class SdtfWriter implements ISdtfWriter {
 
@@ -10,7 +10,7 @@ export class SdtfWriter implements ISdtfWriter {
     ) {
     }
 
-    createSimpleDataSdtf (chunkName: string, data: ISdtfWriterDataItems[]): ISdtfWriteableAsset {
+    createSimpleDataSdtf (chunkName: string, data: ISdtfWriterDataItem[]): ISdtfWriteableAsset {
         // Helper to convert the format of attributes data
         const mapAttributesData = (attr: ISdtfWriterAttributes[]): Record<string, [ unknown, string | undefined ]> => {
             const res: Record<string, [ unknown, string | undefined ]> = {}

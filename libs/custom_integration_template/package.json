@@ -5,6 +5,7 @@
   "keywords": [],
   "author": "ShapeDiver",
   "license": "ISC",
+  "private": true,
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -19,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/issues"
   },
-  "homepage": "https://github.com/shapediver/ShapeDiverSdtfTypeScript#readme",
+  "homepage": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/tree/master/libs/custom_integration_template#readme",
   "typings": "dist/index.d.ts",
   "dependencies": {
     "@shapediver/sdk.sdtf-core": "^0.0.7"

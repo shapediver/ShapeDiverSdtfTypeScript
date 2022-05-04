@@ -43,8 +43,8 @@ export class SdtfWriteableComponentFactory implements ISdtfWriteableComponentFac
         return new SdtfWriteableAsset(fileInfo)
     }
 
-    createAttribute (
-        content?: unknown | { data: ArrayBuffer, contentType: string },
+    createAttribute<T> (
+        content?: Exclude<T, ArrayBuffer> | { data: ArrayBuffer, contentType: string },
         typeHint?: string,
     ): ISdtfWriteableAttribute {
         const attribute = new SdtfWriteableAttribute()
@@ -59,8 +59,8 @@ export class SdtfWriteableComponentFactory implements ISdtfWriteableComponentFac
         return attribute
     }
 
-    createAttributes (
-        content?: Record<string, [ value: unknown | { data: ArrayBuffer, contentType: string }, typeHint?: string ]>,
+    createAttributes<T> (
+        content?: Record<string, [ value: Exclude<T, ArrayBuffer> | { data: ArrayBuffer, contentType: string }, typeHint?: string ]>,
     ): ISdtfWriteableAttributes {
         const attributes = new SdtfWriteableAttributes()
         Object.entries(content ?? {}).forEach(([ name, attr ]) => attributes.entries[name] = this.createAttribute(...attr))
@@ -88,8 +88,8 @@ export class SdtfWriteableComponentFactory implements ISdtfWriteableComponentFac
         return chunk
     }
 
-    createDataItem (
-        content?: unknown | { data: ArrayBuffer, contentType: string },
+    createDataItem<T> (
+        content?: Exclude<T, ArrayBuffer> | { data: ArrayBuffer, contentType: string },
         typeHint?: string,
     ): ISdtfWriteableDataItem {
         const dataItem = new SdtfWriteableDataItem()

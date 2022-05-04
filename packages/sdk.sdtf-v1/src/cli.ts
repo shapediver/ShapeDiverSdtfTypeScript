@@ -61,15 +61,15 @@ function errExit (e: Error | string): void {
 }
 
 function printGeneralInfo (): void {
-    console.log("sdtf <command>", "\n")
+    console.log("Usage: sdtf <command>", "\n")
     console.log("This is a commandline loader for sdTF (Structured Data Transfer Format) files.", "\n")
     console.log("Commands:")
     console.log("\t", command_jsonContent.name, "-", "Print JSON content of the specified sdTF.")
 }
 
 function printJsonContentCommandInfo (): void {
-    console.log("sdtf <command>", "command_jsonContent.name", "\n")
-    console.log("Fetch and print JSON content of the specified sdTF.", "\n")
+    console.log("Usage: sdtf <command>", "command_jsonContent.name", "\n")
+    console.log("Fetch or read the specified sdTF file and print its JSON content.", "\n")
     console.log("Options:")
     console.log("\t", general.help.join(", "), "\t", "Show help.")
     console.log("\t", command_jsonContent.options.url.join(", "), "\t", "Fetch sdTF from URL.", [ "string" ])

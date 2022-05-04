@@ -38,7 +38,7 @@ export class SdtfParser implements ISdtfParser {
             absolutePath = this.fileUtils.toAbsolutePath(path)
             buffer = await this.fileUtils.readFile(absolutePath)
         } catch (e) {
-            throw new SdtfError(`Error reading sdTF-file: ${ e.message }`)
+            throw new SdtfError(`Cannot read sdTF-file: ${ e.message }`)
         }
 
         const [ contentBuffer, binaryBuffer ] = this.binarySdtfParser.parseBinarySdtf(buffer)

@@ -4,5 +4,5 @@ export { create, ISdtfConfig, SdtfSdk } from "./SdtfSdk"
 export { ISdtfFormatter } from "./formatter/ISdtfFormatter"
 
 export { ISdtfConstructor } from "./writer/ISdtfConstructor"
-export { ISdtfWriter, ISdtfWriterAttributes, ISdtfWriterDataItems } from "./writer/ISdtfWriter"
+export { ISdtfWriter, ISdtfWriterAttributes, ISdtfWriterDataItem } from "./writer/ISdtfWriter"
 export * from "./writer/builder/ISdtfGrasshopperSdtfBuilder"

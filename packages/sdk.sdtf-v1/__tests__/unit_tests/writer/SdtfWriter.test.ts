@@ -1,4 +1,4 @@
-import { ISdtfWriterDataItems } from "../../../src"
+import { ISdtfWriterDataItem } from "../../../src"
 import { SdtfWriteableComponentFactory } from "../../../src/writer/SdtfWriteableComponentFactory"
 import { SdtfWriter } from "../../../src/writer/SdtfWriter"
 
@@ -7,7 +7,7 @@ const writer = new SdtfWriter(new SdtfWriteableComponentFactory())
 describe("createSimpleDataSdtf", function () {
 
     test("should create a single chunk that holds all the data", () => {
-        const data: ISdtfWriterDataItems[] = [
+        const data: ISdtfWriterDataItem[] = [
             {
                 content: 1.0,
                 typeHint: "single",

@@ -9,7 +9,7 @@ export interface ISdtfWriterAttributes {
     typeHint?: SdtfTypeHintName | string,
 }
 
-export interface ISdtfWriterDataItems {
+export interface ISdtfWriterDataItem {
 
     content: unknown | { data: ArrayBuffer, contentType: string },
 
@@ -23,10 +23,10 @@ export interface ISdtfWriterDataItems {
 export interface ISdtfWriter {
 
     /**
-     * Creates a simple linear sdTF that consists of a single chunk with one or more data nodes.
+     * Creates a simple linear sdTF structure that consists of a single chunk with one or more data nodes.
      * The given data content is either stored directly in the sdTF JSON content or in the sdTF buffer.
      */
-    createSimpleDataSdtf (chunkName: string, data: ISdtfWriterDataItems[]): ISdtfWriteableAsset
+    createSimpleDataSdtf (chunkName: string, data: ISdtfWriterDataItem[]): ISdtfWriteableAsset
 
     /**
      * Returns a new builder instance to create a grasshopper sdTF asset.

@@ -29,7 +29,7 @@ export class SdtfFileBufferCache extends SdtfBinaryBufferCache {
         try {
             buffer = await this.fileUtils.readFile(`${ this.basePath }/${ relativePath }`)
         } catch (e) {
-            throw new SdtfError(`Error reading buffer: ${ e.message }`)
+            throw new SdtfError(`Cannot read buffer: ${ e.message }`)
         }
 
         // Cache the entire buffer

@@ -26,8 +26,8 @@ export interface ISdtfWriteableComponentFactory {
      * Instantiates a new writeable attributes object.
      * @hen
      */
-    createAttribute (
-        content?: unknown | { data: ArrayBuffer, contentType: string },
+    createAttribute<T> (
+        content?: Exclude<T, ArrayBuffer> | { data: ArrayBuffer, contentType: string },
         typeHint?: string,
     ): ISdtfWriteableAttribute
 
@@ -36,8 +36,8 @@ export interface ISdtfWriteableComponentFactory {
      * @param content - Dictionary of attribute's where `key` represents an attribute name and `value` contains the
      * attribute's `value` and `type hint`.
      */
-    createAttributes (
-        content?: Record<string, [ value: unknown | { data: ArrayBuffer, contentType: string }, typeHint?: string ]>,
+    createAttributes<T> (
+        content?: Record<string, [ value: Exclude<T, ArrayBuffer> | { data: ArrayBuffer, contentType: string }, typeHint?: string ]>,
     ): ISdtfWriteableAttributes
 
     /** Instantiates a new writeable buffer object. */
@@ -53,8 +53,8 @@ export interface ISdtfWriteableComponentFactory {
     createChunk (name?: string): ISdtfWriteableChunk
 
     /** Instantiates a new writeable data item object. */
-    createDataItem (
-        content?: unknown | { data: ArrayBuffer, contentType: string },
+    createDataItem<T> (
+        content?: Exclude<T, ArrayBuffer> | { data: ArrayBuffer, contentType: string },
         typeHint?: string,
     ): ISdtfWriteableDataItem
 
