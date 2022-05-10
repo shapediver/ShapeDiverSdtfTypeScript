@@ -85,7 +85,7 @@ describe("postProcessComponents", function () {
         [ SdtfRhinoTypeHintName.RHINO_SUBD, () => new rhino.SubD() ],
         [ SdtfRhinoTypeHintName.RHINO_SURFACE, () => new rhino.PlaneSurface() ],
     ])("single component of type %s; should store rhino component in single buffer", (type, createComponent) => {
-        const components = [ factory.createDataItem(createComponent(), type) ]
+        const components = [ factory.createDataItem(createComponent() as any, type) ]
         writer.postProcessComponents(components)
 
         // Value should have been replaced by an accessor

@@ -1,5 +1,5 @@
 import { SdtfGrasshopperTypeHintName, SdtfRhinoTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { SdtfRhino3dmTypeIntegration } from "../../dist"
+import { SdtfRhino3dmTypeIntegration } from "../../src"
 
 const integration = new SdtfRhino3dmTypeIntegration()
 
