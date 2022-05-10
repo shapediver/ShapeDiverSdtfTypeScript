@@ -90,10 +90,17 @@ export class SdtfHttpClient implements ISdtfHttpClient {
         // Validate response status
         if (response.status > 299) throw new SdtfError(`Received HTTP status ${ response.status }.`)
 
-        const acceptRanges = response.headers["Accept-Ranges"] ?? response.headers["accept-ranges"]
-        const rangeRequestsSupported = (acceptRanges === "bytes")
+        // Check if the content has been encoded (no range request possible)
+        const contentEncoding = !!(response.headers["Content-Encoding"] ?? response.headers["content-encoding"])
 
-        // Fetch the actual data
+        // Check if HTTP range requests are supported
+        const acceptRanges = response.headers["Accept-Ranges"] ?? response.headers["accept-ranges"]
+
+        // When the data has not been encoded and range requests are supported -> fetch partially.
+        // Otherwise -> fetch all.
+        const rangeRequestsSupported = (!contentEncoding && acceptRanges === "bytes")
+
+        // Fetch the actual data.
         const data = (rangeRequestsSupported) ?
             await this.fetchPartially(url, offset, length) :
             await this.fetchFully(url, offset, length)
@@ -147,6 +154,7 @@ export class SdtfHttpClient implements ISdtfHttpClient {
     async fetchFully (url: string, offset: number, length: number): Promise<any> {
         let response
         try {
+            // NOTE: Axios automatically decodes the body (e.g. GZIP compression)
             response = await axios.get(url, {
                 responseType: "arraybuffer",
             })
