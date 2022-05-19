@@ -58,11 +58,11 @@
     "browser-or-node": "^2.0.0"
   },
   "devDependencies": {
-    "jest": "^27.5.1",
+    "jest": "^28.1.0",
     "lerna": "3.22.1",
     "typescript": "^4.6.4",
-    "webpack": "^5.72.0",
+    "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.8.1"
+    "webpack-dev-server": "^4.9.0"
   }
 }
