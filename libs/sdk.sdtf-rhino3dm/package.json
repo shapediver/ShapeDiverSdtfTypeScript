@@ -41,7 +41,7 @@
   "dependencies": {
     "@shapediver/sdk.sdtf-core": "^1.0.0",
     "pako": "^2.0.4",
-    "rhino3dm": "^7.14.0"
+    "rhino3dm": "7.14.0"
   },
   "devDependencies": {
     "@types/pako": "^2.0.0",
