@@ -12,11 +12,18 @@ export class SdtfHttpClient implements ISdtfHttpClient {
     /** The URL of the sdTF JSON content. */
     readonly jsonContentUrl: string
 
-    constructor (jsonContentUrl: string) {
+    /** the minimum headers object that should be used for all HTTP calls.. */
+    private readonly basicHttpHeader: Record<string, string | number | boolean>
+
+    constructor (jsonContentUrl: string, authToken?: string) {
         this.binarySdtfParser = new SdtfBinarySdtf()
 
         // This initializes this http client for the specified sdTF asset
         this.jsonContentUrl = jsonContentUrl
+
+        // Initialize tha basic HTTP header object
+        this.basicHttpHeader = {}
+        if (authToken) this.basicHttpHeader.authorization = "Bearer " + authToken
     }
 
     /**
@@ -82,7 +89,7 @@ export class SdtfHttpClient implements ISdtfHttpClient {
     async fetch (url: string, offset: number, length: number): Promise<{ data: ArrayBuffer, partial: boolean }> {
         let response
         try {
-            response = await axios.head(url)
+            response = await axios.head(url, { headers: this.basicHttpHeader })
         } catch (e) {
             throw new SdtfError(e.message)
         }
@@ -103,7 +110,7 @@ export class SdtfHttpClient implements ISdtfHttpClient {
         // Fetch the actual data.
         const data = (rangeRequestsSupported) ?
             await this.fetchPartially(url, offset, length) :
-            await this.fetchFully(url, offset, length)
+            await this.fetchFully(url)
 
         // This is required to support Node.js as well as Browsers
         const buffer = (data instanceof ArrayBuffer) ? data : Uint8Array.from(data).buffer
@@ -128,7 +135,10 @@ export class SdtfHttpClient implements ISdtfHttpClient {
         let response
         try {
             response = await axios.get(url, {
-                headers: { range: `bytes=${ offset }-${ offset + length - 1 }` },
+                headers: {
+                    ...this.basicHttpHeader,
+                    range: `bytes=${ offset }-${ offset + length - 1 }`,
+                },
                 responseType: "arraybuffer",
             })
         } catch (e) {
@@ -147,15 +157,14 @@ export class SdtfHttpClient implements ISdtfHttpClient {
      * Fallback when HTTP range requests are not supported by the server.
      * @private
      * @param url
-     * @param offset - Zero-based byte index at which to begin (inclusive).
-     * @param length - Length of the buffer.
      * @throws {@link SdtfError} when the request was not successful.
      */
-    async fetchFully (url: string, offset: number, length: number): Promise<any> {
+    async fetchFully (url: string): Promise<any> {
         let response
         try {
             // NOTE: Axios automatically decodes the body (e.g. GZIP compression)
             response = await axios.get(url, {
+                headers: this.basicHttpHeader,
                 responseType: "arraybuffer",
             })
         } catch (e) {

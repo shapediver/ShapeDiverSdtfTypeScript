@@ -52,12 +52,22 @@ As long as the sdTF component structure is valid, sdTFs can be read and written 
 To manage the mapping, validation and optimization of content data, the SDK can be extended by various _integrations_.
 [sdTF integrations](https://github.com/shapediver/ShapeDiverSdtfTypeScript#integrations) provide an easy way to customize reading and writing of data content for specific data types.
 By default, the SDK instantiates the integrations for [primitive types](https://www.npmjs.com/package/@shapediver/sdk.sdtf-primitives) and [geometry types](https://www.npmjs.com/package/@shapediver/sdk.sdtf-geometry).
-The default integrations can be adopted by specifying a customized list of integrations in the `integrations`-array of the `SdtfConfig` object:
+The default integrations can be adopted by specifying a customized list of integrations in the `integrations`-array of the `SdtfConfig` object.
+
+By default, the SDK does not use any authorization token for its HTTP calls.
+However, ShapeDiver models can be configured so that all interactions with them require a JSON Web Token (JWT) for authorization.
+Thus, a valid JWT must be provided when the SDK is instantiated and the sdTF file is accessed remotely (`readFromUrl`).
+Otherwise, a`401` HTTP status is returned when the sdTF is fetched.
+
 ```typescript
 import { create } from "@shapediver/sdk.sdtf-v1"
 
 create({
-    integrations: [],   // Remove the default integrations from the sdTF
+    // Remove the default integrations from the sdTF
+    integrations: [],
+    
+    // Add a JWT for HTTP authorization
+    authToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3d3dy5zaGFwZWRpdmVyLmNvbS9hcGkvdjEvdG9rZW5zIiwic3ViIjoiMWM0MzY2MzAtMWYxNy00Y2QyLWFmMTItNDNiYTMzZmVkMDYyIiwiYXVkIjoiOTIwNzk0ZmEtMjQ1YS00ODdkLThhYmUtYWY1NjlhOTdkYTQyIiwiZXhwIjoxNjY3NDc4MDUzLCJzY29wZSI6Imdyb3VwLmV4cG9ydCBncm91cC52aWV3IiwiaWF0IjoxNjY3NDc0NDUzLCJzZF91c2VyX2lkIjoiOTQ4MzJlN2YtMGNjNS00YjE4LWIxNGItOTBkN2FlZTYxYzIzIn0.AKkzs-mCW_3qA3XISMiaW6Bp_MFPVoUnWPWcPllUOZ1Ve5K_tFd0xxpT_T0AoUs8OxQZBXujdKojJLj5sbycKA7X9IEGomQBYjCoTJsQGeafFJW_LSrWb9Z4L9xTu0g02UcvKbwSxyIxLug0pVunklSNN382sgbcKVt6ZapT5a8YGaH5LjYCHVb90OTTQ2JUurtdyqyBLJ1CJbszdkggZuyV2uHhSgJ--jrxcOq_lBgI-tuPj4cbQx340vdhPFXTZA9NAnk6fuI8kfSSej-BQpkdHBi_FAhxlQf5AZov6BonaKl8KIvcFi2Zk77jyB6fjfWwXsT5s0kNVaali58PXQ"
 }).then(sdk => {
     // use sdk here
 })

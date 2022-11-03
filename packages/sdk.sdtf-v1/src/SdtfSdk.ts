@@ -30,7 +30,7 @@ export class SdtfSdk {
      * the sdTF file and provides easy access functionality for embedded values and binary data.
      */
     createParser (): ISdtfParser {
-        return new SdtfParser(this.config.integrations)
+        return new SdtfParser(this.config)
     }
 
     /**

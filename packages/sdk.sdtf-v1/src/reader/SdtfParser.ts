@@ -1,4 +1,4 @@
-import { ISdtfIntegration, ISdtfParser, ISdtfReadableAsset, SdtfError } from "@shapediver/sdk.sdtf-core"
+import { ISdtfParser, ISdtfReadableAsset, SdtfError } from "@shapediver/sdk.sdtf-core"
 import { isBrowser } from "browser-or-node"
 import { ISdtfBinarySdtf } from "../binary_sdtf/ISdtfBinarySdtf"
 import { SdtfBinarySdtf } from "../binary_sdtf/SdtfBinarySdtf"
@@ -8,6 +8,7 @@ import { SdtfFileBufferCache } from "../buffer_cache/SdtfFileBufferCache"
 import { SdtfHttpBufferCache } from "../buffer_cache/SdtfHttpBufferCache"
 import { ISdtfHttpClient } from "../http/ISdtfHttpClient"
 import { SdtfHttpClient } from "../http/SdtfHttpClient"
+import { SdtfConfig } from "../SdtfConfig"
 import { ISdtfComponentFactoryWrapper } from "../structure/ISdtfComponentFactoryWrapper"
 import { ISdtfComponentList } from "../structure/ISdtfComponentList"
 import { SdtfComponentFactoryWrapper } from "../structure/SdtfComponentFactoryWrapper"
@@ -23,7 +24,7 @@ export class SdtfParser implements ISdtfParser {
     private readonly componentFactory: ISdtfComponentFactoryWrapper
     private readonly fileUtils: SdtfFileUtils
 
-    constructor (private readonly integration: ISdtfIntegration[]) {
+    constructor (private readonly config: SdtfConfig) {
         this.binarySdtfParser = new SdtfBinarySdtf()
         this.componentFactory = new SdtfComponentFactoryWrapper()
         this.fileUtils = new SdtfFileUtils()
@@ -51,7 +52,7 @@ export class SdtfParser implements ISdtfParser {
     }
 
     async readFromUrl (url: string): Promise<ISdtfReadableAsset> {
-        const httpClient: ISdtfHttpClient = new SdtfHttpClient(url)
+        const httpClient: ISdtfHttpClient = new SdtfHttpClient(url, this.config.authToken)
         const [ contentBuffer, binaryBuffer ] = await httpClient.getJsonContent()
         const jsonContent = this.binarySdtfParser.readJsonContent(contentBuffer)
 
@@ -74,7 +75,7 @@ export class SdtfParser implements ISdtfParser {
     /** Instantiates a sdTF asset that represents the given content. */
     createSdtfAsset (content: Record<string, unknown>, bufferCache: ISdtfBufferCache): ISdtfReadableAsset {
         const componentList = this.componentFactory.createFromJson(content)
-        const readableComponentFactory = new SdtfReadableComponentFactory(bufferCache, new SdtfDataParser(this.integration))
+        const readableComponentFactory = new SdtfReadableComponentFactory(bufferCache, new SdtfDataParser(this.config.integrations))
         return this.buildReadableAsset(componentList, readableComponentFactory)
     }
 
