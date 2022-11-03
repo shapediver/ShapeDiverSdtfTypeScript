@@ -16,7 +16,7 @@
     "build": "lerna run build",
     "build-dep": "lerna run build-dep",
     "check-for-updates": "bash ./scripts/check-updates.sh update",
-    "upgrade-dependencies": "bash ./scripts/check-updates.sh upgrade -x 'lerna'"
+    "upgrade-dependencies": "bash ./scripts/check-updates.sh upgrade -x 'lerna' && ./scripts/audit-dependencies.sh"
   },
   "devDependencies": {
     "@types/jest": "^27.5.1",
