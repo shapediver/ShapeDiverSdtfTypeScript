@@ -1,5 +1,5 @@
 import { ISdtfReadableContentComponent, SdtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { create, SdtfSdk } from "@shapediver/sdk.sdtf-v1"
+import { create, SdtfSdk } from "../../../../packages/sdk.sdtf-v1"
 import { SdtfGeometryPolylineType, SdtfGeometryTypeGuard, SdtfGeometryTypeIntegration } from "../../src"
 
 describe("type polyline", function () {

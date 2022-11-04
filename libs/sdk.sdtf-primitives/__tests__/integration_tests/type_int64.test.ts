@@ -1,5 +1,5 @@
 import { ISdtfReadableContentComponent, SdtfPrimitiveTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { create, SdtfSdk } from "@shapediver/sdk.sdtf-v1"
+import { create, SdtfSdk } from "../../../../packages/sdk.sdtf-v1"
 import { SdtfPrimitiveTypeGuard, SdtfPrimitiveTypeIntegration } from "../../src"
 
 describe("type int64", function () {

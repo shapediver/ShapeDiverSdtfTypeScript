@@ -1,5 +1,5 @@
 import { ISdtfReadableContentComponent, SdtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { create, SdtfSdk } from "@shapediver/sdk.sdtf-v1"
+import { create, SdtfSdk } from "../../../../packages/sdk.sdtf-v1"
 import { SdtfGeometrySphereType, SdtfGeometryTypeGuard, SdtfGeometryTypeIntegration } from "../../src"
 
 describe("type sphere", function () {

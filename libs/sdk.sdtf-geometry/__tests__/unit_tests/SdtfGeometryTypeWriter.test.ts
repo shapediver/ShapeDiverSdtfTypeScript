@@ -1,5 +1,5 @@
 import { ISdtfWriteableAttribute, SdtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { SdtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-v1/src/writer/SdtfWriteableComponentFactory"
+import { SdtfWriteableComponentFactory } from "../../../../packages/sdk.sdtf-v1/src/writer/SdtfWriteableComponentFactory"
 import { SdtfGeometryTypeValidator } from "../../src/SdtfGeometryTypeValidator"
 import { SdtfGeometryTypeWriter } from "../../src/SdtfGeometryTypeWriter"
 

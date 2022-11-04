@@ -1,5 +1,5 @@
 import { ISdtfWriteableAttribute, SdtfPrimitiveTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { SdtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-v1/src/writer/SdtfWriteableComponentFactory"
+import { SdtfWriteableComponentFactory } from "../../../../packages/sdk.sdtf-v1/src/writer/SdtfWriteableComponentFactory"
 import { SdtfPrimitiveTypeValidator } from "../../src/SdtfPrimitiveTypeValidator"
 import { SdtfPrimitiveTypeWriter } from "../../src/SdtfPrimitiveTypeWriter"
 
