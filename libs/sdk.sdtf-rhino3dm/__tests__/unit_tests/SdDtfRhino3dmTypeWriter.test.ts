@@ -1,7 +1,7 @@
 import { ISdtfWriteableAttribute, SdtfGrasshopperTypeHintName, SdtfRhinoTypeHintName } from "@shapediver/sdk.sdtf-core"
 import { SdtfWriteableComponentFactory } from "../../../../packages/sdk.sdtf-v1/src/writer/SdtfWriteableComponentFactory"
 import { RhinoModule } from "rhino3dm"
-import { SdtfRhino3dmSingleton } from "../../src/SdtfRhino3dmSingleton"
+import { SdtfRhino3dmSingleton } from "../../src"
 import { SdtfRhino3dmTypeConfig } from "../../src/SdtfRhino3dmTypeConfig"
 import { SdtfRhino3dmTypeValidator } from "../../src/SdtfRhino3dmTypeValidator"
 import { SdtfRhino3dmTypeWriter } from "../../src/SdtfRhino3dmTypeWriter"
