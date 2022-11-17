@@ -62,6 +62,50 @@ const sdk: SdtfSdk = await create({
 })
 ```
 
+### Rhino3dm
+We highly recommend not to use multiple instances of the [rhino3dm](https://mcneel.github.io/rhino3dm/javascript/api/index.html) library.
+Instead, use the exposed wrapper `SdtfRhino3dmSingleton` to avoid problems during the sdTF creation process.
+```typescript
+const sdk = await create({
+    integrations: [ new SdtfRhino3dmTypeIntegration({ enableCompression: false }) ],
+})
+const constructor = sdk.createConstructor()
+const factory = constructor.getFactory()
+const builder = constructor.getWriter().createGrasshopperSdtfBuilder()
+
+// DO NOT USE THIS!
+// const rhino: RhinoModule = await require("rhino3dm")()
+
+const rhino = SdtfRhino3dmSingleton.getInstance()   // This is the best way to use rhino3dm with the SDK
+
+const polyline = new rhino.Polyline(3)
+polyline.add(0.1, 0.2, 0.3)
+polyline.add(0.4, 0.6, 0.8)
+polyline.add(0.5, 0.7, 0.9)
+const polylineCurve = polyline.toPolylineCurve()
+
+// Create a chunk which represents a Grasshopper tree of polylines.
+const branches = [
+    [ factory.createDataItem(polylineCurve, SdtfRhinoTypeHintName.RHINO_POLYLINE_CURVE) ],
+]
+const paths = [
+    [ 0 ],  // Note: "[ 0 ]" is the name of the branch.
+]
+builder.addChunkForTreeData(
+    "Curve",
+    { branches, paths },
+    factory.createAttributes({ "Name": [ "Crv" ] }),
+)
+
+// Creates a new sdTF file from the writeable-asset
+const writeableAsset = builder.build()
+const sdtf = constructor.createBinarySdtf(writeableAsset)
+
+// Parse the sdTF file and print the structure
+const readableAsset = sdk.createParser().readFromBuffer(sdtf)
+console.log(sdk.createFormatter().prettifyReadableAsset(readableAsset))
+```
+
 ## Supported types
 The following table lists all [type hints](https://github.com/shapediver/sdTF/tree/development/specification/1.0#typehintname-white_check_mark) that are supported by this integration, their specific _TypeScript types_, and the provided _type guard functions_ that can be used to infer a data content type.
 
