@@ -196,6 +196,52 @@ describe("complementTypeHints", function () {
         expect(componentList.typeHints.length).toBe(0)
     })
 
+    test("full bottom-up data test; should complement chunks and nodes where possible", () => {
+        const node_string = factory.createNode()
+        node_string.items.push(factory.createDataItem("", "string"))
+        node_string.items.push(factory.createDataItem("", "string"))
+
+        const node_int = factory.createNode()
+        node_int.items.push(factory.createDataItem(1, "number"))
+        node_int.items.push(factory.createDataItem(2, "number"))
+
+        const node_float = factory.createNode()
+        node_float.items.push(factory.createDataItem(3.0, "number"))
+        node_float.items.push(factory.createDataItem(4.0, "number"))
+
+        const node_bool = factory.createNode()
+        node_bool.items.push(factory.createDataItem(true, "boolean"))
+        node_bool.items.push(factory.createDataItem(false, "boolean"))
+
+        const node_mixed = factory.createNode()
+        node_mixed.items.push(factory.createDataItem("{}", "object"))
+        node_mixed.items.push(factory.createDataItem("[]", "array"))
+
+        const chunk_string = factory.createChunk("string")
+        chunk_string.nodes.push(node_string)
+
+        const chunk_number = factory.createChunk("number")
+        chunk_number.nodes.push(node_int, node_float)
+
+        const chunk_mixed = factory.createChunk("mixed")
+        chunk_mixed.nodes.push(node_bool, node_mixed)
+
+        const componentList = createComponentListWithChunksAndNodes(
+            [ chunk_string, chunk_number, chunk_mixed ],
+            [ node_string, node_int, node_float, node_bool, node_mixed ],
+        )
+        postProcessor.complementTypeHints(componentList)
+        expect(node_string.typeHint?.name).toBe("string")
+        expect(node_int.typeHint?.name).toBe("number")
+        expect(node_float.typeHint?.name).toBe("number")
+        expect(node_bool.typeHint?.name).toBe("boolean")
+        expect(node_mixed.typeHint).toBeUndefined()
+        expect(chunk_string.typeHint?.name).toBe("string")
+        expect(chunk_number.typeHint?.name).toBe("number")
+        expect(chunk_mixed.typeHint).toBeUndefined()
+        expect(componentList.typeHints.length).toBe(6)
+    })
+
 })
 
 describe("removeDuplicatedTypeHints", function () {

@@ -114,10 +114,10 @@ export class SdtfWriteableComponentPostProcessor implements ISdtfWriteableCompon
         }
 
         // Check every node whether their respective data items are of similar a type hint
-        componentList.nodes.forEach(node => complement(node, componentList.items))
+        componentList.nodes.forEach(node => complement(node, node.items))
 
         // Check every chunk whether their respective nodes are of similar a type hint
-        componentList.chunks.forEach(chunk => complement(chunk, componentList.nodes))
+        componentList.chunks.forEach(chunk => complement(chunk, chunk.nodes))
     }
 
     /**
