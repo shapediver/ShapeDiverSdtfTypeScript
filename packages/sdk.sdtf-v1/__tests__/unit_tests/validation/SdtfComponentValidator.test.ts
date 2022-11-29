@@ -73,7 +73,7 @@ describe("validateAttributes", function () {
     }))
 
     test("valid; should return", () => {
-        const attributes = factory.createAttributes({ "name": {} })
+        const attributes = factory.createAttributes({ "name": { typeHint: 0 } })
         validator.validateAttributes(attributes)
     })
 
@@ -84,18 +84,23 @@ describe("validateAttributes", function () {
         expect(() => validator.validateAttributes(attributes)).toThrow(/Required property 'entries' must be a string-keyed object/)
     })
 
+    test("invalid - typeHint not a uint; should throw", () => {
+        // missing
+        let attributes = factory.createAttributes({ "name": {} })
+        expect(() => validator.validateAttributes(attributes)).toThrow(/Required property 'typeHint' must be an unsigned integer/)
+
+        // invalid type
+        attributes = factory.createAttributes({ "name": { typeHint: -1 } })
+        expect(() => validator.validateAttributes(attributes)).toThrow(/Required property 'typeHint' must be an unsigned integer/)
+    })
+
     test("invalid - accessor not a uint; should throw", () => {
-        const attributes = factory.createAttributes({ "name": { accessor: -1 } })
+        const attributes = factory.createAttributes({ "name": { typeHint: 0, accessor: -1 } })
         expect(() => validator.validateAttributes(attributes)).toThrow(/Optional property 'accessor' must be an unsigned integer/)
     })
 
-    test("invalid - typeHint not a uint; should throw", () => {
-        const attributes = factory.createAttributes({ "name": { typeHint: -1 } })
-        expect(() => validator.validateAttributes(attributes)).toThrow(/Optional property 'typeHint' must be an unsigned integer/)
-    })
-
     test("invalid - accessor out of range; should throw", () => {
-        const attributes = factory.createAttributes({ "name": { accessor: 1 } })
+        const attributes = factory.createAttributes({ "name": { typeHint: 0, accessor: 1 } })
         expect(() => validator.validateAttributes(attributes)).toThrow(/Accessor index is out of range/)
     })
 
@@ -205,32 +210,37 @@ describe("validateDataItem", function () {
     }))
 
     test("valid; should return", () => {
-        const dataItem = factory.createDataItem({})
+        const dataItem = factory.createDataItem({ typeHint: 0 })
         validator.validateDataItem(dataItem)
     })
 
+    test("invalid - typeHint not a uint; should throw", () => {
+        // missing
+        let dataItem = factory.createDataItem({})
+        expect(() => validator.validateDataItem(dataItem)).toThrow(/Required property 'typeHint' must be an unsigned integer/)
+
+        // invalid type
+        dataItem = factory.createDataItem({ typeHint: -1 })
+        expect(() => validator.validateDataItem(dataItem)).toThrow(/Required property 'typeHint' must be an unsigned integer/)
+    })
+
     test("invalid - accessor not a uint; should throw", () => {
-        const dataItem = factory.createDataItem({ accessor: -1 })
+        const dataItem = factory.createDataItem({ typeHint: 0, accessor: -1 })
         expect(() => validator.validateDataItem(dataItem)).toThrow(/Optional property 'accessor' must be an unsigned integer/)
     })
 
     test("invalid - attributes not a uint; should throw", () => {
-        const dataItem = factory.createDataItem({ attributes: -1 })
+        const dataItem = factory.createDataItem({ typeHint: 0, attributes: -1 })
         expect(() => validator.validateDataItem(dataItem)).toThrow(/Optional property 'attributes' must be an unsigned integer/)
     })
 
-    test("invalid - typeHint not a uint; should throw", () => {
-        const dataItem = factory.createDataItem({ typeHint: -1 })
-        expect(() => validator.validateDataItem(dataItem)).toThrow(/Optional property 'typeHint' must be an unsigned integer/)
-    })
-
     test("invalid - accessor out of range; should throw", () => {
-        const dataItem = factory.createDataItem({ accessor: 1 })
+        const dataItem = factory.createDataItem({ typeHint: 0, accessor: 1 })
         expect(() => validator.validateDataItem(dataItem)).toThrow(/Accessor index is out of range/)
     })
 
     test("invalid - attributes out of range; should throw", () => {
-        const dataItem = factory.createDataItem({ attributes: 1 })
+        const dataItem = factory.createDataItem({ typeHint: 0, attributes: 1 })
         expect(() => validator.validateDataItem(dataItem)).toThrow(/Attributes index is out of range/)
     })
 

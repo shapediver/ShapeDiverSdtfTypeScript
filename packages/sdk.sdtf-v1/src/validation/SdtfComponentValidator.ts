@@ -49,12 +49,13 @@ export class SdtfComponentValidator implements ISdtfComponentValidator {
 
         Object.values(attributes.entries)
             .forEach((attribute: Partial<ISdtfAttribute>) => {
+                // Validate required properties
+                if (!isUint(attribute.typeHint))
+                    throw new SdtfError("Invalid attribute: Required property 'typeHint' must be an unsigned integer.")
+
                 // Validate optional properties
-                if (attribute.accessor && !isUint(attribute.accessor)) {
+                if (attribute.accessor && !isUint(attribute.accessor))
                     throw new SdtfError("Invalid attribute: Optional property 'accessor' must be an unsigned integer.")
-                }
-                if (attribute.typeHint && !isUint(attribute.typeHint))
-                    throw new SdtfError("Invalid attribute: Optional property 'typeHint' must be an unsigned integer.")
 
                 // Validate component references
                 if (attribute.accessor && attribute.accessor >= this.componentList.accessors.length)
@@ -99,13 +100,15 @@ export class SdtfComponentValidator implements ISdtfComponentValidator {
     }
 
     validateDataItem (dataItem: Partial<ISdtfDataItem>): asserts dataItem is ISdtfDataItem {
+        // Validate required properties
+        if (!isUint(dataItem.typeHint))
+            throw new SdtfError("Invalid item: Required property 'typeHint' must be an unsigned integer.")
+
         // Validate optional properties
         if (dataItem.accessor && !isUint(dataItem.accessor))
             throw new SdtfError("Invalid item: Optional property 'accessor' must be an unsigned integer.")
         if (dataItem.attributes && !isUint(dataItem.attributes))
             throw new SdtfError("Invalid item: Optional property 'attributes' must be an unsigned integer.")
-        if (dataItem.typeHint && !isUint(dataItem.typeHint))
-            throw new SdtfError("Invalid item: Optional property 'typeHint' must be an unsigned integer.")
 
         // Validate component references
         if (dataItem.accessor && dataItem.accessor >= this.componentList.accessors.length)
