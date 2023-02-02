@@ -1,7 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
 # We try to use the same Node.js (LTS) and NPM versions for all TypeScript ShapeDiver projects.
-target_node_version="v14" # FIXME upgrade to 'v18' as soon as rhino3dm get their shit together
-target_npm_version="6"    # FIXME upgrade to '8' as soon as rhino3dm get their shit together
+target_node_version="v16"
+target_npm_version="8"
 
 node_version=$(node -v | cut -d. -f1)
 npm_version=$(npm -v | cut -d. -f1)
