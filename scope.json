@@ -1,3 +1,7 @@
 {
-  "scope": "sdk"
+  "scope": "sdk",
+  "repomaintain": {
+    "publish_mode": "all",
+    "publish_tag_name": "sdtf-sdk"
+  }
 }

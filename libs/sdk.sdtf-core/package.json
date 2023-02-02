@@ -1,6 +1,6 @@
 {
   "name": "@shapediver/sdk.sdtf-core",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Base implementation for all sdTF TypeScript SDKs",
   "keywords": [
     "shapediver",
