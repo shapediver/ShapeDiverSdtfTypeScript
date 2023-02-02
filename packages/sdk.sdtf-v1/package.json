@@ -19,9 +19,6 @@
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/shapediver"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shapediver/ShapeDiverSdtfTypeScript.git"
