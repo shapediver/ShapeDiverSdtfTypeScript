@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@shapediver/sdk.sdtf-core": "~1.2.1",
-    "decimal.js": "~10.4.2"
+    "decimal.js": "~10.4.3"
   },
   "devDependencies": {
     "jest": "~29.4.1",
