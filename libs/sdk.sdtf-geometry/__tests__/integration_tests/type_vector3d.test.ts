@@ -16,10 +16,10 @@ describe("type vector3d", function () {
         "geometry_vector3f.sdtf",
     ])("%s, read and get content; should not throw", async (file) => {
         const asset = await sdk.createParser().readFromFile("./test_data/" + file)
-        const content = await asset.items[0].getContent()
-        expect(content).toStrictEqual(content)
-        SdtfGeometryTypeGuard.assertVector(content)
-        SdtfGeometryTypeGuard.assertVector3d(content)
+        const data = await asset.items[0].getContent()
+        expect(data).toStrictEqual(content)
+        SdtfGeometryTypeGuard.assertVector(data)
+        SdtfGeometryTypeGuard.assertVector3d(data)
     })
 
     test("create via writer; should contain value", () => {

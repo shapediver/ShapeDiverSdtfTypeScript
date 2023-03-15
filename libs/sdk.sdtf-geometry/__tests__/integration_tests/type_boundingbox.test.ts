@@ -16,9 +16,9 @@ describe("type bounding box", function () {
 
     test("read and get content; should not throw", async () => {
         const asset = await sdk.createParser().readFromFile("./test_data/geometry_boundingbox.sdtf")
-        const content = await asset.items[0].getContent()
-        expect(content).toStrictEqual(content)
-        SdtfGeometryTypeGuard.assertBoundingBox(content)
+        const data = await asset.items[0].getContent()
+        expect(data).toStrictEqual(content)
+        SdtfGeometryTypeGuard.assertBoundingBox(data)
     })
 
     test("create via writer; should contain value", () => {

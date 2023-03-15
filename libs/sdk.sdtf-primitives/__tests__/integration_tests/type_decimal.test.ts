@@ -5,6 +5,7 @@ import { SdtfPrimitiveTypeGuard, SdtfPrimitiveTypeIntegration } from "../../src"
 describe("type decimal", function () {
 
     let sdk: SdtfSdk
+    const content: number = 3.14159265358979
 
     beforeAll(async () => {
         sdk = await create({ integrations: [ new SdtfPrimitiveTypeIntegration() ] })
@@ -12,22 +13,22 @@ describe("type decimal", function () {
 
     test("read and get content; should not throw", async () => {
         const asset = await sdk.createParser().readFromFile("./test_data/decimal.sdtf")
-        const content = await asset.items[0].getContent()
-        expect(content).toBe(3.14159265358979)
-        SdtfPrimitiveTypeGuard.assertNumber(content)
+        const data = await asset.items[0].getContent()
+        expect(data).toBe(content)
+        SdtfPrimitiveTypeGuard.assertNumber(data)
     })
 
     test("create via writer; should contain value", () => {
         const constructor = sdk.createConstructor()
         const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
-            content: 3.14159265358979,
+            content,
             typeHint: SdtfPrimitiveTypeHintName.DECIMAL,
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)
         const item = readableAsset.items[0] as ISdtfReadableContentComponent
         expect(SdtfPrimitiveTypeGuard.isNumberType(item.typeHint?.name)).toBeTruthy()
-        expect(item.value).toBe(3.14159265358979)
+        expect(item.value).toBe(content)
         expect(item.accessor).toBeUndefined()
     })
 

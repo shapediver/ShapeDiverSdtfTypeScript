@@ -5,6 +5,7 @@ import { SdtfPrimitiveTypeGuard, SdtfPrimitiveTypeIntegration } from "../../src"
 describe("type uint8", function () {
 
     let sdk: SdtfSdk
+    const content: number = 42
 
     beforeAll(async () => {
         sdk = await create({ integrations: [ new SdtfPrimitiveTypeIntegration() ] })
@@ -12,22 +13,22 @@ describe("type uint8", function () {
 
     test("read and get content; should not throw", async () => {
         const asset = await sdk.createParser().readFromFile("./test_data/uint8.sdtf")
-        const content = await asset.items[0].getContent()
-        expect(content).toBe(42)
-        SdtfPrimitiveTypeGuard.assertNumber(content)
+        const data = await asset.items[0].getContent()
+        expect(data).toBe(content)
+        SdtfPrimitiveTypeGuard.assertNumber(data)
     })
 
     test("create via writer; should contain value", () => {
         const constructor = sdk.createConstructor()
         const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
-            content: 42,
+            content,
             typeHint: SdtfPrimitiveTypeHintName.UINT8,
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)
         const item = readableAsset.items[0] as ISdtfReadableContentComponent
         expect(SdtfPrimitiveTypeGuard.isNumberType(item.typeHint?.name)).toBeTruthy()
-        expect(item.value).toBe(42)
+        expect(item.value).toBe(content)
         expect(item.accessor).toBeUndefined()
     })
 
