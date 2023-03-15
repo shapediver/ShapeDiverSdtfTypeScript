@@ -5,6 +5,7 @@ import { SdtfPrimitiveTypeGuard, SdtfPrimitiveTypeIntegration } from "../../src"
 describe("type char", function () {
 
     let sdk: SdtfSdk
+    const content: string = "C"
 
     beforeAll(async () => {
         sdk = await create({ integrations: [ new SdtfPrimitiveTypeIntegration() ] })
@@ -12,22 +13,22 @@ describe("type char", function () {
 
     test("read and get content; should not throw", async () => {
         const asset = await sdk.createParser().readFromFile("./test_data/char.sdtf")
-        const content = await asset.items[0].getContent()
-        expect(content).toBe("C")
-        SdtfPrimitiveTypeGuard.assertString(content)
+        const data = await asset.items[0].getContent()
+        expect(data).toBe(content)
+        SdtfPrimitiveTypeGuard.assertString(data)
     })
 
     test("create via writer; should contain value", () => {
         const constructor = sdk.createConstructor()
         const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
-            content: "C",
+            content,
             typeHint: SdtfPrimitiveTypeHintName.CHAR,
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)
         const item = readableAsset.items[0] as ISdtfReadableContentComponent
         expect(SdtfPrimitiveTypeGuard.isStringType(item.typeHint?.name)).toBeTruthy()
-        expect(item.value).toBe("C")
+        expect(item.value).toBe(content)
         expect(item.accessor).toBeUndefined()
     })
 

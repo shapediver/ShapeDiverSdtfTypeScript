@@ -13,9 +13,9 @@ describe("type transform", function () {
 
     test("read and get content; should not throw", async () => {
         const asset = await sdk.createParser().readFromFile("./test_data/geometry_transform.sdtf")
-        const content = await asset.items[0].getContent()
-        expect(content).toStrictEqual(content)
-        SdtfGeometryTypeGuard.assertTransform(content)
+        const data = await asset.items[0].getContent()
+        expect(data).toStrictEqual(content)
+        SdtfGeometryTypeGuard.assertTransform(data)
     })
 
     test("create via writer; should contain value", () => {

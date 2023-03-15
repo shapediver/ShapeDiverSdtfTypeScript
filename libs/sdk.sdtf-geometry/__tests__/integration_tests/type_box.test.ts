@@ -6,8 +6,8 @@ describe("type box", function () {
 
     let sdk: SdtfSdk
     const content: SdtfGeometryBoxType = {
-        plane: [ [ 1, 2, 3 ], [ 4, 5, 6 ], [ 7, 8, 9 ] ],
-        extents: [ [ 1, 2 ], [ 3, 4 ], [ 5, 6 ] ],
+        plane: [ [ 0, 0, 0 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ],
+        extents: [ [ -1, 4 ], [ -2, 5 ], [ -3, 6 ] ],
     }
 
     beforeAll(async () => {
@@ -16,9 +16,9 @@ describe("type box", function () {
 
     test("read and get content; should not throw", async () => {
         const asset = await sdk.createParser().readFromFile("./test_data/geometry_box.sdtf")
-        const content = await asset.items[0].getContent()
-        expect(content).toStrictEqual(content)
-        SdtfGeometryTypeGuard.assertBox(content)
+        const data = await asset.items[0].getContent()
+        expect(data).toStrictEqual(content)
+        SdtfGeometryTypeGuard.assertBox(data)
     })
 
     test("create via writer; should contain value", () => {

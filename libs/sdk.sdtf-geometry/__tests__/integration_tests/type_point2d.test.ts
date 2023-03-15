@@ -16,10 +16,10 @@ describe("type point2d", function () {
         "geometry_point2f.sdtf",
     ])("%s, read and get content; should not throw", async (file) => {
         const asset = await sdk.createParser().readFromFile("./test_data/" + file)
-        const content = await asset.items[0].getContent()
-        expect(content).toStrictEqual(content)
-        SdtfGeometryTypeGuard.assertPoint(content)
-        SdtfGeometryTypeGuard.assertPoint2d(content)
+        const data = await asset.items[0].getContent()
+        expect(data).toStrictEqual(content)
+        SdtfGeometryTypeGuard.assertPoint(data)
+        SdtfGeometryTypeGuard.assertPoint2d(data)
     })
 
     test("create via writer; should contain value", () => {
