@@ -31,6 +31,7 @@ export class SdtfPrimitiveTypeReader implements ISdtfTypeReader {
             case SdtfPrimitiveTypeHintName.INT16:
             case SdtfPrimitiveTypeHintName.INT32:
             case SdtfPrimitiveTypeHintName.INT64:
+            case SdtfPrimitiveTypeHintName.JSON:
             case SdtfPrimitiveTypeHintName.SINGLE:
             case SdtfPrimitiveTypeHintName.STRING:
             case SdtfPrimitiveTypeHintName.UINT8:

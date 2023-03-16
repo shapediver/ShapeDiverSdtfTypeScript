@@ -22,6 +22,7 @@ import {
     SdtfGeometryRectangleType,
     SdtfGeometrySphereType,
     SdtfGeometryTorusType,
+    SdtfGeometryTransformListType,
     SdtfGeometryTransformType,
     SdtfGeometryVector2d,
     SdtfGeometryVector3d,
@@ -301,6 +302,16 @@ export class SdtfGeometryTypeGuard {
     /** Returns `true` when the given value is of type `SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM`. */
     static isTransform (value: unknown): value is SdtfGeometryTransformType {
         return Array.isArray(value) && value.length === 4 && value.every(v => isNumberArray(v) && v.length === 4)
+    }
+
+    /** Runtime check that raises an error when the given value is not of type `SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM_LIST`. */
+    static assertTransformList (value: unknown): asserts value is SdtfGeometryTransformListType {
+        if (!this.isTransformList(value)) throw new SdtfError("Assertion error: Value is not a geometry transform-list type.")
+    }
+
+    /** Returns `true` when the given value is of type `SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM_LIST`. */
+    static isTransformList (value: unknown): value is SdtfGeometryTransformListType {
+        return Array.isArray(value) && value.every(v => this.isTransform(v))
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfGeometryTypeHintName.GEOMETRY_VECTOR`. */

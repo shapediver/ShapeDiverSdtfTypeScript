@@ -41,6 +41,7 @@ export class SdtfGeometryTypeWriter implements ISdtfTypeWriter {
             case SdtfGeometryTypeHintName.GEOMETRY_SPHERE:
             case SdtfGeometryTypeHintName.GEOMETRY_TORUS:
             case SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM:
+            case SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM_LIST:
             case SdtfGeometryTypeHintName.GEOMETRY_VECTOR:
                 delete component.accessor   // Stored in JSON content
                 break

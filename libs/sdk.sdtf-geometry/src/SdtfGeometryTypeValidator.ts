@@ -55,6 +55,8 @@ export class SdtfGeometryTypeValidator {
                 return SdtfGeometryTypeGuard.isTorus(value)
             case SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM:
                 return SdtfGeometryTypeGuard.isTransform(value)
+            case SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM_LIST:
+                return SdtfGeometryTypeGuard.isTransformList(value)
             case SdtfGeometryTypeHintName.GEOMETRY_VECTOR:
                 return SdtfGeometryTypeGuard.isVector(value)
             default:

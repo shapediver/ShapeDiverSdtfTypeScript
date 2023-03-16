@@ -11,6 +11,7 @@ export enum SdtfPrimitiveTypeHintName {
     INT16 = "int16",
     INT32 = "int32",
     INT64 = "int64",
+    JSON = "json",
     SINGLE = "single",  // single-precision floating point
     STRING = "string",
     UINT8 = "uint8",
@@ -40,6 +41,7 @@ export enum SdtfGeometryTypeHintName {
     GEOMETRY_SPHERE = "geometry.sphere",
     GEOMETRY_TORUS = "geometry.torus",
     GEOMETRY_TRANSFORM = "geometry.transform",
+    GEOMETRY_TRANSFORM_LIST = "geometry.transformlist",
     GEOMETRY_VECTOR = "geometry.vector",
 }
 

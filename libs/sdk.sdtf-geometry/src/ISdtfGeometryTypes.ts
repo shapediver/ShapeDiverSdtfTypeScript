@@ -143,6 +143,7 @@ export type SdtfGeometryTransformType = [
     [ number, number, number, number ],
     [ number, number, number, number ],
 ]
+export type SdtfGeometryTransformListType = SdtfGeometryTransformType[]
 
 export type SdtfGeometryVectorType = SdtfGeometryVector2d | SdtfGeometryVector3d
 export type SdtfGeometryVector2d = [ number, number ]

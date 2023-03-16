@@ -11,6 +11,7 @@ import {
 } from "@shapediver/sdk.sdtf-core"
 import { Decimal } from "decimal.js"
 import { SdtfPrimitiveColorType } from "./ISdtfPrimitiveTypes"
+import { SdtfPrimitiveTypeGuard } from "./SdtfPrimitiveTypeGuard"
 
 const UUIDv4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
@@ -27,7 +28,7 @@ export class SdtfPrimitiveTypeValidator {
     validateComponent (typeHint: SdtfPrimitiveTypeHintName, value?: unknown, accessor?: ISdtfReadableAccessor | ISdtfWriteableAccessor): boolean {
         switch (typeHint) {
             case SdtfPrimitiveTypeHintName.BOOLEAN:
-                return SdtfPrimitiveTypeValidator.validateBooleanType(value)
+                return SdtfPrimitiveTypeGuard.isBoolean(value)
             case SdtfPrimitiveTypeHintName.CHAR:
                 return SdtfPrimitiveTypeValidator.validateCharType(value)
             case SdtfPrimitiveTypeHintName.COLOR:
@@ -35,9 +36,9 @@ export class SdtfPrimitiveTypeValidator {
             case SdtfPrimitiveTypeHintName.DATA:
                 return !!accessor && value === undefined
             case SdtfPrimitiveTypeHintName.DECIMAL:
-                return SdtfPrimitiveTypeValidator.validateDecimalType(value)
+                return SdtfPrimitiveTypeGuard.isNumber(value)
             case SdtfPrimitiveTypeHintName.DOUBLE:
-                return SdtfPrimitiveTypeValidator.validateDoubleType(value)
+                return SdtfPrimitiveTypeGuard.isNumber(value)
             case SdtfPrimitiveTypeHintName.GUID:
                 return SdtfPrimitiveTypeValidator.validateGuidType(value)
             case SdtfPrimitiveTypeHintName.IMAGE:
@@ -50,10 +51,12 @@ export class SdtfPrimitiveTypeValidator {
                 return SdtfPrimitiveTypeValidator.validateInt32Type(value)
             case SdtfPrimitiveTypeHintName.INT64:
                 return SdtfPrimitiveTypeValidator.validateInt64Type(value)
+            case SdtfPrimitiveTypeHintName.JSON:
+                return SdtfPrimitiveTypeGuard.isJson(value)
             case SdtfPrimitiveTypeHintName.SINGLE:
                 return SdtfPrimitiveTypeValidator.validateSingleType(value)
             case SdtfPrimitiveTypeHintName.STRING:
-                return SdtfPrimitiveTypeValidator.validateStringType(value)
+                return SdtfPrimitiveTypeGuard.isString(value)
             case SdtfPrimitiveTypeHintName.UINT8:
                 return SdtfPrimitiveTypeValidator.validateUint8Type(value)
             case SdtfPrimitiveTypeHintName.UINT16:
@@ -67,17 +70,18 @@ export class SdtfPrimitiveTypeValidator {
         }
     }
 
-    /** Returns `true` when the given value is a valid `SdtfPrimitiveTypeHintName.BOOLEAN` type, otherwise `false`. */
-    static validateBooleanType (value: unknown): value is boolean {
-        return typeof value === "boolean"
-    }
-
     /** Returns `true` when the given value is a valid `SdtfPrimitiveTypeHintName.CHAR` type, otherwise `false`. */
     static validateCharType (value: unknown): value is string {
-        return typeof value === "string" && value.length === 1
+        return SdtfPrimitiveTypeGuard.isString(value) && value.length === 1
     }
 
-    /** Returns `true` when the given value is a valid `SdtfPrimitiveTypeHintName.COLOR` type. */
+    /**
+     * Returns `true` when the given value is a valid `SdtfPrimitiveTypeHintName.COLOR` type.
+     *
+     * NOTE:
+     * The validator excepts both color types, regular (4 parts) and legacy (3 parts). However, a
+     * legacy color is later on mapped to a regular color structure.
+     */
     static validateColorType (value: unknown): value is SdtfPrimitiveColorType | string {
         // Validate color array
         if (isNumberArray(value) && value.length >= 3 && value.length <= 4) return true
@@ -88,25 +92,9 @@ export class SdtfPrimitiveTypeValidator {
         return (parts.length === 3 || parts.length === 4) && parts.every(p => isNumeric(p))
     }
 
-    /**
-     * Returns `true` when the given value is a valid `SdtfPrimitiveTypeHintName.DECIMAL` type, otherwise `false`.
-     *
-     * WARNING:
-     * JavaScript floating-point numbers have a maximum precision of 17, while .Net decimals have a precision of 29.
-     * Thus, JavaScript automatically rounds them to a precision of 17.
-     */
-    static validateDecimalType (value: unknown): value is number {
-        return isNumber(value)
-    }
-
-    /** Returns `true` when the given value is a valid `SdtfPrimitiveTypeHintName.DOUBLE` type, otherwise `false`. */
-    static validateDoubleType (value: unknown): value is number {
-        return isNumber(value)
-    }
-
     /** Returns `true` when the given value is a valid `SdtfPrimitiveTypeHintName.GUID` type, otherwise `false`. */
     static validateGuidType (value: unknown): value is string {
-        return typeof value === "string" && UUIDv4_REGEX.test(value)
+        return SdtfPrimitiveTypeGuard.isString(value) && UUIDv4_REGEX.test(value)
     }
 
     /** Returns `true` when the given value is a valid `SdtfPrimitiveTypeHintName.INT8` type, otherwise `false`. */
@@ -143,11 +131,6 @@ export class SdtfPrimitiveTypeValidator {
         return decimal.precision() <= 9 &&
             decimal.comparedTo(SINGLE_MIN) >= 0 &&
             decimal.comparedTo(SINGLE_MAX) <= 0
-    }
-
-    /** Returns `true` when the given value is a valid `SdtfPrimitiveTypeHintName.STRING` type, otherwise `false`. */
-    static validateStringType (value: unknown): value is string {
-        return typeof value === "string"
     }
 
     /** Returns `true` when the given value is a valid `SdtfPrimitiveTypeHintName.UINT8` type, otherwise `false`. */

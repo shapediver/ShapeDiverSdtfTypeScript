@@ -26,6 +26,7 @@ describe("isTypeHintSupported", function () {
         SdtfGeometryTypeHintName.GEOMETRY_SPHERE,
         SdtfGeometryTypeHintName.GEOMETRY_TORUS,
         SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM,
+        SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM_LIST,
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR,
     ])("supported type %s; should return true", (type) => {
         expect(integration.isTypeHintSupported(type)).toBeTruthy()
