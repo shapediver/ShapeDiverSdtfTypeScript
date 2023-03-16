@@ -49,6 +49,9 @@ describe("writeComponent", function () {
         SdtfGeometryTypeHintName.GEOMETRY_MATRIX,
         SdtfGeometryTypeHintName.GEOMETRY_PLANE,
         SdtfGeometryTypeHintName.GEOMETRY_POINT,
+        SdtfGeometryTypeHintName.GEOMETRY_POINT2D,
+        SdtfGeometryTypeHintName.GEOMETRY_POINT3D,
+        SdtfGeometryTypeHintName.GEOMETRY_POINT4D,
         SdtfGeometryTypeHintName.GEOMETRY_POLYLINE,
         SdtfGeometryTypeHintName.GEOMETRY_RAY,
         SdtfGeometryTypeHintName.GEOMETRY_RECTANGLE,
@@ -57,6 +60,9 @@ describe("writeComponent", function () {
         SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM,
         SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM_LIST,
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR,
+        SdtfGeometryTypeHintName.GEOMETRY_VECTOR2D,
+        SdtfGeometryTypeHintName.GEOMETRY_VECTOR3D,
+        SdtfGeometryTypeHintName.GEOMETRY_VECTOR4D,
     ])("component of type %s; should remove accessor component", (typeHintName) => {
         // Mock
         SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => true)

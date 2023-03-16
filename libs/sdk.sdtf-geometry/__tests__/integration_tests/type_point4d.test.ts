@@ -19,11 +19,14 @@ describe("type point4d", function () {
         SdtfGeometryTypeGuard.assertPoint4d(data)
     })
 
-    test("create via writer; should contain value", () => {
+    test.each([
+        SdtfGeometryTypeHintName.GEOMETRY_POINT,
+        SdtfGeometryTypeHintName.GEOMETRY_POINT4D,
+    ])("%s, create via writer; should contain value", (typeHint) => {
         const constructor = sdk.createConstructor()
         const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
             content,
-            typeHint: SdtfGeometryTypeHintName.GEOMETRY_POINT,
+            typeHint,
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)

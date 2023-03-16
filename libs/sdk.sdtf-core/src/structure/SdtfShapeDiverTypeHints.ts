@@ -35,6 +35,9 @@ export enum SdtfGeometryTypeHintName {
     GEOMETRY_MATRIX = "geometry.matrix",
     GEOMETRY_PLANE = "geometry.plane",
     GEOMETRY_POINT = "geometry.point",
+    GEOMETRY_POINT2D = "geometry.point2d",
+    GEOMETRY_POINT3D = "geometry.point3d",
+    GEOMETRY_POINT4D = "geometry.point4d",
     GEOMETRY_POLYLINE = "geometry.polyline",
     GEOMETRY_RAY = "geometry.ray",
     GEOMETRY_RECTANGLE = "geometry.rectangle",
@@ -43,6 +46,9 @@ export enum SdtfGeometryTypeHintName {
     GEOMETRY_TRANSFORM = "geometry.transform",
     GEOMETRY_TRANSFORM_LIST = "geometry.transformlist",
     GEOMETRY_VECTOR = "geometry.vector",
+    GEOMETRY_VECTOR2D = "geometry.vector2d",
+    GEOMETRY_VECTOR3D = "geometry.vector3d",
+    GEOMETRY_VECTOR4D = "geometry.vector4d",
 }
 
 export enum SdtfGrasshopperTypeHintName {

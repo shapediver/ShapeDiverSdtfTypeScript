@@ -145,6 +145,7 @@ export type SdtfGeometryTransformType = [
 ]
 export type SdtfGeometryTransformListType = SdtfGeometryTransformType[]
 
-export type SdtfGeometryVectorType = SdtfGeometryVector2d | SdtfGeometryVector3d
+export type SdtfGeometryVectorType = SdtfGeometryVector2d | SdtfGeometryVector3d | SdtfGeometryVector4d
 export type SdtfGeometryVector2d = [ number, number ]
 export type SdtfGeometryVector3d = [ number, number, number ]
+export type SdtfGeometryVector4d = [ number, number, number, number ]

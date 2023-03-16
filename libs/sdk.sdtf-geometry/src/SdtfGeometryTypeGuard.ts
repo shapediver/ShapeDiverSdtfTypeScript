@@ -26,6 +26,7 @@ import {
     SdtfGeometryTransformType,
     SdtfGeometryVector2d,
     SdtfGeometryVector3d,
+    SdtfGeometryVector4d,
     SdtfGeometryVectorType,
 } from "./ISdtfGeometryTypes"
 
@@ -319,9 +320,9 @@ export class SdtfGeometryTypeGuard {
         if (!this.isVector(value)) throw new SdtfError("Assertion error: Value is not a geometry vector type.")
     }
 
-    /** Returns `true` when the given value is of type `SdtfGeometryTypeHintName.GEOMETRY_VECTOR` with 2 or 3 elements. */
+    /** Returns `true` when the given value is of type `SdtfGeometryTypeHintName.GEOMETRY_VECTOR` with 2, 3 or 4 elements. */
     static isVector (value: unknown): value is SdtfGeometryVectorType {
-        return isNumberArray(value) && (value.length === 2 || value.length === 3)
+        return isNumberArray(value) && (value.length === 2 || value.length === 3 || value.length === 4)
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfGeometryTypeHintName.GEOMETRY_VECTOR`. */
@@ -330,7 +331,7 @@ export class SdtfGeometryTypeGuard {
     }
 
     /** Returns `true` when the given value is of type `SdtfGeometryTypeHintName.GEOMETRY_VECTOR` with 2 elements. */
-    private static isVector2d (value: unknown): value is SdtfGeometryVector2d {
+    static isVector2d (value: unknown): value is SdtfGeometryVector2d {
         return isNumberArray(value) && value.length === 2
     }
 
@@ -340,8 +341,18 @@ export class SdtfGeometryTypeGuard {
     }
 
     /** Returns `true` when the given value is of type `SdtfGeometryTypeHintName.GEOMETRY_VECTOR` with 3 elements. */
-    private static isVector3d (value: unknown): value is SdtfGeometryVector3d {
+    static isVector3d (value: unknown): value is SdtfGeometryVector3d {
         return isNumberArray(value) && value.length === 3
+    }
+
+    /** Runtime check that raises an error when the given value is not of type `SdtfGeometryTypeHintName.GEOMETRY_VECTOR`. */
+    static assertVector4d (value: unknown): asserts value is SdtfGeometryVector4d {
+        if (!this.isVector4d(value)) throw new SdtfError("Assertion error: Value is not a geometry vector type.")
+    }
+
+    /** Returns `true` when the given value is of type `SdtfGeometryTypeHintName.GEOMETRY_VECTOR` with 4 elements. */
+    static isVector4d (value: unknown): value is SdtfGeometryVector4d {
+        return isNumberArray(value) && value.length === 4
     }
 
 }
