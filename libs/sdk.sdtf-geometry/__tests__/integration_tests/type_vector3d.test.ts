@@ -22,11 +22,14 @@ describe("type vector3d", function () {
         SdtfGeometryTypeGuard.assertVector3d(data)
     })
 
-    test("create via writer; should contain value", () => {
+    test.each([
+        SdtfGeometryTypeHintName.GEOMETRY_VECTOR,
+        SdtfGeometryTypeHintName.GEOMETRY_VECTOR3D,
+    ])("%s, create via writer; should contain value", (typeHint) => {
         const constructor = sdk.createConstructor()
         const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
             content,
-            typeHint: SdtfGeometryTypeHintName.GEOMETRY_VECTOR,
+            typeHint,
         } ])
         const sdTF = constructor.createBinarySdtf(writeableAsset)
         const readableAsset = sdk.createParser().readFromBuffer(sdTF)

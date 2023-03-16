@@ -43,6 +43,12 @@ export class SdtfGeometryTypeValidator {
                 return SdtfGeometryTypeGuard.isPlane(value)
             case SdtfGeometryTypeHintName.GEOMETRY_POINT:
                 return SdtfGeometryTypeGuard.isPoint(value)
+            case SdtfGeometryTypeHintName.GEOMETRY_POINT2D:
+                return SdtfGeometryTypeGuard.isPoint2d(value)
+            case SdtfGeometryTypeHintName.GEOMETRY_POINT3D:
+                return SdtfGeometryTypeGuard.isPoint3d(value)
+            case SdtfGeometryTypeHintName.GEOMETRY_POINT4D:
+                return SdtfGeometryTypeGuard.isPoint4d(value)
             case SdtfGeometryTypeHintName.GEOMETRY_POLYLINE:
                 return SdtfGeometryTypeGuard.isPolyline(value)
             case SdtfGeometryTypeHintName.GEOMETRY_RAY:
@@ -59,6 +65,12 @@ export class SdtfGeometryTypeValidator {
                 return SdtfGeometryTypeGuard.isTransformList(value)
             case SdtfGeometryTypeHintName.GEOMETRY_VECTOR:
                 return SdtfGeometryTypeGuard.isVector(value)
+            case SdtfGeometryTypeHintName.GEOMETRY_VECTOR2D:
+                return SdtfGeometryTypeGuard.isVector2d(value)
+            case SdtfGeometryTypeHintName.GEOMETRY_VECTOR3D:
+                return SdtfGeometryTypeGuard.isVector3d(value)
+            case SdtfGeometryTypeHintName.GEOMETRY_VECTOR4D:
+                return SdtfGeometryTypeGuard.isVector4d(value)
             default:
                 sdAssertUnreachable(typeHint)
         }

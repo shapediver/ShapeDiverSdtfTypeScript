@@ -35,6 +35,9 @@ export class SdtfGeometryTypeReader implements ISdtfTypeReader {
             case SdtfGeometryTypeHintName.GEOMETRY_MATRIX:
             case SdtfGeometryTypeHintName.GEOMETRY_PLANE:
             case SdtfGeometryTypeHintName.GEOMETRY_POINT:
+            case SdtfGeometryTypeHintName.GEOMETRY_POINT2D:
+            case SdtfGeometryTypeHintName.GEOMETRY_POINT3D:
+            case SdtfGeometryTypeHintName.GEOMETRY_POINT4D:
             case SdtfGeometryTypeHintName.GEOMETRY_POLYLINE:
             case SdtfGeometryTypeHintName.GEOMETRY_RAY:
             case SdtfGeometryTypeHintName.GEOMETRY_RECTANGLE:
@@ -43,6 +46,9 @@ export class SdtfGeometryTypeReader implements ISdtfTypeReader {
             case SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM:
             case SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM_LIST:
             case SdtfGeometryTypeHintName.GEOMETRY_VECTOR:
+            case SdtfGeometryTypeHintName.GEOMETRY_VECTOR2D:
+            case SdtfGeometryTypeHintName.GEOMETRY_VECTOR3D:
+            case SdtfGeometryTypeHintName.GEOMETRY_VECTOR4D:
                 return component.value
             default:
                 sdAssertUnreachable(typeHint)

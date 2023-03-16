@@ -1,30 +1,28 @@
 import { ISdtfReadableContentComponent, SdtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
 import { create, SdtfSdk } from "../../../../packages/sdk.sdtf-v1"
-import { SdtfGeometryTypeGuard, SdtfGeometryTypeIntegration, SdtfGeometryVector2d } from "../../src"
+import { SdtfGeometryTypeGuard, SdtfGeometryTypeIntegration, SdtfGeometryVector4d } from "../../src"
 
-describe("type vector2d", function () {
+describe("type vector4d", function () {
 
     let sdk: SdtfSdk
-    const content: SdtfGeometryVector2d = [ 1.0, 2.0 ]
+    const content: SdtfGeometryVector4d = [ 1.0, 2.0, 3.0, 4.0 ]
 
     beforeAll(async () => {
         sdk = await create({ integrations: [ new SdtfGeometryTypeIntegration() ] })
     })
 
-    test.each([
-        "geometry_vector2d.sdtf",
-        "geometry_vector2f.sdtf",
-    ])("%s, read and get content; should not throw", async (file) => {
-        const asset = await sdk.createParser().readFromFile("./test_data/" + file)
+    // TODO remove skip when the test_data file has been created via Grasshopper
+    test.skip("read and get content; should not throw", async () => {
+        const asset = await sdk.createParser().readFromFile("./test_data/geometry_vector4d.sdtf")
         const data = await asset.items[0].getContent()
         expect(data).toStrictEqual(content)
         SdtfGeometryTypeGuard.assertVector(data)
-        SdtfGeometryTypeGuard.assertVector2d(data)
+        SdtfGeometryTypeGuard.assertVector4d(data)
     })
 
     test.each([
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR,
-        SdtfGeometryTypeHintName.GEOMETRY_VECTOR2D,
+        SdtfGeometryTypeHintName.GEOMETRY_VECTOR4D,
     ])("%s, create via writer; should contain value", (typeHint) => {
         const constructor = sdk.createConstructor()
         const writeableAsset = constructor.getWriter().createSimpleDataSdtf("", [ {
