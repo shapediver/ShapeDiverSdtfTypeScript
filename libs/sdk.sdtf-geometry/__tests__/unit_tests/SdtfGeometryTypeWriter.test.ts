@@ -1,5 +1,7 @@
 import { ISdtfWriteableAttribute, SdtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { SdtfWriteableComponentFactory } from "../../../../packages/sdk.sdtf-v1/src/writer/SdtfWriteableComponentFactory"
+import {
+    SdtfWriteableComponentFactory,
+} from "../../../../packages/sdk.sdtf-v1/src/writer/SdtfWriteableComponentFactory"
 import { SdtfGeometryTypeValidator } from "../../src/SdtfGeometryTypeValidator"
 import { SdtfGeometryTypeWriter } from "../../src/SdtfGeometryTypeWriter"
 
@@ -53,6 +55,7 @@ describe("writeComponent", function () {
         SdtfGeometryTypeHintName.GEOMETRY_SPHERE,
         SdtfGeometryTypeHintName.GEOMETRY_TORUS,
         SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM,
+        SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM_LIST,
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR,
     ])("component of type %s; should remove accessor component", (typeHintName) => {
         // Mock

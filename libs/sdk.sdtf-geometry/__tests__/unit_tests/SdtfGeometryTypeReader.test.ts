@@ -55,6 +55,7 @@ describe("readComponent", function () {
         SdtfGeometryTypeHintName.GEOMETRY_SPHERE,
         SdtfGeometryTypeHintName.GEOMETRY_TORUS,
         SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM,
+        SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM_LIST,
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR,
     ])("component of type %s; should return value", async (typeHintName) => {
         // Mock

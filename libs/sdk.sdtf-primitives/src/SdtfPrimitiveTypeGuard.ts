@@ -1,5 +1,5 @@
-import { isNumber, isNumberArray, SdtfError, SdtfPrimitiveTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { SdtfPrimitiveColorType } from "./ISdtfPrimitiveTypes"
+import { isDataObject, isNumber, isNumberArray, SdtfError, SdtfPrimitiveTypeHintName } from "@shapediver/sdk.sdtf-core"
+import { SdtfPrimitiveColorType, SdtfPrimitiveJsonType } from "./ISdtfPrimitiveTypes"
 
 export class SdtfPrimitiveTypeGuard {
 
@@ -170,6 +170,24 @@ export class SdtfPrimitiveTypeGuard {
             SdtfPrimitiveTypeHintName.DATA,
             SdtfPrimitiveTypeHintName.IMAGE,
         ].includes(typeHint as SdtfPrimitiveTypeHintName)
+    }
+
+    /**
+     * Runtime check that raises an error when the given value is not of type `SdtfPrimitiveTypeHintName.JSON`.
+     * @throws {@link SdtfError} when the invariant is not met.
+     */
+    static assertJson (value: unknown): asserts value is SdtfPrimitiveJsonType {
+        if (!this.isJson(value)) throw new SdtfError("Assertion error: Value is not a primitive json type.")
+    }
+
+    /** Returns `true` when the given value is of type `SdtfPrimitiveTypeHintName.JSON`. */
+    static isJson (value: unknown): value is SdtfPrimitiveJsonType {
+        return isDataObject(value)|| Array.isArray(value)
+    }
+
+    /** Returns `true` when the given type hint name is of type `SdtfPrimitiveTypeHintName.JSON`. */
+    static isJsonType (typeHint: string | undefined): typeHint is SdtfPrimitiveTypeHintName.JSON {
+        return typeHint === SdtfPrimitiveTypeHintName.JSON
     }
 
 }

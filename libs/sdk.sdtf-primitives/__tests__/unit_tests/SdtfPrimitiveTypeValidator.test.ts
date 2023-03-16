@@ -177,6 +177,18 @@ describe("validateInt64Type", function () {
 
 })
 
+describe("validateJsonType", function () {
+
+    test("valid", () => {
+        expect(validator.validateComponent(SdtfPrimitiveTypeHintName.JSON, { foo: "bar" })).toBeTruthy()
+    })
+
+    test("invalid", () => {
+        expect(validator.validateComponent(SdtfPrimitiveTypeHintName.JSON, "foobar")).toBeFalsy()
+    })
+
+})
+
 describe("validateSingleType", function () {
 
     test("valid", () => {

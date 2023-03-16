@@ -43,6 +43,7 @@ describe("writeComponent", function () {
         SdtfPrimitiveTypeHintName.INT16,
         SdtfPrimitiveTypeHintName.INT32,
         SdtfPrimitiveTypeHintName.INT64,
+        SdtfPrimitiveTypeHintName.JSON,
         SdtfPrimitiveTypeHintName.SINGLE,
         SdtfPrimitiveTypeHintName.STRING,
         SdtfPrimitiveTypeHintName.UINT8,
