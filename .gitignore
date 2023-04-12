@@ -16,3 +16,5 @@ __pycache__/
 
 # JetBrains products are ignored by default - remove where needed
 .idea/
+
+/packages/sdk.tester
