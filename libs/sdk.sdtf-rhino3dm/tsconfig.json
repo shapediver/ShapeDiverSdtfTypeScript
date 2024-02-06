@@ -2,7 +2,8 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "rootDir": "src",
-        "outDir": "dist"
+        "outDir": "dist",
+        "sourceRoot": "libs/sdk.sdtf-rhino3dm/src"
     },
     "include": [
         "./src/**/*.ts"
