@@ -1,6 +1,6 @@
 {
   "name": "@shapediver/sdk.sdtf-geometry",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Extension containing sdTF geometry types",
   "keywords": [
     "shapediver",
@@ -38,7 +38,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
-    "@shapediver/sdk.sdtf-core": "~1.4.1"
+    "@shapediver/sdk.sdtf-core": "~1.4.2"
   },
   "devDependencies": {
     "jest": "~29.7.0",

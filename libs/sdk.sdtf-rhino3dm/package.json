@@ -38,7 +38,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
-    "@shapediver/sdk.sdtf-core": "~1.4.0",
+    "@shapediver/sdk.sdtf-core": "~1.4.2",
     "pako": "~2.1.0",
     "rhino3dm": "~8.0.1"
   },
