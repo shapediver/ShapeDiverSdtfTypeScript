@@ -2,8 +2,7 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "rootDir": "src",
-        "outDir": "dist",
-        "sourceRoot": "libs/sdk.sdtf-core/src"
+        "outDir": "dist"
     },
     "include": [
         "./src/**/*.ts"
