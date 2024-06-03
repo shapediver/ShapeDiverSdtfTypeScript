@@ -147,9 +147,20 @@ export class SdtfHttpClient implements ISdtfHttpClient {
 
         // Validate response status
         if (response.status === 416) throw new SdtfError("Invalid range requested.")
-        if (response.status !== 206) throw new SdtfError(`Received HTTP status ${ response.status }.`)
+        if (response.status !== 200 && response.status !== 206)
+            throw new SdtfError(`Received HTTP status ${ response.status }.`)
 
-        return response.data
+        const data = response.data
+
+        // This is required to support Node.js as well as Browsers
+        const buffer = (data instanceof ArrayBuffer) ? data : Uint8Array.from(data).buffer
+
+        // The browser might cache the full data of the response. When this happens, a consecutive
+        // partial-fetch request, will return the full data as well. Thus, we have to extract the
+        // requested part manually.
+        return (buffer.byteLength > length) ?
+            buffer.slice(offset, offset + length) :
+            buffer
     }
 
     /**
