@@ -40,12 +40,12 @@
   "dependencies": {
     "@shapediver/sdk.sdtf-core": "~1.4.2",
     "pako": "~2.1.0",
-    "rhino3dm": "~8.0.1"
+    "rhino3dm": "~8.6.1"
   },
   "devDependencies": {
     "@types/pako": "~2.0.3",
     "jest": "~29.7.0",
     "lerna": "~7.4.2",
-    "typescript": "~5.3.3"
+    "typescript": "~5.4.5"
   }
 }

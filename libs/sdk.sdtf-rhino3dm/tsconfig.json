@@ -2,7 +2,8 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "rootDir": "src",
-        "outDir": "dist"
+        "outDir": "dist",
+        "noImplicitAny": false // Required by rhino3dm@8.6.1 - remove when possible!
     },
     "include": [
         "./src/**/*.ts"
