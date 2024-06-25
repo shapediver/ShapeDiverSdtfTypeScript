@@ -113,8 +113,8 @@ describe("mapColor", function () {
     })
 
     test("legacy color format", () => {
-        expect(reader.mapColor("1,1,1")).toStrictEqual([ 1, 1, 1, 1 ])
-        expect(reader.mapColor("1,1,1,0")).toStrictEqual([ 1, 1, 1, 0 ])
+        expect(reader.mapColor("255,255,255")).toStrictEqual([ 1, 1, 1, 1 ])
+        expect(reader.mapColor("255,255,255,0")).toStrictEqual([ 1, 1, 1, 0 ])
     })
 
 })

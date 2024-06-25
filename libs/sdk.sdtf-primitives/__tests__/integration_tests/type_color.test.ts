@@ -21,7 +21,7 @@ describe("type color", function () {
     test("read legacy and get content", async () => {
         const asset = await sdk.createParser().readFromFile("./test_data/color_legacy.sdtf")
         const content = await asset.items[0].getContent()
-        expect(content).toStrictEqual([ 126, 156, 255, 1 ])
+        expect(content).toStrictEqual([ 126 / 255, 156 / 255, 255 / 255, 1 ])
         SdtfPrimitiveTypeGuard.assertColor(content)
     })
 
