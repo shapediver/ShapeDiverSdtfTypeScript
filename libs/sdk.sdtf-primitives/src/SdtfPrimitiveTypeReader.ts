@@ -61,8 +61,9 @@ export class SdtfPrimitiveTypeReader implements ISdtfTypeReader {
             // Handle regular color
             parts = content
         } else {
-            // Handle legacy color: Map sdTF color string to array
-            parts = (content as string).split(",").map(p => Number(p))
+            // Handle legacy color: Map sdTF color string to array and divide by 255
+            // Example: "255,255,255" -> [ 1, 1, 1 ]
+            parts = (content as string).split(",").map(p => Number(p) / 255)
         }
 
         let res = [ ...parts ]
