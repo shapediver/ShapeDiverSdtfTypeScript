@@ -10,33 +10,33 @@ import {
     ISdtfReadableFileInfo,
     ISdtfReadableNode,
     ISdtfReadableTypeHint,
-} from "@shapediver/sdk.sdtf-core"
+} from '@shapediver/sdk.sdtf-core';
 
 export interface ISdtfReadableComponentList {
+    accessors: ISdtfReadableAccessor[];
 
-    accessors: ISdtfReadableAccessor[]
+    asset: ISdtfReadableAsset;
 
-    asset: ISdtfReadableAsset
+    attributes: ISdtfReadableAttributes[];
 
-    attributes: ISdtfReadableAttributes[]
+    buffers: ISdtfReadableBuffer[];
 
-    buffers: ISdtfReadableBuffer[]
+    bufferViews: ISdtfReadableBufferView[];
 
-    bufferViews: ISdtfReadableBufferView[]
+    chunks: ISdtfReadableChunk[];
 
-    chunks: ISdtfReadableChunk[]
+    items: (ISdtfReadableDataItem & ISdtfReadableContentComponent)[];
 
-    items: (ISdtfReadableDataItem & ISdtfReadableContentComponent)[]
+    nodes: ISdtfReadableNode[];
 
-    nodes: ISdtfReadableNode[]
+    typeHints: ISdtfReadableTypeHint[];
 
-    typeHints: ISdtfReadableTypeHint[]
-
-    fileInfo: ISdtfReadableFileInfo
-
+    fileInfo: ISdtfReadableFileInfo;
 }
 
-export function readableComponentListFromAsset (asset: ISdtfReadableAsset): ISdtfReadableComponentList {
+export function readableComponentListFromAsset(
+    asset: ISdtfReadableAsset
+): ISdtfReadableComponentList {
     return {
         accessors: asset.accessors,
         asset: asset,
@@ -48,5 +48,5 @@ export function readableComponentListFromAsset (asset: ISdtfReadableAsset): ISdt
         nodes: asset.nodes,
         typeHints: asset.typeHints,
         fileInfo: asset.fileInfo,
-    }
+    };
 }

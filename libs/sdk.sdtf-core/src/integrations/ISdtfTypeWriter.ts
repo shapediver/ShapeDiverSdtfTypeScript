@@ -1,5 +1,5 @@
-import { ISdtfWriteableAttribute } from "../writer/components/ISdtfWriteableAttributes"
-import { ISdtfWriteableDataItem } from "../writer/components/ISdtfWriteableDataItem"
+import { ISdtfWriteableAttribute } from '../writer/components/ISdtfWriteableAttributes';
+import { ISdtfWriteableDataItem } from '../writer/components/ISdtfWriteableDataItem';
 
 /**
  * The writer is the central component for modifying and mapping content data of your custom integration-type, whenever
@@ -19,7 +19,6 @@ import { ISdtfWriteableDataItem } from "../writer/components/ISdtfWriteableDataI
  * integration, the user would receive an object instance again.
  */
 export interface ISdtfTypeWriter {
-
     /*
      * Prepares the content of a single component for being written to a new sdTF file.
      * Additionally, the component might be validated to ensure a correct format for the respective type hint.
@@ -29,7 +28,7 @@ export interface ISdtfTypeWriter {
      *
      * @throws {@link SdtfError} when the component is invalid or something goes wrong.
      */
-    writeComponent (component: ISdtfWriteableAttribute | ISdtfWriteableDataItem): void
+    writeComponent(component: ISdtfWriteableAttribute | ISdtfWriteableDataItem): void;
 
     /*
      * Processes multiple components at once and prepares them for writing.
@@ -40,6 +39,5 @@ export interface ISdtfTypeWriter {
      *
      * @throws {@link SdtfError} when the component is invalid or something goes wrong.
      */
-    postProcessComponents (components: (ISdtfWriteableAttribute | ISdtfWriteableDataItem)[]): void
-
+    postProcessComponents(components: (ISdtfWriteableAttribute | ISdtfWriteableDataItem)[]): void;
 }

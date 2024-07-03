@@ -2,37 +2,36 @@ import {
     ISdtfReadableContentComponent,
     ISdtfReadableTypeHint,
     SdtfGeometryTypeHintName,
-} from "@shapediver/sdk.sdtf-core"
-import { SdtfGeometryTypeReader } from "../../src/SdtfGeometryTypeReader"
-import { SdtfGeometryTypeValidator } from "../../src/SdtfGeometryTypeValidator"
+} from '@shapediver/sdk.sdtf-core';
+import { SdtfGeometryTypeReader } from '../../src/SdtfGeometryTypeReader';
+import { SdtfGeometryTypeValidator } from '../../src/SdtfGeometryTypeValidator';
 
-const reader = new SdtfGeometryTypeReader()
+const reader = new SdtfGeometryTypeReader();
 
-describe("readComponent", function () {
-
-    let origValidateComponent: any
+describe('readComponent', function () {
+    let origValidateComponent: any;
 
     beforeAll(() => {
-        origValidateComponent = SdtfGeometryTypeValidator.prototype.validateComponent
-    })
+        origValidateComponent = SdtfGeometryTypeValidator.prototype.validateComponent;
+    });
 
     afterAll(() => {
-        SdtfGeometryTypeValidator.prototype.validateComponent = origValidateComponent
-    })
+        SdtfGeometryTypeValidator.prototype.validateComponent = origValidateComponent;
+    });
 
-    test("invalid component; should throw", async () => {
+    test('invalid component; should throw', async () => {
         // Mock
-        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => false)
+        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => false);
 
-        expect(async () => reader.readComponent({})).rejects.toThrow()
-    })
+        expect(async () => reader.readComponent({})).rejects.toThrow();
+    });
 
-    test("unsupported type hint name; should throw", async () => {
+    test('unsupported type hint name; should throw', async () => {
         // Mock
-        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => true)
+        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => true);
 
-        expect(async () => reader.readComponent({})).rejects.toThrow()
-    })
+        expect(async () => reader.readComponent({})).rejects.toThrow();
+    });
 
     test.each([
         SdtfGeometryTypeHintName.GEOMETRY_ARC,
@@ -63,16 +62,15 @@ describe("readComponent", function () {
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR2D,
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR3D,
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR4D,
-    ])("component of type %s; should return value", async (typeHintName) => {
+    ])('component of type %s; should return value', async (typeHintName) => {
         // Mock
-        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => true)
+        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => true);
 
         let component: ISdtfReadableContentComponent = {
             typeHint: { name: typeHintName } as ISdtfReadableTypeHint,
-            value: "value",
-        }
+            value: 'value',
+        };
 
-        expect(await reader.readComponent(component)).toBe("value")
-    })
-
-})
+        expect(await reader.readComponent(component)).toBe('value');
+    });
+});

@@ -1,15 +1,13 @@
-import { ISdtfReadableAccessor } from "./components/ISdtfReadableAccessor"
-import { ISdtfReadableTypeHint } from "./components/ISdtfReadableTypeHint"
+import { ISdtfReadableAccessor } from './components/ISdtfReadableAccessor';
+import { ISdtfReadableTypeHint } from './components/ISdtfReadableTypeHint';
 
 export interface ISdtfReadableContentComponent {
-
     /** Referenced accessor to binary data. */
-    accessor?: ISdtfReadableAccessor
+    accessor?: ISdtfReadableAccessor;
 
     /** The type hint of the referenced accessor or value. */
-    typeHint?: ISdtfReadableTypeHint
+    typeHint?: ISdtfReadableTypeHint;
 
     /** Embedded representation of the data item. */
-    value?: unknown
-
+    value?: unknown;
 }

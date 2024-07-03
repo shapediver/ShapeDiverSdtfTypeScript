@@ -1,10 +1,9 @@
-import { SdtfPrimitiveTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { SdtfPrimitiveTypeIntegration } from "../../src"
+import { SdtfPrimitiveTypeHintName } from '@shapediver/sdk.sdtf-core';
+import { SdtfPrimitiveTypeIntegration } from '../../src';
 
-const integration = new SdtfPrimitiveTypeIntegration()
+const integration = new SdtfPrimitiveTypeIntegration();
 
-describe("isTypeHintSupported", function () {
-
+describe('isTypeHintSupported', function () {
     test.each([
         SdtfPrimitiveTypeHintName.BOOLEAN,
         SdtfPrimitiveTypeHintName.CHAR,
@@ -25,12 +24,11 @@ describe("isTypeHintSupported", function () {
         SdtfPrimitiveTypeHintName.UINT16,
         SdtfPrimitiveTypeHintName.UINT32,
         SdtfPrimitiveTypeHintName.UINT64,
-    ])("supported type %s; should return true", (type) => {
-        expect(integration.isTypeHintSupported(type)).toBeTruthy()
-    })
+    ])('supported type %s; should return true', (type) => {
+        expect(integration.isTypeHintSupported(type)).toBeTruthy();
+    });
 
-    test("unsupported type; should return false", () => {
-        expect(integration.isTypeHintSupported("foobar")).toBeFalsy()
-    })
-
-})
+    test('unsupported type; should return false', () => {
+        expect(integration.isTypeHintSupported('foobar')).toBeFalsy();
+    });
+});

@@ -1,45 +1,45 @@
 {
-  "name": "@shapediver/sdk.sdtf-core",
-  "version": "1.5.2",
-  "description": "Base implementation for all sdTF TypeScript SDKs",
-  "keywords": [
-    "shapediver",
-    "sdk",
-    "sdTF"
-  ],
-  "author": "ShapeDiver",
-  "license": "ISC",
-  "main": "dist/index.js",
-  "directories": {
-    "test": "__tests__"
-  },
-  "files": [
-    "dist",
-    "src"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shapediver/ShapeDiverSdtfTypeScript.git"
-  },
-  "scripts": {
-    "check": "tsc --noEmit",
-    "build": "bash ../../scripts/build.sh",
-    "build-dep": "bash ../../scripts/build-dep.sh",
-    "pre-publish": "bash ../../scripts/pre-publish.sh",
-    "post-publish": "bash ../../scripts/post-publish.sh"
-  },
-  "bugs": {
-    "url": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/issues"
-  },
-  "homepage": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/tree/master/libs/sdk.sdtf-core#readme",
-  "typings": "dist/index.d.ts",
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node"
-  },
-  "devDependencies": {
-    "jest": "~29.7.0",
-    "lerna": "~7.4.2",
-    "typescript": "~5.5.2"
-  }
+    "name": "@shapediver/sdk.sdtf-core",
+    "version": "1.5.2",
+    "description": "Base implementation for all sdTF TypeScript SDKs",
+    "keywords": [
+        "shapediver",
+        "sdk",
+        "sdTF"
+    ],
+    "author": "ShapeDiver",
+    "license": "ISC",
+    "main": "dist/index.js",
+    "directories": {
+        "test": "__tests__"
+    },
+    "files": [
+        "dist",
+        "src"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/shapediver/ShapeDiverSdtfTypeScript.git"
+    },
+    "scripts": {
+        "check": "tsc --noEmit",
+        "build": "bash ../../scripts/build.sh",
+        "build-dep": "bash ../../scripts/build-dep.sh",
+        "pre-publish": "bash ../../scripts/pre-publish.sh",
+        "post-publish": "bash ../../scripts/post-publish.sh"
+    },
+    "bugs": {
+        "url": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/issues"
+    },
+    "homepage": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/tree/master/libs/sdk.sdtf-core#readme",
+    "typings": "dist/index.d.ts",
+    "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node"
+    },
+    "devDependencies": {
+        "jest": "~29.7.0",
+        "lerna": "~7.4.2",
+        "typescript": "~5.5.2"
+    }
 }

@@ -4,19 +4,18 @@ import {
     sdAssertUnreachable,
     SdtfError,
     SdtfGeometryTypeHintName,
-} from "@shapediver/sdk.sdtf-core"
-import { SdtfGeometryTypeValidator } from "./SdtfGeometryTypeValidator"
+} from '@shapediver/sdk.sdtf-core';
+import { SdtfGeometryTypeValidator } from './SdtfGeometryTypeValidator';
 
 export class SdtfGeometryTypeReader implements ISdtfTypeReader {
+    private readonly validator = new SdtfGeometryTypeValidator();
 
-    private readonly validator = new SdtfGeometryTypeValidator()
-
-    async readComponent (component: ISdtfReadableContentComponent): Promise<unknown> {
-        const typeHint = component.typeHint?.name as SdtfGeometryTypeHintName
+    async readComponent(component: ISdtfReadableContentComponent): Promise<unknown> {
+        const typeHint = component.typeHint?.name as SdtfGeometryTypeHintName;
 
         // Make sure that the component consists of valid data
         if (!this.validator.validateComponent(typeHint, component.value, component.accessor)) {
-            throw new SdtfError(`Cannot read value of type '${ typeHint }': Invalid component.`)
+            throw new SdtfError(`Cannot read value of type '${typeHint}': Invalid component.`);
         }
 
         // All values of a geometry type are stored inside the JSON content.
@@ -49,10 +48,9 @@ export class SdtfGeometryTypeReader implements ISdtfTypeReader {
             case SdtfGeometryTypeHintName.GEOMETRY_VECTOR2D:
             case SdtfGeometryTypeHintName.GEOMETRY_VECTOR3D:
             case SdtfGeometryTypeHintName.GEOMETRY_VECTOR4D:
-                return component.value
+                return component.value;
             default:
-                sdAssertUnreachable(typeHint)
+                sdAssertUnreachable(typeHint);
         }
     }
-
 }

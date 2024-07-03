@@ -1,37 +1,33 @@
-import { ISdtfWriteableAsset, SdtfTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { ISdtfGrasshopperSdtfBuilder } from "./builder/ISdtfGrasshopperSdtfBuilder"
+import { ISdtfWriteableAsset, SdtfTypeHintName } from '@shapediver/sdk.sdtf-core';
+import { ISdtfGrasshopperSdtfBuilder } from './builder/ISdtfGrasshopperSdtfBuilder';
 
 export interface ISdtfWriterAttributes {
-    name: string
+    name: string;
 
-    content: unknown | { data: ArrayBuffer, contentType: string },
+    content: unknown | { data: ArrayBuffer; contentType: string };
 
-    typeHint?: SdtfTypeHintName | string,
+    typeHint?: SdtfTypeHintName | string;
 }
 
 export interface ISdtfWriterDataItem {
+    content: unknown | { data: ArrayBuffer; contentType: string };
 
-    content: unknown | { data: ArrayBuffer, contentType: string },
+    typeHint?: SdtfTypeHintName | string;
 
-    typeHint?: SdtfTypeHintName | string,
-
-    attributes?: ISdtfWriterAttributes[]
-
+    attributes?: ISdtfWriterAttributes[];
 }
 
 /** A high-level asset builder that allows to create simple sdTF structures directly from data. */
 export interface ISdtfWriter {
-
     /**
      * Creates a simple linear sdTF structure that consists of a single chunk with one or more data nodes.
      * The given data content is either stored directly in the sdTF JSON content or in the sdTF buffer.
      */
-    createSimpleDataSdtf (chunkName: string, data: ISdtfWriterDataItem[]): ISdtfWriteableAsset
+    createSimpleDataSdtf(chunkName: string, data: ISdtfWriterDataItem[]): ISdtfWriteableAsset;
 
     /**
      * Returns a new builder instance to create a grasshopper sdTF asset.
      * This sdTF asset includes chunks that are readable by the ShapeDiver Grasshopper input component.
      */
-    createGrasshopperSdtfBuilder (): ISdtfGrasshopperSdtfBuilder
-
+    createGrasshopperSdtfBuilder(): ISdtfGrasshopperSdtfBuilder;
 }

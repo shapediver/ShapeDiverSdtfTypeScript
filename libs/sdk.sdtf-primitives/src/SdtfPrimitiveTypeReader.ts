@@ -5,19 +5,18 @@ import {
     sdAssertUnreachable,
     SdtfError,
     SdtfPrimitiveTypeHintName,
-} from "@shapediver/sdk.sdtf-core"
-import { SdtfPrimitiveTypeValidator } from "./SdtfPrimitiveTypeValidator"
+} from '@shapediver/sdk.sdtf-core';
+import { SdtfPrimitiveTypeValidator } from './SdtfPrimitiveTypeValidator';
 
 export class SdtfPrimitiveTypeReader implements ISdtfTypeReader {
+    private readonly validator = new SdtfPrimitiveTypeValidator();
 
-    private readonly validator = new SdtfPrimitiveTypeValidator()
-
-    async readComponent (component: ISdtfReadableContentComponent): Promise<unknown> {
-        const typeHint = component.typeHint?.name as SdtfPrimitiveTypeHintName
+    async readComponent(component: ISdtfReadableContentComponent): Promise<unknown> {
+        const typeHint = component.typeHint?.name as SdtfPrimitiveTypeHintName;
 
         // Make sure that the component consists of valid data
         if (!this.validator.validateComponent(typeHint, component.value, component.accessor)) {
-            throw new SdtfError(`Cannot read value of type '${ typeHint }': Invalid component.`)
+            throw new SdtfError(`Cannot read value of type '${typeHint}': Invalid component.`);
         }
 
         // Map the component data and return the result
@@ -38,14 +37,14 @@ export class SdtfPrimitiveTypeReader implements ISdtfTypeReader {
             case SdtfPrimitiveTypeHintName.UINT16:
             case SdtfPrimitiveTypeHintName.UINT32:
             case SdtfPrimitiveTypeHintName.UINT64:
-                return component.value  // Nothing to map here
+                return component.value; // Nothing to map here
             case SdtfPrimitiveTypeHintName.COLOR:
-                return this.mapColor(component.value)
+                return this.mapColor(component.value);
             case SdtfPrimitiveTypeHintName.DATA:
             case SdtfPrimitiveTypeHintName.IMAGE:
-                return this.mapGenericData(await component.accessor?.getContent())
+                return this.mapGenericData(await component.accessor?.getContent());
             default:
-                sdAssertUnreachable(typeHint)
+                sdAssertUnreachable(typeHint);
         }
     }
 
@@ -54,24 +53,24 @@ export class SdtfPrimitiveTypeReader implements ISdtfTypeReader {
      * Its external representation is a number-array.
      * @private
      */
-    mapColor (content: unknown): unknown {
-        let parts: number[]
+    mapColor(content: unknown): unknown {
+        let parts: number[];
 
         if (Array.isArray(content)) {
             // Handle regular color
-            parts = content
+            parts = content;
         } else {
             // Handle legacy color: Map sdTF color string to array and divide by 255
             // Example: "255,255,255" -> [ 1, 1, 1 ]
-            parts = (content as string).split(",").map(p => Number(p) / 255)
+            parts = (content as string).split(',').map((p) => Number(p) / 255);
         }
 
-        let res = [ ...parts ]
+        let res = [...parts];
 
         // Default alpha content is `1`
-        if (res.length === 3) res = [ ...parts, 1 ]
+        if (res.length === 3) res = [...parts, 1];
 
-        return res
+        return res;
     }
 
     /**
@@ -80,8 +79,7 @@ export class SdtfPrimitiveTypeReader implements ISdtfTypeReader {
      * @private
      * @throws {@link SdtfError} when content is not a {@link ISdtfBufferValue}.
      */
-    mapGenericData (content?: ISdtfBufferValue): unknown {
-        return content?.data
+    mapGenericData(content?: ISdtfBufferValue): unknown {
+        return content?.data;
     }
-
 }

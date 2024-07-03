@@ -1,20 +1,21 @@
-import { ISdtfWriteableTypeHint } from "@shapediver/sdk.sdtf-core"
-import { SdtfBaseWriteableComponent } from "./SdtfBaseWriteableComponent"
+import { ISdtfWriteableTypeHint } from '@shapediver/sdk.sdtf-core';
+import { SdtfBaseWriteableComponent } from './SdtfBaseWriteableComponent';
 
-export class SdtfWriteableTypeHint extends SdtfBaseWriteableComponent implements ISdtfWriteableTypeHint {
+export class SdtfWriteableTypeHint
+    extends SdtfBaseWriteableComponent
+    implements ISdtfWriteableTypeHint
+{
+    name?: string;
 
-    name?: string
+    additionalProperties: Record<string, unknown> = {};
 
-    additionalProperties: Record<string, unknown> = {}
+    static clone(orig: ISdtfWriteableTypeHint): ISdtfWriteableTypeHint {
+        const clone = new SdtfWriteableTypeHint();
 
-    static clone (orig: ISdtfWriteableTypeHint): ISdtfWriteableTypeHint {
-        const clone = new SdtfWriteableTypeHint()
+        clone.name = orig.name;
 
-        clone.name = orig.name
+        clone.additionalProperties = { ...orig.additionalProperties };
 
-        clone.additionalProperties = { ...orig.additionalProperties }
-
-        return clone
+        return clone;
     }
-
 }

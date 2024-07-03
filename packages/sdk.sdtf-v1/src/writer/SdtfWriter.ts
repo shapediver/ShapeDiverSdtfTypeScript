@@ -1,39 +1,39 @@
-import { ISdtfWriteableAsset, ISdtfWriteableComponentFactory } from "@shapediver/sdk.sdtf-core"
-import { ISdtfGrasshopperSdtfBuilder } from "./builder/ISdtfGrasshopperSdtfBuilder"
-import { SdtfGrasshopperSdtfBuilder } from "./builder/SdtfGrasshopperSdtfBuilder"
-import { ISdtfWriter, ISdtfWriterAttributes, ISdtfWriterDataItem } from "./ISdtfWriter"
+import { ISdtfWriteableAsset, ISdtfWriteableComponentFactory } from '@shapediver/sdk.sdtf-core';
+import { ISdtfGrasshopperSdtfBuilder } from './builder/ISdtfGrasshopperSdtfBuilder';
+import { SdtfGrasshopperSdtfBuilder } from './builder/SdtfGrasshopperSdtfBuilder';
+import { ISdtfWriter, ISdtfWriterAttributes, ISdtfWriterDataItem } from './ISdtfWriter';
 
 export class SdtfWriter implements ISdtfWriter {
+    constructor(private readonly factory: ISdtfWriteableComponentFactory) {}
 
-    constructor (
-        private readonly factory: ISdtfWriteableComponentFactory,
-    ) {
-    }
-
-    createSimpleDataSdtf (chunkName: string, data: ISdtfWriterDataItem[]): ISdtfWriteableAsset {
+    createSimpleDataSdtf(chunkName: string, data: ISdtfWriterDataItem[]): ISdtfWriteableAsset {
         // Helper to convert the format of attributes data
-        const mapAttributesData = (attr: ISdtfWriterAttributes[]): Record<string, [ unknown, string | undefined ]> => {
-            const res: Record<string, [ unknown, string | undefined ]> = {}
-            attr.forEach(data => res[data.name] = [ data.content, data.typeHint ])
-            return res
-        }
+        const mapAttributesData = (
+            attr: ISdtfWriterAttributes[]
+        ): Record<string, [unknown, string | undefined]> => {
+            const res: Record<string, [unknown, string | undefined]> = {};
+            attr.forEach((data) => (res[data.name] = [data.content, data.typeHint]));
+            return res;
+        };
 
-        const chunk = this.factory.createChunk(chunkName)
+        const chunk = this.factory.createChunk(chunkName);
 
-        data.forEach(d => {
-            const dataItem = this.factory.createDataItem(d.content, d.typeHint)
-            if (d.attributes) dataItem.attributes = this.factory.createAttributes(mapAttributesData(d.attributes))
-            chunk.items.push(dataItem)
-        })
+        data.forEach((d) => {
+            const dataItem = this.factory.createDataItem(d.content, d.typeHint);
+            if (d.attributes)
+                dataItem.attributes = this.factory.createAttributes(
+                    mapAttributesData(d.attributes)
+                );
+            chunk.items.push(dataItem);
+        });
 
-        const asset = this.factory.createAsset()
-        asset.chunks.push(chunk)
+        const asset = this.factory.createAsset();
+        asset.chunks.push(chunk);
 
-        return asset
+        return asset;
     }
 
-    createGrasshopperSdtfBuilder (): ISdtfGrasshopperSdtfBuilder {
-        return new SdtfGrasshopperSdtfBuilder(this.factory)
+    createGrasshopperSdtfBuilder(): ISdtfGrasshopperSdtfBuilder {
+        return new SdtfGrasshopperSdtfBuilder(this.factory);
     }
-
 }

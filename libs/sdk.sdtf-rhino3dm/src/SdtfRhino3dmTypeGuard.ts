@@ -1,4 +1,4 @@
-import { SdtfError } from "@shapediver/sdk.sdtf-core"
+import { SdtfError } from '@shapediver/sdk.sdtf-core';
 import {
     ArcCurve,
     Brep,
@@ -15,169 +15,183 @@ import {
     RevSurface,
     SubD,
     Surface,
-} from "rhino3dm"
-import { SdtfRhino3dmSingleton } from "./SdtfRhino3dmSingleton"
+} from 'rhino3dm';
+import { SdtfRhino3dmSingleton } from './SdtfRhino3dmSingleton';
 
 export class SdtfRhino3dmTypeGuard {
-
     /** Runtime check that raises an error when the given value is not of type `SdtfGrasshopperTypeHintName.GRASSHOPPER_PATH`. */
-    static assertGrasshopperPath (value: unknown): asserts value is string {
-        if (!this.isGrasshopperPath(value)) throw new SdtfError("Assertion error: Value is not a Grasshopper path.")
+    static assertGrasshopperPath(value: unknown): asserts value is string {
+        if (!this.isGrasshopperPath(value))
+            throw new SdtfError('Assertion error: Value is not a Grasshopper path.');
     }
 
     /** Returns `true` when the given value is of type `SdtfGrasshopperTypeHintName.GRASSHOPPER_PATH`. */
-    static isGrasshopperPath (value: unknown): value is string {
-        return typeof value === "string"
+    static isGrasshopperPath(value: unknown): value is string {
+        return typeof value === 'string';
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_ARC_CURVE`. */
-    static assertArcCurve (value: unknown): asserts value is ArcCurve {
-        if (!this.isArcCurve(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm arc-curve type.")
+    static assertArcCurve(value: unknown): asserts value is ArcCurve {
+        if (!this.isArcCurve(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm arc-curve type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_ARC_CURVE`. */
-    static isArcCurve (value: unknown): value is ArcCurve {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().ArcCurve
+    static isArcCurve(value: unknown): value is ArcCurve {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().ArcCurve;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_BREP`. */
-    static assertBrep (value: unknown): asserts value is Brep {
-        if (!this.isBrep(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm brep type.")
+    static assertBrep(value: unknown): asserts value is Brep {
+        if (!this.isBrep(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm brep type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_BREP`. */
-    static isBrep (value: unknown): value is Brep {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().Brep
+    static isBrep(value: unknown): value is Brep {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().Brep;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_CURVE`. */
-    static assertCurve (value: unknown): asserts value is Curve {
-        if (!this.isCurve(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm curve type.")
+    static assertCurve(value: unknown): asserts value is Curve {
+        if (!this.isCurve(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm curve type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_CURVE`. */
-    static isCurve (value: unknown): value is Curve {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().Curve
+    static isCurve(value: unknown): value is Curve {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().Curve;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_EXTRUSION`. */
-    static assertExtrusion (value: unknown): asserts value is Extrusion {
-        if (!this.isExtrusion(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm extrusion type.")
+    static assertExtrusion(value: unknown): asserts value is Extrusion {
+        if (!this.isExtrusion(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm extrusion type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_EXTRUSION`. */
-    static isExtrusion (value: unknown): value is Extrusion {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().Extrusion
+    static isExtrusion(value: unknown): value is Extrusion {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().Extrusion;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_LINE_CURVE`. */
-    static assertLineCurve (value: unknown): asserts value is LineCurve {
-        if (!this.isLineCurve(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm line-curve type.")
+    static assertLineCurve(value: unknown): asserts value is LineCurve {
+        if (!this.isLineCurve(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm line-curve type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_LINE_CURVE`. */
-    static isLineCurve (value: unknown): value is LineCurve {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().LineCurve
+    static isLineCurve(value: unknown): value is LineCurve {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().LineCurve;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_MESH`. */
-    static assertMesh (value: unknown): asserts value is Mesh {
-        if (!this.isMesh(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm mesh type.")
+    static assertMesh(value: unknown): asserts value is Mesh {
+        if (!this.isMesh(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm mesh type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_MESH`. */
-    static isMesh (value: unknown): value is Mesh {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().Mesh
+    static isMesh(value: unknown): value is Mesh {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().Mesh;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_NURBS_CURVE`. */
-    static assertNurbsCurve (value: unknown): asserts value is NurbsCurve {
-        if (!this.isNurbsCurve(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm nurbs-curve type.")
+    static assertNurbsCurve(value: unknown): asserts value is NurbsCurve {
+        if (!this.isNurbsCurve(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm nurbs-curve type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_NURBS_CURVE`. */
-    static isNurbsCurve (value: unknown): value is NurbsCurve {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().NurbsCurve
+    static isNurbsCurve(value: unknown): value is NurbsCurve {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().NurbsCurve;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_NURBS_SURFACE`. */
-    static assertNurbsSurface (value: unknown): asserts value is NurbsSurface {
-        if (!this.isNurbsSurface(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm nurbs-surface type.")
+    static assertNurbsSurface(value: unknown): asserts value is NurbsSurface {
+        if (!this.isNurbsSurface(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm nurbs-surface type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_NURBS_SURFACE`. */
-    static isNurbsSurface (value: unknown): value is NurbsSurface {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().NurbsSurface
+    static isNurbsSurface(value: unknown): value is NurbsSurface {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().NurbsSurface;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_PLANE_SURFACE`. */
-    static assertPlaneSurface (value: unknown): asserts value is PlaneSurface {
-        if (!this.isPlaneSurface(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm plane-surface type.")
+    static assertPlaneSurface(value: unknown): asserts value is PlaneSurface {
+        if (!this.isPlaneSurface(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm plane-surface type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_PLANE_SURFACE`. */
-    static isPlaneSurface (value: unknown): value is PlaneSurface {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().PlaneSurface
+    static isPlaneSurface(value: unknown): value is PlaneSurface {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().PlaneSurface;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_POINT`. */
-    static assertPoint (value: unknown): asserts value is Point {
-        if (!this.isPoint(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm point type.")
+    static assertPoint(value: unknown): asserts value is Point {
+        if (!this.isPoint(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm point type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_POINT`. */
-    static isPoint (value: unknown): value is Point {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().Point
+    static isPoint(value: unknown): value is Point {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().Point;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_POLY_CURVE`. */
-    static assertPolyCurve (value: unknown): asserts value is PolyCurve {
-        if (!this.isPolyCurve(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm poly-curve type.")
+    static assertPolyCurve(value: unknown): asserts value is PolyCurve {
+        if (!this.isPolyCurve(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm poly-curve type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_POLY_CURVE`. */
-    static isPolyCurve (value: unknown): value is PolyCurve {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().PolyCurve
+    static isPolyCurve(value: unknown): value is PolyCurve {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().PolyCurve;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_POLYLINE_CURVE`. */
-    static assertPolylineCurve (value: unknown): asserts value is PolylineCurve {
-        if (!this.isPolylineCurve(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm polyline-curve type.")
+    static assertPolylineCurve(value: unknown): asserts value is PolylineCurve {
+        if (!this.isPolylineCurve(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm polyline-curve type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_POLYLINE_CURVE`. */
-    static isPolylineCurve (value: unknown): value is PolylineCurve {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().PolylineCurve
+    static isPolylineCurve(value: unknown): value is PolylineCurve {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().PolylineCurve;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_REV_SURFACE`. */
-    static assertRevSurface (value: unknown): asserts value is RevSurface {
-        if (!this.isRevSurface(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm rev-surface type.")
+    static assertRevSurface(value: unknown): asserts value is RevSurface {
+        if (!this.isRevSurface(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm rev-surface type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_REV_SURFACE`. */
-    static isRevSurface (value: unknown): value is RevSurface {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().RevSurface
+    static isRevSurface(value: unknown): value is RevSurface {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().RevSurface;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_SUBD`. */
-    static assertSubD (value: unknown): asserts value is SubD {
-        if (!this.isSubD(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm subD type.")
+    static assertSubD(value: unknown): asserts value is SubD {
+        if (!this.isSubD(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm subD type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_SUBD`. */
-    static isSubD (value: unknown): value is SubD {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().SubD
+    static isSubD(value: unknown): value is SubD {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().SubD;
     }
 
     /** Runtime check that raises an error when the given value is not of type `SdtfRhinoTypeHintName.RHINO_SURFACE`. */
-    static assertSurface (value: unknown): asserts value is Surface {
-        if (!this.isSurface(value)) throw new SdtfError("Assertion error: Value is not a rhino3dm surface type.")
+    static assertSurface(value: unknown): asserts value is Surface {
+        if (!this.isSurface(value))
+            throw new SdtfError('Assertion error: Value is not a rhino3dm surface type.');
     }
 
     /** Returns `true` when the given value is of type `SdtfRhinoTypeHintName.RHINO_SURFACE`. */
-    static isSurface (value: unknown): value is Surface {
-        return value instanceof SdtfRhino3dmSingleton.getInstance().Surface
+    static isSurface(value: unknown): value is Surface {
+        return value instanceof SdtfRhino3dmSingleton.getInstance().Surface;
     }
-
 }

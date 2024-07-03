@@ -1,29 +1,28 @@
-import { SdtfError } from "@shapediver/sdk.sdtf-core"
-import axios from "axios"
-import { ISdtfBinarySdtf } from "../binary_sdtf/ISdtfBinarySdtf"
-import { SdtfBinarySdtf } from "../binary_sdtf/SdtfBinarySdtf"
-import { ISdtfHttpClient } from "./ISdtfHttpClient"
+import { SdtfError } from '@shapediver/sdk.sdtf-core';
+import axios from 'axios';
+import { ISdtfBinarySdtf } from '../binary_sdtf/ISdtfBinarySdtf';
+import { SdtfBinarySdtf } from '../binary_sdtf/SdtfBinarySdtf';
+import { ISdtfHttpClient } from './ISdtfHttpClient';
 
 /** HTTP client of a single sdTF asset. */
 export class SdtfHttpClient implements ISdtfHttpClient {
-
-    private readonly binarySdtfParser: ISdtfBinarySdtf
+    private readonly binarySdtfParser: ISdtfBinarySdtf;
 
     /** The URL of the sdTF JSON content. */
-    readonly jsonContentUrl: string
+    readonly jsonContentUrl: string;
 
     /** the minimum headers object that should be used for all HTTP calls.. */
-    private readonly basicHttpHeader: Record<string, string | number | boolean>
+    private readonly basicHttpHeader: Record<string, string | number | boolean>;
 
-    constructor (jsonContentUrl: string, authToken?: string) {
-        this.binarySdtfParser = new SdtfBinarySdtf()
+    constructor(jsonContentUrl: string, authToken?: string) {
+        this.binarySdtfParser = new SdtfBinarySdtf();
 
         // This initializes this http client for the specified sdTF asset
-        this.jsonContentUrl = jsonContentUrl
+        this.jsonContentUrl = jsonContentUrl;
 
         // Initialize tha basic HTTP header object
-        this.basicHttpHeader = {}
-        if (authToken) this.basicHttpHeader.authorization = "Bearer " + authToken
+        this.basicHttpHeader = {};
+        if (authToken) this.basicHttpHeader.authorization = 'Bearer ' + authToken;
     }
 
     /**
@@ -32,47 +31,52 @@ export class SdtfHttpClient implements ISdtfHttpClient {
      * When no URI is specified, the URL of the JSON content is returned.
      * @private
      */
-    calcUrl (uri: string | undefined): string {
-        if (!uri) return this.jsonContentUrl
+    calcUrl(uri: string | undefined): string {
+        if (!uri) return this.jsonContentUrl;
 
-        const index = this.jsonContentUrl.lastIndexOf("/")
-        return `${ this.jsonContentUrl.substring(0, index) }/${ uri }`
+        const index = this.jsonContentUrl.lastIndexOf('/');
+        return `${this.jsonContentUrl.substring(0, index)}/${uri}`;
     }
 
-    async getJsonContent (): Promise<[ DataView, DataView | undefined ]> {
+    async getJsonContent(): Promise<[DataView, DataView | undefined]> {
         try {
-            const {
-                data,
-                partial,
-            } = await this.fetch(this.jsonContentUrl, 0, this.binarySdtfParser.binaryHeaderLength)
+            const { data, partial } = await this.fetch(
+                this.jsonContentUrl,
+                0,
+                this.binarySdtfParser.binaryHeaderLength
+            );
 
             if (partial) {
                 // Partial requests are supported by the server - fetch json content next
-                const [ contentLength, _ ] = this.binarySdtfParser.readHeader(data)
-                const jsonContentBuffer = await this.fetch(this.jsonContentUrl, 20, contentLength)
-                return [ new DataView(jsonContentBuffer.data), undefined ]
+                const [contentLength, _] = this.binarySdtfParser.readHeader(data);
+                const jsonContentBuffer = await this.fetch(this.jsonContentUrl, 20, contentLength);
+                return [new DataView(jsonContentBuffer.data), undefined];
             } else {
                 // Entire sdTF has been returned - parse and return
-                return this.binarySdtfParser.parseBinarySdtf(data)
+                return this.binarySdtfParser.parseBinarySdtf(data);
             }
         } catch (e) {
-            throw new SdtfError(`Could not fetch sdTF JSON content: ${ e.message }`)
+            throw new SdtfError(`Could not fetch sdTF JSON content: ${e.message}`);
         }
     }
 
-    async getBinaryBuffer (uri: string | undefined, offset: number, length: number): Promise<[ DataView, ArrayBuffer | undefined ]> {
+    async getBinaryBuffer(
+        uri: string | undefined,
+        offset: number,
+        length: number
+    ): Promise<[DataView, ArrayBuffer | undefined]> {
         try {
-            const { data, partial } = await this.fetch(this.calcUrl(uri), offset, length)
+            const { data, partial } = await this.fetch(this.calcUrl(uri), offset, length);
 
             if (partial) {
                 // Partial requests are supported by the server - partial buffer was fetched
-                return [ new DataView(data), undefined ]
+                return [new DataView(data), undefined];
             } else {
                 // Partial requests are supported by the server - entire buffer was fetched
-                return [ new DataView(data, offset, length), data ]
+                return [new DataView(data, offset, length), data];
             }
         } catch (e) {
-            throw new SdtfError(`Could not fetch sdTF binary buffer: ${ e.message }`)
+            throw new SdtfError(`Could not fetch sdTF binary buffer: ${e.message}`);
         }
     }
 
@@ -86,39 +90,46 @@ export class SdtfHttpClient implements ISdtfHttpClient {
      * @param length - Length of the buffer.
      * @throws {@link SdtfError} when the request was not successful.
      */
-    async fetch (url: string, offset: number, length: number): Promise<{ data: ArrayBuffer, partial: boolean }> {
-        let response
+    async fetch(
+        url: string,
+        offset: number,
+        length: number
+    ): Promise<{ data: ArrayBuffer; partial: boolean }> {
+        let response;
         try {
-            response = await axios.head(url, { headers: this.basicHttpHeader })
+            response = await axios.head(url, { headers: this.basicHttpHeader });
         } catch (e) {
-            throw new SdtfError(e.message)
+            throw new SdtfError(e.message);
         }
 
         // Validate response status
-        if (response.status > 299) throw new SdtfError(`Received HTTP status ${ response.status }.`)
+        if (response.status > 299) throw new SdtfError(`Received HTTP status ${response.status}.`);
 
         // Check if the content has been encoded (no range request possible)
-        const contentEncoding = !!(response.headers["Content-Encoding"] ?? response.headers["content-encoding"])
+        const contentEncoding = !!(
+            response.headers['Content-Encoding'] ?? response.headers['content-encoding']
+        );
 
         // Check if HTTP range requests are supported
-        const acceptRanges = response.headers["Accept-Ranges"] ?? response.headers["accept-ranges"]
+        const acceptRanges =
+            response.headers['Accept-Ranges'] ?? response.headers['accept-ranges'];
 
         // When the data has not been encoded and range requests are supported -> fetch partially.
         // Otherwise -> fetch all.
-        const rangeRequestsSupported = (!contentEncoding && acceptRanges === "bytes")
+        const rangeRequestsSupported = !contentEncoding && acceptRanges === 'bytes';
 
         // Fetch the actual data.
-        const data = (rangeRequestsSupported) ?
-            await this.fetchPartially(url, offset, length) :
-            await this.fetchFully(url)
+        const data = rangeRequestsSupported
+            ? await this.fetchPartially(url, offset, length)
+            : await this.fetchFully(url);
 
         // This is required to support Node.js as well as Browsers
-        const buffer = (data instanceof ArrayBuffer) ? data : Uint8Array.from(data).buffer
+        const buffer = data instanceof ArrayBuffer ? data : Uint8Array.from(data).buffer;
 
         return {
             data: buffer,
             partial: rangeRequestsSupported,
-        }
+        };
     }
 
     /**
@@ -131,36 +142,34 @@ export class SdtfHttpClient implements ISdtfHttpClient {
      * @param length - Length of the buffer.
      * @throws {@link SdtfError} when the request was not successful.
      */
-    async fetchPartially (url: string, offset: number, length: number): Promise<any> {
-        let response
+    async fetchPartially(url: string, offset: number, length: number): Promise<any> {
+        let response;
         try {
             response = await axios.get(url, {
                 headers: {
                     ...this.basicHttpHeader,
-                    range: `bytes=${ offset }-${ offset + length - 1 }`,
+                    range: `bytes=${offset}-${offset + length - 1}`,
                 },
-                responseType: "arraybuffer",
-            })
+                responseType: 'arraybuffer',
+            });
         } catch (e) {
-            throw new SdtfError(e.message)
+            throw new SdtfError(e.message);
         }
 
         // Validate response status
-        if (response.status === 416) throw new SdtfError("Invalid range requested.")
+        if (response.status === 416) throw new SdtfError('Invalid range requested.');
         if (response.status !== 200 && response.status !== 206)
-            throw new SdtfError(`Received HTTP status ${ response.status }.`)
+            throw new SdtfError(`Received HTTP status ${response.status}.`);
 
-        const data = response.data
+        const data = response.data;
 
         // This is required to support Node.js as well as Browsers
-        const buffer = (data instanceof ArrayBuffer) ? data : Uint8Array.from(data).buffer
+        const buffer = data instanceof ArrayBuffer ? data : Uint8Array.from(data).buffer;
 
         // The browser might cache the full data of the response. When this happens, a consecutive
         // partial-fetch request, will return the full data as well. Thus, we have to extract the
         // requested part manually.
-        return (buffer.byteLength > length) ?
-            buffer.slice(offset, offset + length) :
-            buffer
+        return buffer.byteLength > length ? buffer.slice(offset, offset + length) : buffer;
     }
 
     /**
@@ -170,22 +179,22 @@ export class SdtfHttpClient implements ISdtfHttpClient {
      * @param url
      * @throws {@link SdtfError} when the request was not successful.
      */
-    async fetchFully (url: string): Promise<any> {
-        let response
+    async fetchFully(url: string): Promise<any> {
+        let response;
         try {
             // NOTE: Axios automatically decodes the body (e.g. GZIP compression)
             response = await axios.get(url, {
                 headers: this.basicHttpHeader,
-                responseType: "arraybuffer",
-            })
+                responseType: 'arraybuffer',
+            });
         } catch (e) {
-            throw new SdtfError(e.message)
+            throw new SdtfError(e.message);
         }
 
         // Validate response status
-        if (response.status !== 200) throw new SdtfError(`Received HTTP status ${ response.status }.`)
+        if (response.status !== 200)
+            throw new SdtfError(`Received HTTP status ${response.status}.`);
 
-        return response.data
+        return response.data;
     }
-
 }

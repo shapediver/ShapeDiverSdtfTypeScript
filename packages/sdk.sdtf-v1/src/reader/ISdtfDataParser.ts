@@ -1,4 +1,4 @@
-import { ISdtfReadableContentComponent } from "@shapediver/sdk.sdtf-core"
+import { ISdtfReadableContentComponent } from '@shapediver/sdk.sdtf-core';
 
 /**
  * This is a wrapper around data access used in sdTF items and attributes.
@@ -13,8 +13,6 @@ import { ISdtfReadableContentComponent } from "@shapediver/sdk.sdtf-core"
  * depending on the data's concrete type hint.
  */
 export interface ISdtfDataParser {
-
     /** Parses the given data item with the registered readers. */
-    parseContent (component: ISdtfReadableContentComponent): Promise<unknown>
-
+    parseContent(component: ISdtfReadableContentComponent): Promise<unknown>;
 }

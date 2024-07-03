@@ -2,48 +2,47 @@ import {
     ISdtfReadableContentComponent,
     ISdtfReadableTypeHint,
     SdtfPrimitiveTypeHintName,
-} from "@shapediver/sdk.sdtf-core"
-import { SdtfPrimitiveTypeReader } from "../../src/SdtfPrimitiveTypeReader"
-import { SdtfPrimitiveTypeValidator } from "../../src/SdtfPrimitiveTypeValidator"
+} from '@shapediver/sdk.sdtf-core';
+import { SdtfPrimitiveTypeReader } from '../../src/SdtfPrimitiveTypeReader';
+import { SdtfPrimitiveTypeValidator } from '../../src/SdtfPrimitiveTypeValidator';
 
-const reader = new SdtfPrimitiveTypeReader()
+const reader = new SdtfPrimitiveTypeReader();
 
-describe("readComponent", function () {
+describe('readComponent', function () {
+    let origValidateComponent: any, origMapColor: any, origMapGenericData: any;
 
-    let origValidateComponent: any, origMapColor: any, origMapGenericData: any
-
-    const mapColorRes = "map color result",
-        mapGenericDataRes = "map generic data res"
+    const mapColorRes = 'map color result',
+        mapGenericDataRes = 'map generic data res';
 
     beforeAll(() => {
-        origValidateComponent = SdtfPrimitiveTypeValidator.prototype.validateComponent
+        origValidateComponent = SdtfPrimitiveTypeValidator.prototype.validateComponent;
 
-        origMapColor = SdtfPrimitiveTypeReader.prototype.mapColor
-        SdtfPrimitiveTypeReader.prototype.mapColor = jest.fn(() => mapColorRes)
+        origMapColor = SdtfPrimitiveTypeReader.prototype.mapColor;
+        SdtfPrimitiveTypeReader.prototype.mapColor = jest.fn(() => mapColorRes);
 
-        origMapGenericData = SdtfPrimitiveTypeReader.prototype.mapGenericData
-        SdtfPrimitiveTypeReader.prototype.mapGenericData = jest.fn(() => mapGenericDataRes)
-    })
+        origMapGenericData = SdtfPrimitiveTypeReader.prototype.mapGenericData;
+        SdtfPrimitiveTypeReader.prototype.mapGenericData = jest.fn(() => mapGenericDataRes);
+    });
 
     afterAll(() => {
-        SdtfPrimitiveTypeValidator.prototype.validateComponent = origValidateComponent
-        SdtfPrimitiveTypeReader.prototype.mapColor = origMapColor
-        SdtfPrimitiveTypeReader.prototype.mapGenericData = origMapGenericData
-    })
+        SdtfPrimitiveTypeValidator.prototype.validateComponent = origValidateComponent;
+        SdtfPrimitiveTypeReader.prototype.mapColor = origMapColor;
+        SdtfPrimitiveTypeReader.prototype.mapGenericData = origMapGenericData;
+    });
 
-    test("invalid component; should throw", async () => {
+    test('invalid component; should throw', async () => {
         // Mock
-        SdtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => false)
+        SdtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => false);
 
-        expect(async () => reader.readComponent({})).rejects.toThrow()
-    })
+        expect(async () => reader.readComponent({})).rejects.toThrow();
+    });
 
-    test("unsupported type hint name; should throw", async () => {
+    test('unsupported type hint name; should throw', async () => {
         // Mock
-        SdtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => true)
+        SdtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => true);
 
-        expect(async () => reader.readComponent({})).rejects.toThrow()
-    })
+        expect(async () => reader.readComponent({})).rejects.toThrow();
+    });
 
     test.each([
         SdtfPrimitiveTypeHintName.BOOLEAN,
@@ -62,69 +61,65 @@ describe("readComponent", function () {
         SdtfPrimitiveTypeHintName.UINT16,
         SdtfPrimitiveTypeHintName.UINT32,
         SdtfPrimitiveTypeHintName.UINT64,
-    ])("component of type %s; should return value", async (typeHintName) => {
+    ])('component of type %s; should return value', async (typeHintName) => {
         // Mock
-        SdtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => true)
+        SdtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => true);
 
         let component: ISdtfReadableContentComponent = {
             typeHint: { name: typeHintName } as ISdtfReadableTypeHint,
-            value: "value",
+            value: 'value',
+        };
+
+        expect(await reader.readComponent(component)).toBe('value');
+    });
+
+    test.each([SdtfPrimitiveTypeHintName.COLOR])(
+        'component of type %s; should return mapped color res',
+        async (typeHintName) => {
+            // Mock
+            SdtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => true);
+
+            let component: ISdtfReadableContentComponent = {
+                typeHint: { name: typeHintName } as ISdtfReadableTypeHint,
+                value: 'value',
+            };
+
+            expect(await reader.readComponent(component)).toBe(mapColorRes);
         }
+    );
 
-        expect(await reader.readComponent(component)).toBe("value")
-    })
+    test.each([SdtfPrimitiveTypeHintName.DATA, SdtfPrimitiveTypeHintName.IMAGE])(
+        'component of type %s; should return map generic data res',
+        async (typeHintName) => {
+            // Mock
+            SdtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => true);
 
-    test.each([
-        SdtfPrimitiveTypeHintName.COLOR,
-    ])("component of type %s; should return mapped color res", async (typeHintName) => {
-        // Mock
-        SdtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => true)
+            let component: ISdtfReadableContentComponent = {
+                typeHint: { name: typeHintName } as ISdtfReadableTypeHint,
+                value: 'value',
+            };
 
-        let component: ISdtfReadableContentComponent = {
-            typeHint: { name: typeHintName } as ISdtfReadableTypeHint,
-            value: "value",
+            expect(await reader.readComponent(component)).toBe(mapGenericDataRes);
         }
+    );
+});
 
-        expect(await reader.readComponent(component)).toBe(mapColorRes)
-    })
+describe('mapColor', function () {
+    test('new color format', () => {
+        expect(reader.mapColor([1, 1, 1])).toStrictEqual([1, 1, 1, 1]);
+        expect(reader.mapColor([1, 1, 1, 0])).toStrictEqual([1, 1, 1, 0]);
+    });
 
-    test.each([
-        SdtfPrimitiveTypeHintName.DATA,
-        SdtfPrimitiveTypeHintName.IMAGE,
-    ])("component of type %s; should return map generic data res", async (typeHintName) => {
-        // Mock
-        SdtfPrimitiveTypeValidator.prototype.validateComponent = jest.fn(() => true)
+    test('legacy color format', () => {
+        expect(reader.mapColor('255,255,255')).toStrictEqual([1, 1, 1, 1]);
+        expect(reader.mapColor('255,255,255,0')).toStrictEqual([1, 1, 1, 0]);
+    });
+});
 
-        let component: ISdtfReadableContentComponent = {
-            typeHint: { name: typeHintName } as ISdtfReadableTypeHint,
-            value: "value",
-        }
+describe('mapGenericData', function () {
+    const data = new DataView(new ArrayBuffer(1));
 
-        expect(await reader.readComponent(component)).toBe(mapGenericDataRes)
-    })
-
-})
-
-describe("mapColor", function () {
-
-    test("new color format", () => {
-        expect(reader.mapColor([ 1, 1, 1 ])).toStrictEqual([ 1, 1, 1, 1 ])
-        expect(reader.mapColor([ 1, 1, 1, 0 ])).toStrictEqual([ 1, 1, 1, 0 ])
-    })
-
-    test("legacy color format", () => {
-        expect(reader.mapColor("255,255,255")).toStrictEqual([ 1, 1, 1, 1 ])
-        expect(reader.mapColor("255,255,255,0")).toStrictEqual([ 1, 1, 1, 0 ])
-    })
-
-})
-
-describe("mapGenericData", function () {
-
-    const data = new DataView(new ArrayBuffer(1))
-
-    test("should extract inner data", () => {
-        expect(reader.mapGenericData({ id: "foo", data })).toStrictEqual(data)
-    })
-
-})
+    test('should extract inner data', () => {
+        expect(reader.mapGenericData({ id: 'foo', data })).toStrictEqual(data);
+    });
+});

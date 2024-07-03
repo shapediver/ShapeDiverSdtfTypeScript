@@ -1,5 +1,4 @@
 export interface ISdtfHttpClient {
-
     /**
      * Fetches the sdTF JSON content from the given URL.
      *
@@ -11,7 +10,7 @@ export interface ISdtfHttpClient {
      * @returns - [ sdTF JSON content, sdTF binary buffer ]
      * @throws {@link SdtfError} when the request was not successful.
      */
-    getJsonContent (): Promise<[ DataView, DataView | undefined ]>
+    getJsonContent(): Promise<[DataView, DataView | undefined]>;
 
     /**
      * Fetches the request part of the sdTF binary buffer.
@@ -28,6 +27,9 @@ export interface ISdtfHttpClient {
      * @returns - [ part of the binary buffer, entire binary buffer ]
      * @throws {@link SdtfError} when the request was not successful.
      */
-    getBinaryBuffer (uri: string | undefined, offset: number, length: number): Promise<[ DataView, ArrayBuffer | undefined ]>
-
+    getBinaryBuffer(
+        uri: string | undefined,
+        offset: number,
+        length: number
+    ): Promise<[DataView, ArrayBuffer | undefined]>;
 }

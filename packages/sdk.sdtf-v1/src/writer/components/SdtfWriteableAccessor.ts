@@ -1,23 +1,25 @@
-import { ISdtfWriteableAccessor, ISdtfWriteableBufferView } from "@shapediver/sdk.sdtf-core"
-import { SdtfBaseWriteableComponent } from "./SdtfBaseWriteableComponent"
-import { SdtfWriteableBufferView } from "./SdtfWriteableBufferView"
+import { ISdtfWriteableAccessor, ISdtfWriteableBufferView } from '@shapediver/sdk.sdtf-core';
+import { SdtfBaseWriteableComponent } from './SdtfBaseWriteableComponent';
+import { SdtfWriteableBufferView } from './SdtfWriteableBufferView';
 
-export class SdtfWriteableAccessor extends SdtfBaseWriteableComponent implements ISdtfWriteableAccessor {
+export class SdtfWriteableAccessor
+    extends SdtfBaseWriteableComponent
+    implements ISdtfWriteableAccessor
+{
+    bufferView?: ISdtfWriteableBufferView;
+    id?: string;
 
-    bufferView?: ISdtfWriteableBufferView
-    id?: string
+    additionalProperties: Record<string, unknown> = {};
 
-    additionalProperties: Record<string, unknown> = {}
+    static clone(original: ISdtfWriteableAccessor): ISdtfWriteableAccessor {
+        const clone = new SdtfWriteableAccessor();
 
-    static clone (original: ISdtfWriteableAccessor): ISdtfWriteableAccessor {
-        const clone = new SdtfWriteableAccessor()
+        if (original.bufferView)
+            clone.bufferView = SdtfWriteableBufferView.clone(original.bufferView);
+        clone.id = original.id;
 
-        if (original.bufferView) clone.bufferView = SdtfWriteableBufferView.clone(original.bufferView)
-        clone.id = original.id
+        clone.additionalProperties = { ...original.additionalProperties };
 
-        clone.additionalProperties = { ...original.additionalProperties }
-
-        return clone
+        return clone;
     }
-
 }

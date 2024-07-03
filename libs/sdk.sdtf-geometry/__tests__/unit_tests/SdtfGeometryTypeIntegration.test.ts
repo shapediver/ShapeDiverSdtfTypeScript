@@ -1,10 +1,9 @@
-import { SdtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { SdtfGeometryTypeIntegration } from "../../src"
+import { SdtfGeometryTypeHintName } from '@shapediver/sdk.sdtf-core';
+import { SdtfGeometryTypeIntegration } from '../../src';
 
-const integration = new SdtfGeometryTypeIntegration()
+const integration = new SdtfGeometryTypeIntegration();
 
-describe("isTypeHintSupported", function () {
-
+describe('isTypeHintSupported', function () {
     test.each([
         SdtfGeometryTypeHintName.GEOMETRY_ARC,
         SdtfGeometryTypeHintName.GEOMETRY_BOUNDING_BOX,
@@ -28,12 +27,11 @@ describe("isTypeHintSupported", function () {
         SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM,
         SdtfGeometryTypeHintName.GEOMETRY_TRANSFORM_LIST,
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR,
-    ])("supported type %s; should return true", (type) => {
-        expect(integration.isTypeHintSupported(type)).toBeTruthy()
-    })
+    ])('supported type %s; should return true', (type) => {
+        expect(integration.isTypeHintSupported(type)).toBeTruthy();
+    });
 
-    test("unsupported type; should return false", () => {
-        expect(integration.isTypeHintSupported("foobar")).toBeFalsy()
-    })
-
-})
+    test('unsupported type; should return false', () => {
+        expect(integration.isTypeHintSupported('foobar')).toBeFalsy();
+    });
+});

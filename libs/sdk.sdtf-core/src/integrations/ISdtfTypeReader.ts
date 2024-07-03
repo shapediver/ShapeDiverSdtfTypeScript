@@ -1,4 +1,4 @@
-import { ISdtfReadableContentComponent } from "../reader/ISdtfReadableContentComponent"
+import { ISdtfReadableContentComponent } from '../reader/ISdtfReadableContentComponent';
 
 /**
  * The reader is the central component for parsing and mapping content data of your custom integration-type.
@@ -17,7 +17,6 @@ import { ISdtfReadableContentComponent } from "../reader/ISdtfReadableContentCom
  * This way, users can interact directly with a concrete class instance instead of creating one themselves.
  */
 export interface ISdtfTypeReader {
-
     /**
      * Parses and maps the content of the given component and returns the data that should be forwarded to the user.
      *
@@ -26,6 +25,5 @@ export interface ISdtfTypeReader {
      *
      * @throws {@link SdtfError} when the component is invalid or something goes wrong.
      */
-    readComponent (component: ISdtfReadableContentComponent): Promise<unknown>
-
+    readComponent(component: ISdtfReadableContentComponent): Promise<unknown>;
 }

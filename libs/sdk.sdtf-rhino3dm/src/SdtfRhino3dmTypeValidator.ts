@@ -4,31 +4,29 @@ import {
     sdAssertUnreachable,
     SdtfGrasshopperTypeHintName,
     SdtfRhinoTypeHintName,
-} from "@shapediver/sdk.sdtf-core"
-import { SdtfRhino3dmTypeConfig } from "./SdtfRhino3dmTypeConfig"
+} from '@shapediver/sdk.sdtf-core';
+import { SdtfRhino3dmTypeConfig } from './SdtfRhino3dmTypeConfig';
 
 /** Validates values that are of a type hint supported by this integration. */
 export class SdtfRhino3dmTypeValidator {
-
-    constructor (private readonly config: SdtfRhino3dmTypeConfig) {
-    }
+    constructor(private readonly config: SdtfRhino3dmTypeConfig) {}
 
     /**
      * Validates the internal representation of the given component type.
      * @throws {@link SdtfError} when the given type is not supported.
      */
-    validateInternalRepresentationOfComponent (
+    validateInternalRepresentationOfComponent(
         typeHint: string,
         value?: unknown,
-        accessor?: ISdtfReadableAccessor | ISdtfWriteableAccessor,
+        accessor?: ISdtfReadableAccessor | ISdtfWriteableAccessor
     ): boolean {
         // Map the grasshopper component data and return the result
         if (typeHint === SdtfGrasshopperTypeHintName.GRASSHOPPER_PATH) {
-            return typeof value === "string"
+            return typeof value === 'string';
         }
 
         // Map the rhino component data and return the result
-        const rhinoTypeHint = typeHint as SdtfRhinoTypeHintName
+        const rhinoTypeHint = typeHint as SdtfRhinoTypeHintName;
         switch (rhinoTypeHint) {
             case SdtfRhinoTypeHintName.RHINO_ARC_CURVE:
             case SdtfRhinoTypeHintName.RHINO_BREP:
@@ -45,9 +43,9 @@ export class SdtfRhino3dmTypeValidator {
             case SdtfRhinoTypeHintName.RHINO_REV_SURFACE:
             case SdtfRhinoTypeHintName.RHINO_SUBD:
             case SdtfRhinoTypeHintName.RHINO_SURFACE:
-                return !!accessor && value === undefined
+                return !!accessor && value === undefined;
             default:
-                sdAssertUnreachable(rhinoTypeHint)
+                sdAssertUnreachable(rhinoTypeHint);
         }
     }
 
@@ -56,18 +54,18 @@ export class SdtfRhino3dmTypeValidator {
      * By default, all rhino3dm objects must be valid before they can be written to the sdTF buffer.
      * @throws {@link SdtfError} when the given type is not supported.
      */
-    validateExternalRepresentationOfComponent (
+    validateExternalRepresentationOfComponent(
         typeHint: string,
         value?: unknown,
-        accessor?: ISdtfReadableAccessor | ISdtfWriteableAccessor,
+        accessor?: ISdtfReadableAccessor | ISdtfWriteableAccessor
     ): boolean {
         // Map the grasshopper component data and return the result
         if (typeHint === SdtfGrasshopperTypeHintName.GRASSHOPPER_PATH) {
-            return typeof value === "string"
+            return typeof value === 'string';
         }
 
         // Map the rhino component data and return the result
-        const rhinoTypeHint = typeHint as SdtfRhinoTypeHintName
+        const rhinoTypeHint = typeHint as SdtfRhinoTypeHintName;
         switch (rhinoTypeHint) {
             case SdtfRhinoTypeHintName.RHINO_ARC_CURVE:
             case SdtfRhinoTypeHintName.RHINO_BREP:
@@ -87,13 +85,12 @@ export class SdtfRhino3dmTypeValidator {
                 // Some rhino objects are not written to file when they are invalid.
                 // This validation check makes sure that these scenarios do not result in nasty bugs.
                 if (this.config.requireValidRhino3dmComponents) {
-                    return !accessor && !!value && (<any>value).isValid
+                    return !accessor && !!value && (<any>value).isValid;
                 } else {
-                    return !accessor && !!value
+                    return !accessor && !!value;
                 }
             default:
-                sdAssertUnreachable(rhinoTypeHint)
+                sdAssertUnreachable(rhinoTypeHint);
         }
     }
-
 }

@@ -1,69 +1,69 @@
 {
-  "name": "@shapediver/sdk.sdtf-v1",
-  "version": "1.5.2",
-  "description": "Official sdTF SDK for TypeScript",
-  "keywords": [
-    "shapediver",
-    "sdk",
-    "sdTF"
-  ],
-  "author": "ShapeDiver",
-  "license": "ISC",
-  "main": "dist/index.js",
-  "bin": {
-    "sdtf-v1": "bin/sdtf-v1.js"
-  },
-  "directories": {
-    "test": "__tests__"
-  },
-  "files": [
-    "dist",
-    "src"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shapediver/ShapeDiverSdtfTypeScript.git"
-  },
-  "scripts": {
-    "test": "bash ../../scripts/test.sh",
-    "check": "tsc --noEmit",
-    "build": "bash ../../scripts/build.sh",
-    "build-dep": "bash ../../scripts/build-dep.sh",
-    "build-dev": "bash ../../scripts/build-dev.sh",
-    "build-prod": "bash ../../scripts/build-prod.sh",
-    "pre-publish": "bash ../../scripts/pre-publish.sh",
-    "post-publish": "bash ../../scripts/post-publish.sh"
-  },
-  "bugs": {
-    "url": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/issues"
-  },
-  "homepage": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/tree/master/packages/sdk.sdtf-v1#readme",
-  "typings": "dist/index.d.ts",
-  "browser": {
-    "fs": false,
-    "path": false
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "testMatch": [
-      "**/__tests__/**/*.test.ts"
-    ]
-  },
-  "dependencies": {
-    "@shapediver/sdk.sdtf-core": "1.5.2",
-    "@shapediver/sdk.sdtf-primitives": "1.5.2",
-    "@shapediver/sdk.sdtf-geometry": "1.5.2",
-    "axios": "~1.7.2",
-    "browser-or-node": "2.1.1"
-  },
-  "devDependencies": {
-    "jest": "~29.7.0",
-    "axios-mock-adapter": "~1.22.0",
-    "lerna": "~7.4.2",
-    "typescript": "~5.5.2",
-    "webpack": "~5.92.1",
-    "webpack-cli": "~4.10.0",
-    "webpack-dev-server": "~4.15.2"
-  }
+    "name": "@shapediver/sdk.sdtf-v1",
+    "version": "1.5.2",
+    "description": "Official sdTF SDK for TypeScript",
+    "keywords": [
+        "shapediver",
+        "sdk",
+        "sdTF"
+    ],
+    "author": "ShapeDiver",
+    "license": "ISC",
+    "main": "dist/index.js",
+    "bin": {
+        "sdtf-v1": "bin/sdtf-v1.js"
+    },
+    "directories": {
+        "test": "__tests__"
+    },
+    "files": [
+        "dist",
+        "src"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/shapediver/ShapeDiverSdtfTypeScript.git"
+    },
+    "scripts": {
+        "test": "bash ../../scripts/test.sh",
+        "check": "tsc --noEmit",
+        "build": "bash ../../scripts/build.sh",
+        "build-dep": "bash ../../scripts/build-dep.sh",
+        "build-dev": "bash ../../scripts/build-dev.sh",
+        "build-prod": "bash ../../scripts/build-prod.sh",
+        "pre-publish": "bash ../../scripts/pre-publish.sh",
+        "post-publish": "bash ../../scripts/post-publish.sh"
+    },
+    "bugs": {
+        "url": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/issues"
+    },
+    "homepage": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/tree/master/packages/sdk.sdtf-v1#readme",
+    "typings": "dist/index.d.ts",
+    "browser": {
+        "fs": false,
+        "path": false
+    },
+    "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "testMatch": [
+            "**/__tests__/**/*.test.ts"
+        ]
+    },
+    "dependencies": {
+        "@shapediver/sdk.sdtf-core": "1.5.2",
+        "@shapediver/sdk.sdtf-primitives": "1.5.2",
+        "@shapediver/sdk.sdtf-geometry": "1.5.2",
+        "axios": "~1.7.2",
+        "browser-or-node": "2.1.1"
+    },
+    "devDependencies": {
+        "jest": "~29.7.0",
+        "axios-mock-adapter": "~1.22.0",
+        "lerna": "~7.4.2",
+        "typescript": "~5.5.2",
+        "webpack": "~5.92.1",
+        "webpack-cli": "~4.10.0",
+        "webpack-dev-server": "~4.15.2"
+    }
 }

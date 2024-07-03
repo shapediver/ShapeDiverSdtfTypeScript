@@ -4,14 +4,6 @@
         "rootDir": "src",
         "outDir": "dist"
     },
-    "include": [
-        "./src/**/*.ts"
-    ],
-    "exclude": [
-        "__tests__/**/*",
-        "node_modules/**/*",
-        "dist",
-        "dist-dev",
-        "dist-prod"
-    ]
+    "include": ["./src/**/*.ts"],
+    "exclude": ["__tests__/**/*", "node_modules/**/*", "dist", "dist-dev", "dist-prod"]
 }

@@ -6,18 +6,16 @@ import {
     sdAssertUnreachable,
     SdtfError,
     SdtfPrimitiveTypeHintName,
-} from "@shapediver/sdk.sdtf-core"
-import { SdtfPrimitiveTypeValidator } from "./SdtfPrimitiveTypeValidator"
+} from '@shapediver/sdk.sdtf-core';
+import { SdtfPrimitiveTypeValidator } from './SdtfPrimitiveTypeValidator';
 
 export class SdtfPrimitiveTypeWriter implements ISdtfTypeWriter {
+    private readonly validator = new SdtfPrimitiveTypeValidator();
 
-    private readonly validator = new SdtfPrimitiveTypeValidator()
+    constructor(private factory: ISdtfWriteableComponentFactory) {}
 
-    constructor (private factory: ISdtfWriteableComponentFactory) {
-    }
-
-    writeComponent (component: ISdtfWriteableAttribute | ISdtfWriteableDataItem): void {
-        const typeHint = component.typeHint?.name as SdtfPrimitiveTypeHintName
+    writeComponent(component: ISdtfWriteableAttribute | ISdtfWriteableDataItem): void {
+        const typeHint = component.typeHint?.name as SdtfPrimitiveTypeHintName;
 
         switch (typeHint) {
             case SdtfPrimitiveTypeHintName.BOOLEAN:
@@ -37,24 +35,25 @@ export class SdtfPrimitiveTypeWriter implements ISdtfTypeWriter {
             case SdtfPrimitiveTypeHintName.UINT16:
             case SdtfPrimitiveTypeHintName.UINT32:
             case SdtfPrimitiveTypeHintName.UINT64:
-                delete component.accessor   // Stored in JSON content
-                break
+                delete component.accessor; // Stored in JSON content
+                break;
             case SdtfPrimitiveTypeHintName.DATA:
             case SdtfPrimitiveTypeHintName.IMAGE:
-                delete component.value      // Stored in sdTF buffer
-                break
+                delete component.value; // Stored in sdTF buffer
+                break;
             default:
-                sdAssertUnreachable(typeHint)
+                sdAssertUnreachable(typeHint);
         }
 
         // Make sure that the component consists of valid data
         if (!this.validator.validateComponent(typeHint, component.value, component.accessor)) {
-            throw new SdtfError(`Cannot write component of type '${ typeHint }': Invalid component.`)
+            throw new SdtfError(
+                `Cannot write component of type '${typeHint}': Invalid component.`
+            );
         }
     }
 
-    postProcessComponents (components: (ISdtfWriteableAttribute | ISdtfWriteableDataItem)[]): void {
+    postProcessComponents(components: (ISdtfWriteableAttribute | ISdtfWriteableDataItem)[]): void {
         // Nothing to do here
     }
-
 }

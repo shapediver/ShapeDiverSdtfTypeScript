@@ -6,18 +6,16 @@ import {
     sdAssertUnreachable,
     SdtfError,
     SdtfGeometryTypeHintName,
-} from "@shapediver/sdk.sdtf-core"
-import { SdtfGeometryTypeValidator } from "./SdtfGeometryTypeValidator"
+} from '@shapediver/sdk.sdtf-core';
+import { SdtfGeometryTypeValidator } from './SdtfGeometryTypeValidator';
 
 export class SdtfGeometryTypeWriter implements ISdtfTypeWriter {
+    private readonly validator = new SdtfGeometryTypeValidator();
 
-    private readonly validator = new SdtfGeometryTypeValidator()
+    constructor(private factory: ISdtfWriteableComponentFactory) {}
 
-    constructor (private factory: ISdtfWriteableComponentFactory) {
-    }
-
-    writeComponent (component: ISdtfWriteableAttribute | ISdtfWriteableDataItem): void {
-        const typeHint = component.typeHint?.name as SdtfGeometryTypeHintName
+    writeComponent(component: ISdtfWriteableAttribute | ISdtfWriteableDataItem): void {
+        const typeHint = component.typeHint?.name as SdtfGeometryTypeHintName;
 
         // All values of a geometry type are stored inside the JSON content.
         switch (typeHint) {
@@ -49,20 +47,21 @@ export class SdtfGeometryTypeWriter implements ISdtfTypeWriter {
             case SdtfGeometryTypeHintName.GEOMETRY_VECTOR2D:
             case SdtfGeometryTypeHintName.GEOMETRY_VECTOR3D:
             case SdtfGeometryTypeHintName.GEOMETRY_VECTOR4D:
-                delete component.accessor   // Stored in JSON content
-                break
+                delete component.accessor; // Stored in JSON content
+                break;
             default:
-                sdAssertUnreachable(typeHint)
+                sdAssertUnreachable(typeHint);
         }
 
         // Make sure that the component consists of valid data
         if (!this.validator.validateComponent(typeHint, component.value, component.accessor)) {
-            throw new SdtfError(`Cannot write component of type '${ typeHint }': Invalid component.`)
+            throw new SdtfError(
+                `Cannot write component of type '${typeHint}': Invalid component.`
+            );
         }
     }
 
-    postProcessComponents (components: (ISdtfWriteableAttribute | ISdtfWriteableDataItem)[]): void {
+    postProcessComponents(components: (ISdtfWriteableAttribute | ISdtfWriteableDataItem)[]): void {
         // Nothing to do here
     }
-
 }

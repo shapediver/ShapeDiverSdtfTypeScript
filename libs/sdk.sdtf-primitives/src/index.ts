@@ -1,3 +1,3 @@
-export * from "./ISdtfPrimitiveTypes"
-export * from "./SdtfPrimitiveTypeGuard"
-export * from "./SdtfPrimitiveTypeIntegration"
+export * from './ISdtfPrimitiveTypes';
+export * from './SdtfPrimitiveTypeGuard';
+export * from './SdtfPrimitiveTypeIntegration';

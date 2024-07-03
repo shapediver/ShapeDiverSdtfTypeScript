@@ -1,22 +1,21 @@
-import { SdtfError } from "@shapediver/sdk.sdtf-core"
-import { SdtfFileUtils } from "../utils/SdtfFileUtils"
-import { SdtfBinaryBufferCache } from "./SdtfBinaryBufferCache"
+import { SdtfError } from '@shapediver/sdk.sdtf-core';
+import { SdtfFileUtils } from '../utils/SdtfFileUtils';
+import { SdtfBinaryBufferCache } from './SdtfBinaryBufferCache';
 
 export class SdtfFileBufferCache extends SdtfBinaryBufferCache {
-
-    private readonly fileUtils: SdtfFileUtils
+    private readonly fileUtils: SdtfFileUtils;
 
     /** The paths of all sdTF buffers of this sdTF asset are relative to the path of the JSON content file. */
-    private readonly basePath: string
+    private readonly basePath: string;
 
-    constructor (absolutePath: string) {
-        super()
+    constructor(absolutePath: string) {
+        super();
 
-        this.fileUtils = new SdtfFileUtils()
+        this.fileUtils = new SdtfFileUtils();
 
         // Calculate the base path for all external buffers
-        const index = absolutePath.lastIndexOf("/")
-        this.basePath = absolutePath.substring(0, index)
+        const index = absolutePath.lastIndexOf('/');
+        this.basePath = absolutePath.substring(0, index);
     }
 
     /**
@@ -24,18 +23,25 @@ export class SdtfFileBufferCache extends SdtfBinaryBufferCache {
      * @override
      * @protected
      */
-    async acquireBuffer (relativePath: string | undefined, offset: number, length: number): Promise<DataView> {
-        let buffer
+    async acquireBuffer(
+        relativePath: string | undefined,
+        offset: number,
+        length: number
+    ): Promise<DataView> {
+        let buffer;
         try {
-            buffer = await this.fileUtils.readFile(`${ this.basePath }/${ relativePath }`)
+            buffer = await this.fileUtils.readFile(`${this.basePath}/${relativePath}`);
         } catch (e) {
-            throw new SdtfError(`Cannot read buffer: ${ e.message }`)
+            throw new SdtfError(`Cannot read buffer: ${e.message}`);
         }
 
         // Cache the entire buffer
-        this.storeInCache(this.calcCacheKey(relativePath), this.cacheIdFullBuffer, new DataView(buffer))
+        this.storeInCache(
+            this.calcCacheKey(relativePath),
+            this.cacheIdFullBuffer,
+            new DataView(buffer)
+        );
 
-        return new DataView(buffer, offset, length)
+        return new DataView(buffer, offset, length);
     }
-
 }

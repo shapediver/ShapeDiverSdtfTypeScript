@@ -9,40 +9,43 @@ import {
     ISdtfWriteableFileInfo,
     ISdtfWriteableNode,
     ISdtfWriteableTypeHint,
-} from "@shapediver/sdk.sdtf-core"
+} from '@shapediver/sdk.sdtf-core';
 
 export interface ISdtfWriteableComponentList {
+    accessors: ISdtfWriteableAccessor[];
 
-    accessors: ISdtfWriteableAccessor[]
+    asset: ISdtfWriteableAsset;
 
-    asset: ISdtfWriteableAsset
+    attributes: ISdtfWriteableAttributes[];
 
-    attributes: ISdtfWriteableAttributes[]
+    buffers: ISdtfWriteableBuffer[];
 
-    buffers: ISdtfWriteableBuffer[]
+    bufferViews: ISdtfWriteableBufferView[];
 
-    bufferViews: ISdtfWriteableBufferView[]
+    chunks: ISdtfWriteableChunk[];
 
-    chunks: ISdtfWriteableChunk[]
+    items: ISdtfWriteableDataItem[];
 
-    items: ISdtfWriteableDataItem[]
+    nodes: ISdtfWriteableNode[];
 
-    nodes: ISdtfWriteableNode[]
+    typeHints: ISdtfWriteableTypeHint[];
 
-    typeHints: ISdtfWriteableTypeHint[]
-
-    fileInfo: ISdtfWriteableFileInfo
-
+    fileInfo: ISdtfWriteableFileInfo;
 }
 
 /** Extracts all referenced components from the writeable asset object and returns them as a component list. */
-export function writeableComponentListFromAsset (asset: ISdtfWriteableAsset): ISdtfWriteableComponentList {
+export function writeableComponentListFromAsset(
+    asset: ISdtfWriteableAsset
+): ISdtfWriteableComponentList {
     // Helper function to add components to list if they are not already in the list
-    const addToList = (component: { componentId: string } | undefined, array: { componentId: string }[]): void => {
-        if (!component) return
+    const addToList = (
+        component: { componentId: string } | undefined,
+        array: { componentId: string }[]
+    ): void => {
+        if (!component) return;
         if (array.findIndex((c) => c.componentId === component.componentId) === -1)
-            array.push(component)
-    }
+            array.push(component);
+    };
 
     const list: ISdtfWriteableComponentList = {
         accessors: [],
@@ -55,34 +58,34 @@ export function writeableComponentListFromAsset (asset: ISdtfWriteableAsset): IS
         nodes: [],
         typeHints: [],
         fileInfo: asset.fileInfo,
-    }
+    };
 
     // NOTE: Extraction order matters!
-    list.chunks.forEach(chunk => {
-        addToList(chunk.attributes, list.attributes)
-        chunk.items.forEach(item => addToList(item, list.items))
-        chunk.nodes.forEach(node => addToList(node, list.nodes))
-        addToList(chunk.typeHint, list.typeHints)
-    })
-    list.nodes.forEach(nodes => {
-        addToList(nodes.attributes, list.attributes)
-        nodes.items.forEach(item => addToList(item, list.items))
-        nodes.nodes.forEach(node => addToList(node, list.nodes))
-        addToList(nodes.typeHint, list.typeHints)
-    })
-    list.items.forEach(item => {
-        addToList(item.accessor, list.accessors)
-        addToList(item.attributes, list.attributes)
-        addToList(item.typeHint, list.typeHints)
-    })
-    list.attributes.forEach(attributes => {
-        Object.values(attributes.entries).forEach(attribute => {
-            addToList(attribute.accessor, list.accessors)
-            addToList(attribute.typeHint, list.typeHints)
-        })
-    })
-    list.accessors.forEach(accessor => addToList(accessor.bufferView, list.bufferViews))
-    list.bufferViews.forEach(bufferView => addToList(bufferView.buffer, list.buffers))
+    list.chunks.forEach((chunk) => {
+        addToList(chunk.attributes, list.attributes);
+        chunk.items.forEach((item) => addToList(item, list.items));
+        chunk.nodes.forEach((node) => addToList(node, list.nodes));
+        addToList(chunk.typeHint, list.typeHints);
+    });
+    list.nodes.forEach((nodes) => {
+        addToList(nodes.attributes, list.attributes);
+        nodes.items.forEach((item) => addToList(item, list.items));
+        nodes.nodes.forEach((node) => addToList(node, list.nodes));
+        addToList(nodes.typeHint, list.typeHints);
+    });
+    list.items.forEach((item) => {
+        addToList(item.accessor, list.accessors);
+        addToList(item.attributes, list.attributes);
+        addToList(item.typeHint, list.typeHints);
+    });
+    list.attributes.forEach((attributes) => {
+        Object.values(attributes.entries).forEach((attribute) => {
+            addToList(attribute.accessor, list.accessors);
+            addToList(attribute.typeHint, list.typeHints);
+        });
+    });
+    list.accessors.forEach((accessor) => addToList(accessor.bufferView, list.bufferViews));
+    list.bufferViews.forEach((bufferView) => addToList(bufferView.buffer, list.buffers));
 
-    return list
+    return list;
 }

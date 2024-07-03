@@ -17,68 +17,76 @@ import {
     ISdtfReadableNode,
     ISdtfReadableTypeHint,
     ISdtfTypeHint,
-} from "@shapediver/sdk.sdtf-core"
+} from '@shapediver/sdk.sdtf-core';
 
 /**
  * Creates instances of individual readable components.
  * Replaces ID-references between components with object references.
  */
 export interface ISdtfReadableComponentFactory {
-
     /** Instantiates a new readable accessor object. */
-    createAccessor (accessor: ISdtfAccessor, bufferViews: ISdtfReadableBufferView[]): ISdtfReadableAccessor
+    createAccessor(
+        accessor: ISdtfAccessor,
+        bufferViews: ISdtfReadableBufferView[]
+    ): ISdtfReadableAccessor;
 
     /** Instantiates a new readable attributes object. */
-    createAttributes (
+    createAttributes(
         attribute: ISdtfAttributes,
         accessors: ISdtfReadableAccessor[],
-        typeHints: ISdtfReadableTypeHint[],
-    ): ISdtfReadableAttributes
+        typeHints: ISdtfReadableTypeHint[]
+    ): ISdtfReadableAttributes;
 
     /** Instantiates a new readable buffer object. */
-    createBuffer (buffer: ISdtfBuffer): ISdtfReadableBuffer
+    createBuffer(buffer: ISdtfBuffer): ISdtfReadableBuffer;
 
     /** Instantiates a new readable buffer view object. */
-    createBufferView (bufferView: ISdtfBufferView, buffers: ISdtfReadableBuffer[]): ISdtfReadableBufferView
+    createBufferView(
+        bufferView: ISdtfBufferView,
+        buffers: ISdtfReadableBuffer[]
+    ): ISdtfReadableBufferView;
 
     /** Instantiates a new readable chunk object. */
-    createChunk (
+    createChunk(
         chunk: ISdtfChunk,
         attributes: ISdtfReadableAttributes[],
         dataItems: ISdtfReadableDataItem[],
-        typeHints: ISdtfReadableTypeHint[],
-    ): ISdtfReadableChunk
+        typeHints: ISdtfReadableTypeHint[]
+    ): ISdtfReadableChunk;
 
     /** Instantiates a new readable data item object. */
-    createDataItem (
+    createDataItem(
         dataItem: ISdtfDataItem,
         accessors: ISdtfReadableAccessor[],
         attributes: ISdtfReadableAttributes[],
-        typeHints: ISdtfReadableTypeHint[],
-    ): ISdtfReadableDataItem
+        typeHints: ISdtfReadableTypeHint[]
+    ): ISdtfReadableDataItem;
 
     /** Instantiates a new readable file info object. */
-    createFileInfo (fileInfo: ISdtfFileInfo): ISdtfReadableFileInfo
+    createFileInfo(fileInfo: ISdtfFileInfo): ISdtfReadableFileInfo;
 
     /**
      * Instantiates a new readable node object.
      *
      * WARNING: Nodes referencing other nodes are not processed here!
      */
-    createNode (
+    createNode(
         node: ISdtfNode,
         attributes: ISdtfReadableAttributes[],
         dataItems: ISdtfReadableDataItem[],
-        typeHints: ISdtfReadableTypeHint[],
-    ): ISdtfReadableNode
+        typeHints: ISdtfReadableTypeHint[]
+    ): ISdtfReadableNode;
 
     /** Instantiates a new readable type hint object. */
-    createTypeHint (typeHint: ISdtfTypeHint): ISdtfReadableTypeHint
+    createTypeHint(typeHint: ISdtfTypeHint): ISdtfReadableTypeHint;
 
     /** Links references from chunk to node components. */
-    setChunkReferences (readableChunks: ISdtfReadableChunk[], chunks: ISdtfChunk[], readableNodes: ISdtfReadableNode[]): void
+    setChunkReferences(
+        readableChunks: ISdtfReadableChunk[],
+        chunks: ISdtfChunk[],
+        readableNodes: ISdtfReadableNode[]
+    ): void;
 
     /** Links references between node components. */
-    setNodeReferences (readableNodes: ISdtfReadableNode[], nodes: ISdtfNode[]): void
-
+    setNodeReferences(readableNodes: ISdtfReadableNode[], nodes: ISdtfNode[]): void;
 }

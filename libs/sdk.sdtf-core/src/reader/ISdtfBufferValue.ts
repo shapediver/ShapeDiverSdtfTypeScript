@@ -8,11 +8,9 @@
  * }
  */
 export interface ISdtfBufferValue {
-
     /** Optional id that was specified in the accessor */
-    id?: string,
+    id?: string;
 
     /** Holds the referenced buffer data */
-    data: DataView
-
+    data: DataView;
 }

@@ -1,38 +1,35 @@
-import { ISdtfWriteableAttribute, SdtfGeometryTypeHintName } from "@shapediver/sdk.sdtf-core"
-import {
-    SdtfWriteableComponentFactory,
-} from "../../../../packages/sdk.sdtf-v1/src/writer/SdtfWriteableComponentFactory"
-import { SdtfGeometryTypeValidator } from "../../src/SdtfGeometryTypeValidator"
-import { SdtfGeometryTypeWriter } from "../../src/SdtfGeometryTypeWriter"
+import { ISdtfWriteableAttribute, SdtfGeometryTypeHintName } from '@shapediver/sdk.sdtf-core';
+import { SdtfWriteableComponentFactory } from '../../../../packages/sdk.sdtf-v1/src/writer/SdtfWriteableComponentFactory';
+import { SdtfGeometryTypeValidator } from '../../src/SdtfGeometryTypeValidator';
+import { SdtfGeometryTypeWriter } from '../../src/SdtfGeometryTypeWriter';
 
-const factory = new SdtfWriteableComponentFactory()
-const writer = new SdtfGeometryTypeWriter(factory)
+const factory = new SdtfWriteableComponentFactory();
+const writer = new SdtfGeometryTypeWriter(factory);
 
-describe("writeComponent", function () {
-
-    let origValidateComponent: any
+describe('writeComponent', function () {
+    let origValidateComponent: any;
 
     beforeAll(() => {
-        origValidateComponent = SdtfGeometryTypeValidator.prototype.validateComponent
-    })
+        origValidateComponent = SdtfGeometryTypeValidator.prototype.validateComponent;
+    });
 
     afterAll(() => {
-        SdtfGeometryTypeValidator.prototype.validateComponent = origValidateComponent
-    })
+        SdtfGeometryTypeValidator.prototype.validateComponent = origValidateComponent;
+    });
 
-    test("invalid component; should throw", () => {
+    test('invalid component; should throw', () => {
         // Mock
-        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => false)
+        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => false);
 
-        expect(() => writer.writeComponent({})).toThrow()
-    })
+        expect(() => writer.writeComponent({})).toThrow();
+    });
 
-    test("unsupported type hint name; should throw", () => {
+    test('unsupported type hint name; should throw', () => {
         // Mock
-        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => true)
+        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => true);
 
-        expect(() => writer.writeComponent({})).toThrow()
-    })
+        expect(() => writer.writeComponent({})).toThrow();
+    });
 
     test.each([
         SdtfGeometryTypeHintName.GEOMETRY_ARC,
@@ -63,19 +60,18 @@ describe("writeComponent", function () {
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR2D,
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR3D,
         SdtfGeometryTypeHintName.GEOMETRY_VECTOR4D,
-    ])("component of type %s; should remove accessor component", (typeHintName) => {
+    ])('component of type %s; should remove accessor component', (typeHintName) => {
         // Mock
-        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => true)
+        SdtfGeometryTypeValidator.prototype.validateComponent = jest.fn(() => true);
 
         let component: ISdtfWriteableAttribute = {
             accessor: factory.createAccessor(),
             typeHint: factory.createTypeHint(typeHintName),
-            value: "value",
-        }
+            value: 'value',
+        };
 
-        writer.writeComponent(component)
-        expect(component.value).toBeDefined()
-        expect(component.accessor).toBeUndefined()
-    })
-
-})
+        writer.writeComponent(component);
+        expect(component.value).toBeDefined();
+        expect(component.accessor).toBeUndefined();
+    });
+});

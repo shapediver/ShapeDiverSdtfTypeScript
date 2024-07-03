@@ -1,10 +1,9 @@
-import { SdtfGrasshopperTypeHintName, SdtfRhinoTypeHintName } from "@shapediver/sdk.sdtf-core"
-import { SdtfRhino3dmTypeIntegration } from "../../src"
+import { SdtfGrasshopperTypeHintName, SdtfRhinoTypeHintName } from '@shapediver/sdk.sdtf-core';
+import { SdtfRhino3dmTypeIntegration } from '../../src';
 
-const integration = new SdtfRhino3dmTypeIntegration()
+const integration = new SdtfRhino3dmTypeIntegration();
 
-describe("isTypeHintSupported", function () {
-
+describe('isTypeHintSupported', function () {
     test.each([
         SdtfGrasshopperTypeHintName.GRASSHOPPER_PATH,
         SdtfRhinoTypeHintName.RHINO_ARC_CURVE,
@@ -22,12 +21,11 @@ describe("isTypeHintSupported", function () {
         SdtfRhinoTypeHintName.RHINO_REV_SURFACE,
         SdtfRhinoTypeHintName.RHINO_SUBD,
         SdtfRhinoTypeHintName.RHINO_SURFACE,
-    ])("supported type %s; should return true", (type) => {
-        expect(integration.isTypeHintSupported(type)).toBeTruthy()
-    })
+    ])('supported type %s; should return true', (type) => {
+        expect(integration.isTypeHintSupported(type)).toBeTruthy();
+    });
 
-    test("unsupported type; should return false", () => {
-        expect(integration.isTypeHintSupported("foobar")).toBeFalsy()
-    })
-
-})
+    test('unsupported type; should return false', () => {
+        expect(integration.isTypeHintSupported('foobar')).toBeFalsy();
+    });
+});

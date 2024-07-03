@@ -1,33 +1,33 @@
 {
-  "name": "@shapediver/custom_integration_template",
-  "version": "0.0.0",
-  "description": "A minimalistic template for a custom sdTF integration.",
-  "keywords": [],
-  "author": "ShapeDiver",
-  "license": "ISC",
-  "private": true,
-  "main": "dist/index.js",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shapediver/ShapeDiverSdtfTypeScript.git"
-  },
-  "scripts": {
-    "build": "bash ../../scripts/build.sh"
-  },
-  "bugs": {
-    "url": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/issues"
-  },
-  "homepage": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/tree/master/libs/custom_integration_template#readme",
-  "typings": "dist/index.d.ts",
-  "dependencies": {
-    "@shapediver/sdk.sdtf-core": "^1.5.2"
-  },
-  "devDependencies": {
-    "lerna": "~7.4.2",
-    "typescript": "^5.5.2"
-  }
+    "name": "@shapediver/custom_integration_template",
+    "version": "0.0.0",
+    "description": "A minimalistic template for a custom sdTF integration.",
+    "keywords": [],
+    "author": "ShapeDiver",
+    "license": "ISC",
+    "private": true,
+    "main": "dist/index.js",
+    "files": [
+        "dist",
+        "src"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/shapediver/ShapeDiverSdtfTypeScript.git"
+    },
+    "scripts": {
+        "build": "bash ../../scripts/build.sh"
+    },
+    "bugs": {
+        "url": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/issues"
+    },
+    "homepage": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/tree/master/libs/custom_integration_template#readme",
+    "typings": "dist/index.d.ts",
+    "dependencies": {
+        "@shapediver/sdk.sdtf-core": "^1.5.2"
+    },
+    "devDependencies": {
+        "lerna": "~7.4.2",
+        "typescript": "^5.5.2"
+    }
 }

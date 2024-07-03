@@ -9,33 +9,31 @@ import {
     ISdtfFileInfo,
     ISdtfNode,
     ISdtfTypeHint,
-} from "@shapediver/sdk.sdtf-core"
+} from '@shapediver/sdk.sdtf-core';
 
 /** Holds all component instances that represent a single sdTF file. */
 export interface ISdtfComponentList {
+    accessors: ISdtfAccessor[];
 
-    accessors: ISdtfAccessor[]
+    asset: ISdtfAsset;
 
-    asset: ISdtfAsset
+    attributes: ISdtfAttributes[];
 
-    attributes: ISdtfAttributes[]
+    buffers: ISdtfBuffer[];
 
-    buffers: ISdtfBuffer[]
+    bufferViews: ISdtfBufferView[];
 
-    bufferViews: ISdtfBufferView[]
+    chunks: ISdtfChunk[];
 
-    chunks: ISdtfChunk[]
+    items: ISdtfDataItem[];
 
-    items: ISdtfDataItem[]
+    nodes: ISdtfNode[];
 
-    nodes: ISdtfNode[]
+    typeHints: ISdtfTypeHint[];
 
-    typeHints: ISdtfTypeHint[]
+    fileInfo: ISdtfFileInfo;
 
-    fileInfo: ISdtfFileInfo
-
-    binaryBody?: ArrayBuffer
-
+    binaryBody?: ArrayBuffer;
 }
 
 /**
@@ -43,43 +41,41 @@ export interface ISdtfComponentList {
  * These components are partial representations and must be validated to ensure data correctness.
  */
 export interface ISdtfPartialComponentList {
+    accessors: Partial<ISdtfAccessor>[];
 
-    accessors: Partial<ISdtfAccessor>[]
+    asset: Partial<ISdtfAsset>;
 
-    asset: Partial<ISdtfAsset>
+    attributes: Partial<ISdtfAttributes>[];
 
-    attributes: Partial<ISdtfAttributes>[]
+    buffers: Partial<ISdtfBuffer>[];
 
-    buffers: Partial<ISdtfBuffer>[]
+    bufferViews: Partial<ISdtfBufferView>[];
 
-    bufferViews: Partial<ISdtfBufferView>[]
+    chunks: Partial<ISdtfChunk>[];
 
-    chunks: Partial<ISdtfChunk>[]
+    items: Partial<ISdtfDataItem>[];
 
-    items: Partial<ISdtfDataItem>[]
+    nodes: Partial<ISdtfNode>[];
 
-    nodes: Partial<ISdtfNode>[]
+    typeHints: Partial<ISdtfTypeHint>[];
 
-    typeHints: Partial<ISdtfTypeHint>[]
+    fileInfo: Partial<ISdtfFileInfo>;
 
-    fileInfo: Partial<ISdtfFileInfo>
-
-    binaryBody?: ArrayBuffer
-
+    binaryBody?: ArrayBuffer;
 }
 
 /** Creates a sdTF JSON content object from the given component list. */
-export function toJsonContent (componentList: ISdtfComponentList): Record<string, unknown> {
-    const json = componentList.asset.toJson()
-    json.asset = componentList.fileInfo.toJson()
-    json.chunks = componentList.chunks.map(c => c.toJson())
-    json.nodes = componentList.nodes.map(n => n.toJson())
-    json.items = componentList.items.map(i => i.toJson())
-    json.attributes = componentList.attributes.map(a => a.toJson())
-    json.typeHints = componentList.typeHints.map(t => t.toJson())
-    json.accessors = componentList.accessors.map(a => a.toJson())
-    json.bufferViews = componentList.bufferViews.map(v => v.toJson())
-    json.buffers = componentList.buffers.map(b => b.toJson())
+export function toJsonContent(componentList: ISdtfComponentList): Record<string, unknown> {
+    const json = componentList.asset.toJson();
+    json.asset = componentList.fileInfo.toJson();
+    json.chunks = componentList.chunks.map((c) => c.toJson());
+    json.nodes = componentList.nodes.map((n) => n.toJson());
+    json.items = componentList.items.map((i) => i.toJson());
+    json.attributes = componentList.attributes.map((a) => a.toJson());
+    json.typeHints = componentList.typeHints.map((t) => t.toJson());
+    json.accessors = componentList.accessors.map((a) => a.toJson());
+    json.bufferViews = componentList.bufferViews.map((v) => v.toJson());
+    json.buffers = componentList.buffers.map((b) => b.toJson());
 
-    return json
+    return json;
 }

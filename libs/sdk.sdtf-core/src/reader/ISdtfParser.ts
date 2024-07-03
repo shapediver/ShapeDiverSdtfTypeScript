@@ -1,8 +1,7 @@
-import { ISdtfReadableAsset } from "./components/ISdtfReadableAsset"
+import { ISdtfReadableAsset } from './components/ISdtfReadableAsset';
 
 /** Parser for sdTF assets. */
 export interface ISdtfParser {
-
     /**
      * Parses the sdTF-file with the given path.
      *
@@ -10,19 +9,18 @@ export interface ISdtfParser {
      * @param path - Absolute or relative path of the sdTF file.
      * @throws {@link SdtfError} when the sdTF-file could not be parsed.
      */
-    readFromFile (path: string): Promise<ISdtfReadableAsset>
+    readFromFile(path: string): Promise<ISdtfReadableAsset>;
 
     /**
      * Fetches the sdTF-file from the given link and returns the parsing results.
      * @param url - Location of the sdTF-file.
      * @throws {@link SdtfError} when the sdTF-file could not be parsed.
      */
-    readFromUrl (url: string): Promise<ISdtfReadableAsset>
+    readFromUrl(url: string): Promise<ISdtfReadableAsset>;
 
     /**
      * Parses the sdTF-file with the given data.
      * @throws {@link SdtfError} when the sdTF-file could not be parsed.
      */
-    readFromBuffer (sdtf: ArrayBuffer): ISdtfReadableAsset
-
+    readFromBuffer(sdtf: ArrayBuffer): ISdtfReadableAsset;
 }

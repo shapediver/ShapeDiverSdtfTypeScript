@@ -1,14 +1,12 @@
-import { ISdtfBaseComponent } from "@shapediver/sdk.sdtf-core"
-import { createComponentId } from "../../utils/SdtfUtils"
+import { ISdtfBaseComponent } from '@shapediver/sdk.sdtf-core';
+import { createComponentId } from '../../utils/SdtfUtils';
 
 export abstract class SdtfBasePartialComponent implements ISdtfBaseComponent {
+    readonly componentId: string;
 
-    readonly componentId: string
-
-    constructor () {
-        this.componentId = createComponentId()
+    constructor() {
+        this.componentId = createComponentId();
     }
 
-    abstract toJson (): Record<string, unknown>
-
+    abstract toJson(): Record<string, unknown>;
 }

@@ -1,32 +1,32 @@
-import { ISdtfReadableBuffer, SdtfError } from "@shapediver/sdk.sdtf-core"
-import { ISdtfBufferCache } from "../../buffer_cache/ISdtfBufferCache"
-import { SdtfBaseReadableComponent } from "./SdtfBaseReadableComponent"
+import { ISdtfReadableBuffer, SdtfError } from '@shapediver/sdk.sdtf-core';
+import { ISdtfBufferCache } from '../../buffer_cache/ISdtfBufferCache';
+import { SdtfBaseReadableComponent } from './SdtfBaseReadableComponent';
 
 export class SdtfReadableBuffer extends SdtfBaseReadableComponent implements ISdtfReadableBuffer {
+    uri?: string;
 
-    uri?: string
+    additionalProperties: Record<string, unknown> = {};
 
-    additionalProperties: Record<string, unknown> = {}
-
-    constructor (
+    constructor(
         public byteLength: number,
-        private bufferCache: ISdtfBufferCache,
+        private bufferCache: ISdtfBufferCache
     ) {
-        super()
+        super();
     }
 
     /** @override */
-    toDataObject (): Record<string, unknown> {
-        const dataObject = super.toDataObject()
-        delete dataObject.bufferCache
-        return dataObject
+    toDataObject(): Record<string, unknown> {
+        const dataObject = super.toDataObject();
+        delete dataObject.bufferCache;
+        return dataObject;
     }
 
-    async getContent (offset: number, length: number): Promise<DataView> {
+    async getContent(offset: number, length: number): Promise<DataView> {
         if (offset + length > this.byteLength)
-            throw new SdtfError("Unable to get content of buffer: Requested content is out of range.")
+            throw new SdtfError(
+                'Unable to get content of buffer: Requested content is out of range.'
+            );
 
-        return this.bufferCache.getBuffer(this.uri, offset, length)
+        return this.bufferCache.getBuffer(this.uri, offset, length);
     }
-
 }

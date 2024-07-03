@@ -3,14 +3,13 @@
  * The user is can override every setting when creating and adding the integration to the SDK.
  */
 export class SdtfRhino3dmTypeConfig {
-
     /**
      * When enabled, compresses the rhino3dm file via GZIP when creating a new sdTF asset.
      * This reduces the overall size of the sdTF buffer object.
      *
      * Default: `true`.
      */
-    readonly enableCompression: boolean = true
+    readonly enableCompression: boolean = true;
 
     /**
      * When required, validates all rhino3dm components when creating a new sdTF asset and throws when one is invalid.
@@ -21,14 +20,13 @@ export class SdtfRhino3dmTypeConfig {
      *
      * Default: `true`.
      */
-    readonly requireValidRhino3dmComponents: boolean = true
+    readonly requireValidRhino3dmComponents: boolean = true;
 
-    constructor (config?: Partial<SdtfRhino3dmTypeConfig>) {
+    constructor(config?: Partial<SdtfRhino3dmTypeConfig>) {
         if (config?.enableCompression !== undefined)
-            this.enableCompression = config.enableCompression
+            this.enableCompression = config.enableCompression;
 
         if (config?.requireValidRhino3dmComponents !== undefined)
-            this.requireValidRhino3dmComponents = config.requireValidRhino3dmComponents
+            this.requireValidRhino3dmComponents = config.requireValidRhino3dmComponents;
     }
-
 }

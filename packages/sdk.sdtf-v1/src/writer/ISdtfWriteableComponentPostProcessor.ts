@@ -1,5 +1,5 @@
-import { ISdtfWriteableAsset } from "@shapediver/sdk.sdtf-core"
-import { ISdtfWriteableComponentList } from "./ISdtfWriteableComponentList"
+import { ISdtfWriteableAsset } from '@shapediver/sdk.sdtf-core';
+import { ISdtfWriteableComponentList } from './ISdtfWriteableComponentList';
 
 /**
  * Post-processor for a writable component list.
@@ -9,8 +9,6 @@ import { ISdtfWriteableComponentList } from "./ISdtfWriteableComponentList"
  * This is done by the optimizer.
  */
 export interface ISdtfWriteableComponentPostProcessor {
-
     /** Calls component-writers of registered integrations, removes duplicated type hints and merges buffer data. */
-    optimize (asset: ISdtfWriteableAsset): ISdtfWriteableComponentList
-
+    optimize(asset: ISdtfWriteableAsset): ISdtfWriteableComponentList;
 }
