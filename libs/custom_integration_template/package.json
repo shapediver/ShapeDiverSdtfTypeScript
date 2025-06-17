@@ -24,7 +24,7 @@
     "homepage": "https://github.com/shapediver/ShapeDiverSdtfTypeScript/tree/master/libs/custom_integration_template#readme",
     "typings": "dist/index.d.ts",
     "dependencies": {
-        "@shapediver/sdk.sdtf-core": "^1.5.3"
+        "@shapediver/sdk.sdtf-core": "^1.6.0"
     },
     "devDependencies": {
         "lerna": "~7.4.2",

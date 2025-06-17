@@ -51,7 +51,7 @@ importers:
   libs/custom_integration_template:
     dependencies:
       '@shapediver/sdk.sdtf-core':
-        specifier: ^1.5.3
+        specifier: ^1.6.0
         version: link:../sdk.sdtf-core
     devDependencies:
       lerna:
@@ -76,7 +76,7 @@ importers:
   libs/sdk.sdtf-geometry:
     dependencies:
       '@shapediver/sdk.sdtf-core':
-        specifier: 1.5.3
+        specifier: 1.6.0
         version: link:../sdk.sdtf-core
     devDependencies:
       jest:
@@ -92,7 +92,7 @@ importers:
   libs/sdk.sdtf-primitives:
     dependencies:
       '@shapediver/sdk.sdtf-core':
-        specifier: 1.5.3
+        specifier: 1.6.0
         version: link:../sdk.sdtf-core
       decimal.js:
         specifier: ~10.5.0
@@ -111,7 +111,7 @@ importers:
   libs/sdk.sdtf-rhino3dm:
     dependencies:
       '@shapediver/sdk.sdtf-core':
-        specifier: 1.5.3
+        specifier: 1.6.0
         version: link:../sdk.sdtf-core
       pako:
         specifier: ~2.1.0
@@ -136,13 +136,13 @@ importers:
   packages/sdk.sdtf-v1:
     dependencies:
       '@shapediver/sdk.sdtf-core':
-        specifier: 1.5.3
+        specifier: 1.6.0
         version: link:../../libs/sdk.sdtf-core
       '@shapediver/sdk.sdtf-geometry':
-        specifier: 1.5.3
+        specifier: 1.6.0
         version: link:../../libs/sdk.sdtf-geometry
       '@shapediver/sdk.sdtf-primitives':
-        specifier: 1.5.3
+        specifier: 1.6.0
         version: link:../../libs/sdk.sdtf-primitives
       axios:
         specifier: ~1.10.0
