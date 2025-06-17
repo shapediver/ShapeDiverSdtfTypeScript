@@ -18,4 +18,8 @@ __pycache__/
 # JetBrains products are ignored by default - remove where needed
 .idea/
 
+.vscode/
+**/.DS_Store
+**/tsconfig.tsbuildinfo
+
 /packages/sdk.tester
