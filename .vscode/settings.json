@@ -1,0 +1,15 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "search.exclude": {
+        "**/.git": true,
+        "**/.nx": true,
+        "**/.venv": true,
+        "**/dist": true
+    },
+    "terminal.integrated.defaultProfile.osx": "zsh - work",
+    "cSpell.words": [],
+    "jest.runMode": {
+        "type": "on-demand"
+    },
+    "typescript.preferences.includePackageJsonAutoImports": "on"
+}
