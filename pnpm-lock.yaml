@@ -145,15 +145,15 @@ importers:
         specifier: 1.6.0
         version: link:../../libs/sdk.sdtf-primitives
       axios:
-        specifier: ~1.10.0
-        version: 1.10.0
+        specifier: ~1.13.1
+        version: 1.13.2
       browser-or-node:
         specifier: 2.1.1
         version: 2.1.1
     devDependencies:
       axios-mock-adapter:
         specifier: ~1.22.0
-        version: 1.22.0(axios@1.10.0)
+        version: 1.22.0(axios@1.13.2)
       jest:
         specifier: ~29.7.0
         version: 29.7.0(@types/node@20.19.1)
@@ -1961,21 +1961,21 @@ packages:
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  /axios-mock-adapter@1.22.0(axios@1.10.0):
+  /axios-mock-adapter@1.22.0(axios@1.13.2):
     resolution: {integrity: sha512-dmI0KbkyAhntUR05YY96qg2H6gg0XMl2+qTW0xmYg6Up+BFBAJYRLROMXRdDEL06/Wqwa0TJThAYvFtSFdRCZw==}
     peerDependencies:
       axios: '>= 0.17.0'
     dependencies:
-      axios: 1.10.0
+      axios: 1.13.2
       fast-deep-equal: 3.1.3
       is-buffer: 2.0.5
     dev: true
 
-  /axios@1.10.0:
-    resolution: {integrity: sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw==}
+  /axios@1.13.2:
+    resolution: {integrity: sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==}
     dependencies:
       follow-redirects: 1.15.9
-      form-data: 4.0.3
+      form-data: 4.0.4
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
@@ -3365,8 +3365,8 @@ packages:
     engines: {node: '>= 14.17'}
     dev: true
 
-  /form-data@4.0.3:
-    resolution: {integrity: sha512-qsITQPfmvMOSAdeyZ+12I1c+CKSstAFAwu+97zrnWAbIr5u8wfsExUzCesVLC8NgHuRUqNN4Zy6UPWUTRGslcA==}
+  /form-data@4.0.4:
+    resolution: {integrity: sha512-KrGhL9Q4zjj0kiUt5OO4Mr/A/jlI2jDYs5eHBpYHPcBEVSiipAvn2Ko2HnPe20rmcuuvMHNdZFp+4IlGTMF0Ow==}
     engines: {node: '>= 6'}
     dependencies:
       asynckit: 0.4.0
@@ -5749,7 +5749,7 @@ packages:
       '@yarnpkg/lockfile': 1.1.0
       '@yarnpkg/parsers': 3.0.0-rc.46
       '@zkochan/js-yaml': 0.0.6
-      axios: 1.10.0
+      axios: 1.13.2
       chalk: 4.1.0
       cli-cursor: 3.1.0
       cli-spinners: 2.6.1
