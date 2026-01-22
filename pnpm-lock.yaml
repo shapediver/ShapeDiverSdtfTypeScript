@@ -51,8 +51,8 @@ importers:
   libs/custom_integration_template:
     dependencies:
       '@shapediver/sdk.sdtf-core':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.2
+        version: 1.6.2
     devDependencies:
       lerna:
         specifier: 9.0.3
@@ -65,10 +65,10 @@ importers:
     devDependencies:
       jest:
         specifier: 30.2.0
-        version: 30.2.0(@types/node@24.1.0)
+        version: 30.2.0(@types/node@25.0.10)
       lerna:
         specifier: 9.0.3
-        version: 9.0.3(@types/node@24.1.0)
+        version: 9.0.3(@types/node@25.0.10)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -76,8 +76,8 @@ importers:
   libs/sdk.sdtf-geometry:
     dependencies:
       '@shapediver/sdk.sdtf-core':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.2
+        version: 1.6.2
     devDependencies:
       jest:
         specifier: 30.2.0
@@ -92,8 +92,8 @@ importers:
   libs/sdk.sdtf-primitives:
     dependencies:
       '@shapediver/sdk.sdtf-core':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.2
+        version: 1.6.2
       decimal.js:
         specifier: 10.6.0
         version: 10.6.0
@@ -111,8 +111,8 @@ importers:
   libs/sdk.sdtf-rhino3dm:
     dependencies:
       '@shapediver/sdk.sdtf-core':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.2
+        version: 1.6.2
       pako:
         specifier: 2.1.0
         version: 2.1.0
@@ -125,10 +125,10 @@ importers:
         version: 2.0.4
       jest:
         specifier: 30.2.0
-        version: 30.2.0(@types/node@25.0.10)
+        version: 30.2.0(@types/node@24.1.0)
       lerna:
         specifier: 9.0.3
-        version: 9.0.3(@types/node@25.0.10)
+        version: 9.0.3(@types/node@24.1.0)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -136,14 +136,14 @@ importers:
   packages/sdk.sdtf-v1:
     dependencies:
       '@shapediver/sdk.sdtf-core':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.2
+        version: 1.6.2
       '@shapediver/sdk.sdtf-geometry':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.2
+        version: 1.6.2
       '@shapediver/sdk.sdtf-primitives':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.2
+        version: 1.6.2
       axios:
         specifier: 1.13.2
         version: 1.13.2
@@ -837,14 +837,14 @@ packages:
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@shapediver/sdk.sdtf-core@1.6.1':
-    resolution: {integrity: sha512-sj/6HCTBbj1QtQeoaYZlFWbRaQJiYSQRq0L43nwjk8H3zEKujEmZclST22T6VmTK1UOzSEfa4BoyLKLbt4aJ8A==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.sdtf-core/1.6.1/040ba750ab058479cf008c6ed620bb9316bec95f}
+  '@shapediver/sdk.sdtf-core@1.6.2':
+    resolution: {integrity: sha512-LdbbHPQOROUxaavkEqf5JAz5LhlyrTjWVbGH1+czQ8TZK/RGlvjJJOjp27awF0y+Q4pZCLN+7U5ECP9zcxzdyg==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.sdtf-core/1.6.2/74497b800b16d287b1a4fb40ae4bea4cd40207f3}
 
-  '@shapediver/sdk.sdtf-geometry@1.6.1':
-    resolution: {integrity: sha512-Zp89WGCVuM98HiJ2jhKxXvoqEQs5DlxPK+FsFnpi9IqAIAlpBhj30+vaGPzzZxq0+HN09rbtyWN8gD4JeERe5w==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.sdtf-geometry/1.6.1/1c2228880466042e06c50de7337869c99d23afed}
+  '@shapediver/sdk.sdtf-geometry@1.6.2':
+    resolution: {integrity: sha512-2qowKIpML2YJDFBUmkckqPMscVWJkkOVRzjr2P6FWvgjPDYjoU9iFczsd1w6SLNCTAt5Hj7phvmBYdg993dGFg==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.sdtf-geometry/1.6.2/0f1bbe07b2259412b763bd0939c5f803f3bd1ced}
 
-  '@shapediver/sdk.sdtf-primitives@1.6.1':
-    resolution: {integrity: sha512-V+gdKHsJkczfWJaVzb44RXFCrXjpLw735J+WbG+Mm+lrD6nWg1P+d5kueV+RJAKoJRCkG8WTPuomvGJpTaJWJQ==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.sdtf-primitives/1.6.1/9aa56516f65fe2fbd151297b8b4ff4668878b310}
+  '@shapediver/sdk.sdtf-primitives@1.6.2':
+    resolution: {integrity: sha512-uiivBEdybgN7aq1Ri9ioZGSlmsFtGJ+tB+gsrrmBKDO12OdPZMOyPZBAHGuQwvl9fLvG6ZlE95QPLZPp35d0qQ==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.sdtf-primitives/1.6.2/4fc9d2f03585b154c311d9721896c2927687b875}
 
   '@sigstore/bundle@4.0.0':
     resolution: {integrity: sha512-NwCl5Y0V6Di0NexvkTqdoVfmjTaQwoLM236r89KEojGmq/jMls8S+zb7yOwAPdXvbwfKDlP+lmXgAL4vKSQT+A==}
@@ -1711,9 +1711,6 @@ packages:
   decamelize@1.2.0:
     resolution: {integrity: sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==}
     engines: {node: '>=0.10.0'}
-
-  decimal.js@10.5.0:
-    resolution: {integrity: sha512-8vDa8Qxvr/+d94hSh5P3IJwI5t8/c0KsMp+g8bNw9cY2icONa5aPfvKeieW1WlG0WQYwwhJ7mjui2xtiePQSXw==}
 
   decimal.js@10.6.0:
     resolution: {integrity: sha512-YpgQiITW3JXGntzdUmyUR1V812Hn8T1YVXhCu+wO3OpS4eU9l4YdD3qjyiKdV6mvV29zapkMeD390UVEf2lkUg==}
@@ -5308,16 +5305,16 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@shapediver/sdk.sdtf-core@1.6.1': {}
+  '@shapediver/sdk.sdtf-core@1.6.2': {}
 
-  '@shapediver/sdk.sdtf-geometry@1.6.1':
+  '@shapediver/sdk.sdtf-geometry@1.6.2':
     dependencies:
-      '@shapediver/sdk.sdtf-core': 1.6.1
+      '@shapediver/sdk.sdtf-core': 1.6.2
 
-  '@shapediver/sdk.sdtf-primitives@1.6.1':
+  '@shapediver/sdk.sdtf-primitives@1.6.2':
     dependencies:
-      '@shapediver/sdk.sdtf-core': 1.6.1
-      decimal.js: 10.5.0
+      '@shapediver/sdk.sdtf-core': 1.6.2
+      decimal.js: 10.6.0
 
   '@sigstore/bundle@4.0.0':
     dependencies:
@@ -6243,8 +6240,6 @@ snapshots:
       map-obj: 1.0.1
 
   decamelize@1.2.0: {}
-
-  decimal.js@10.5.0: {}
 
   decimal.js@10.6.0: {}
 
