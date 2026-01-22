@@ -40,11 +40,11 @@
     },
     "dependencies": {
         "@shapediver/sdk.sdtf-core": "1.6.1",
-        "decimal.js": "10.5.0"
+        "decimal.js": "10.6.0"
     },
     "devDependencies": {
-        "jest": "29.7.0",
-        "lerna": "7.4.2",
+        "jest": "30.2.0",
+        "lerna": "9.0.3",
         "typescript": "5.8.3"
     }
 }

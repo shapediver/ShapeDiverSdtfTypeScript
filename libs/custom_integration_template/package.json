@@ -27,7 +27,7 @@
         "@shapediver/sdk.sdtf-core": "1.6.1"
     },
     "devDependencies": {
-        "lerna": "7.4.2",
+        "lerna": "9.0.3",
         "typescript": "5.8.3"
     }
 }
