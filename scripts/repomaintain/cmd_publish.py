@@ -576,6 +576,7 @@ def update_version(
     publishable_component_map: t.Dict[str, str] = {
         c["component"]["name"]: c["new_version"] for c in publishable_components
     }
+    component_map: t.Dict[str, LernaComponent] = {c["name"]: c for c in all_components}
 
     # Regex to extract the prefix of a semver (e.g. '~', '<=')
     regex = re.compile(r"^[^ \d]*")
@@ -592,7 +593,34 @@ def update_version(
         c["name"]: {} for c in all_components
     }
 
-    def update_internal_dependency(pkg_json_dep_ref: t.Dict[str, t.Any]) -> None:
+    def resolve_workspace_dependency_version(
+        dep_name: str, current_version: str, target_version: str
+    ) -> str:
+        """Resolves pnpm workspace protocol specs to publishable npm version specs."""
+        workspace_spec = current_version.removeprefix("workspace:")
+
+        if workspace_spec in ("", "*"):
+            return target_version
+        if workspace_spec in ("^", "~"):
+            return workspace_spec + target_version
+
+        try:
+            semver.NpmSpec(workspace_spec)
+        except ValueError:
+            raise PrintMessageError(
+                f"""
+ERROR:
+  Unsupported workspace dependency spec '{current_version}' for dependency {dep_name}.
+  Use a semver workspace spec like 'workspace:*', 'workspace:^', or 'workspace:~'.
+"""
+            )
+
+        semver_specifier: str = re.findall(regex, workspace_spec)[0]
+        return semver_specifier + target_version
+
+    def update_internal_dependency(
+        pkg_json_dep_ref: t.Dict[str, t.Any], target_version: str
+    ) -> None:
         """
         Helper function to update the version of a linked internal dependency.
 
@@ -602,14 +630,21 @@ def update_version(
         information is added to `forced_updates`. Afterwards, the new version is set in the
         package.json object.
         """
-        # Extract semver-prefix
-        semver_specifier: str = re.findall(regex, pkg_json_dep_ref[name])[0]
-
         current_version = pkg_json_dep_ref[name]
-        new_version = semver_specifier + version
+
+        if current_version.startswith("workspace:"):
+            new_version = resolve_workspace_dependency_version(
+                name, current_version, target_version
+            )
+            pkg_json_dep_ref[name] = new_version
+            return
+
+        # Extract semver-prefix
+        semver_specifier: str = re.findall(regex, current_version)[0]
+        new_version = semver_specifier + target_version
 
         # Extend forced_updates list when versions do not match
-        if semver.Version(version) not in semver.NpmSpec(current_version):
+        if semver.Version(target_version) not in semver.NpmSpec(current_version):
             forced_updates[component["name"]].update(
                 {name: f"{current_version} -> {new_version}"}
             )
@@ -628,18 +663,33 @@ def update_version(
         if component["name"] in publishable_component_map:
             pkg_json_content["version"] = publishable_component_map[component["name"]]
 
-        # Remove all internal dependencies that have a matching version.
-        for name, version in publishable_component_map.items():
+        # Update internal dependencies that are part of the release, or workspace protocol
+        # dependencies in packages that are about to be published.
+        for name, internal_dependency in component_map.items():
+            target_version = publishable_component_map.get(
+                name, internal_dependency["version"]
+            )
+            should_update = name in publishable_component_map
+            is_published_component = component["name"] in publishable_component_map
+
             if (
                 "dependencies" in pkg_json_content
                 and name in pkg_json_content["dependencies"]
             ):
-                update_internal_dependency(pkg_json_content["dependencies"])
+                dep_ref = pkg_json_content["dependencies"]
+                if should_update or (
+                    is_published_component and dep_ref[name].startswith("workspace:")
+                ):
+                    update_internal_dependency(dep_ref, target_version)
             elif (
                 "devDependencies" in pkg_json_content
                 and name in pkg_json_content["devDependencies"]
             ):
-                update_internal_dependency(pkg_json_content["devDependencies"])
+                dep_ref = pkg_json_content["devDependencies"]
+                if should_update or (
+                    is_published_component and dep_ref[name].startswith("workspace:")
+                ):
+                    update_internal_dependency(dep_ref, target_version)
 
         # Write changes to package.json file.
         with open(pkg_json_file, "w") as writer:
