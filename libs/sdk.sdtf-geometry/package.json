@@ -39,7 +39,7 @@
         "testEnvironment": "node"
     },
     "dependencies": {
-        "@shapediver/sdk.sdtf-core": "1.7.4"
+        "@shapediver/sdk.sdtf-core": "workspace:*"
     },
     "devDependencies": {
         "jest": "30.4.2",
