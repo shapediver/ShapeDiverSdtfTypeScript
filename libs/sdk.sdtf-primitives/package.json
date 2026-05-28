@@ -43,8 +43,8 @@
         "decimal.js": "10.6.0"
     },
     "devDependencies": {
-        "jest": "30.2.0",
-        "lerna": "9.0.3",
-        "typescript": "5.8.3"
+        "jest": "30.4.2",
+        "lerna": "9.0.7",
+        "typescript": "5.9.3"
     }
 }

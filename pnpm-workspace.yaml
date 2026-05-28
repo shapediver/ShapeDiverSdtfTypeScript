@@ -1,4 +1,9 @@
 packages:
-  - 'packages/*'
-  - 'libs/*'
-  - '!packages/sdk.tester/.*'
+    - 'packages/*'
+    - 'libs/*'
+    - '!packages/sdk.tester/.*'
+allowBuilds:
+    nx: true
+    unrs-resolver: true
+minimumReleaseAgeExclude:
+    - '@shapediver/*'
