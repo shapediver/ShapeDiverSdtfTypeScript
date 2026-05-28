@@ -28,15 +28,14 @@ export class SdtfFileUtils {
 
         return new Promise<ArrayBuffer>((resolve, reject) => {
             fs.readFile(absolutePath, (error: Error, buffer: Buffer) => {
-                if (error) reject(error);
+                if (error) {
+                    reject(error);
+                    return;
+                }
 
-                // The size of the buffer property is arbitrary.
-                // Thus, byte offset and length must be taken into account.
-                const data = buffer.buffer.slice(
-                    buffer.byteOffset,
-                    buffer.byteOffset + buffer.byteLength
-                );
-                resolve(data);
+                const data = new Uint8Array(buffer.byteLength);
+                data.set(buffer);
+                resolve(data.buffer);
             });
         });
     }

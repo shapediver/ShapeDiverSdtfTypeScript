@@ -311,6 +311,6 @@ export class SdtfWriteableComponentPostProcessor implements ISdtfWriteableCompon
             merged.set(data, offsets[i]);
         });
 
-        return [merged, offsets];
+        return [merged.buffer, offsets];
     }
 }

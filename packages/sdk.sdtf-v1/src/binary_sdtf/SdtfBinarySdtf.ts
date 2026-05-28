@@ -107,7 +107,7 @@ export class SdtfBinarySdtf implements ISdtfBinarySdtf {
         const jsonContent = toJsonContent(componentList);
 
         try {
-            return new TextEncoder().encode(JSON.stringify(jsonContent, undefined, 0));
+            return new TextEncoder().encode(JSON.stringify(jsonContent, undefined, 0)).buffer;
         } catch (e) {
             throw new SdtfError(`Invalid content: Cannot create sdTF JSON content. ${e.message}`);
         }
