@@ -6,6 +6,7 @@ dist-prod
 lerna-debug.log
 .npmrc
 .nx/
+.pnpm-store/
 
 # Python
 .venv/
