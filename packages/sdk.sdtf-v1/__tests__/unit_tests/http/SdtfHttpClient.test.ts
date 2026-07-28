@@ -1,9 +1,7 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import { SdtfBinarySdtf } from '../../../src/binary_sdtf/SdtfBinarySdtf';
 import { SdtfHttpClient } from '../../../src/http/SdtfHttpClient';
 
-describe('calcUrl', function () {
+describe('calcUrl', function() {
     test('should replace last part of json content url with uri', () => {
         const client = new SdtfHttpClient('https://shapediver.com/api/v2/sdtf/foo.sdtf');
         expect(client.calcUrl('bar/baz.obj')).toBe(
@@ -12,7 +10,7 @@ describe('calcUrl', function () {
     });
 });
 
-describe('getJsonContent', function () {
+describe('getJsonContent', function() {
     let origFetch: any, origReadHeader: any, origParseBinarySdtf: any;
 
     const client = new SdtfHttpClient(''),
@@ -68,7 +66,7 @@ describe('getJsonContent', function () {
     });
 });
 
-describe('getBinaryBuffer', function () {
+describe('getBinaryBuffer', function() {
     let origFetch: any;
 
     const client = new SdtfHttpClient(''),
@@ -108,18 +106,26 @@ describe('getBinaryBuffer', function () {
     });
 });
 
-describe('fetch', function () {
-    const axiosMock = new MockAdapter(axios);
-
+describe('fetch', function() {
+    let originalFetch: typeof globalThis.fetch;
+    let fetchMock: jest.MockedFunction<typeof globalThis.fetch>;
     let origFetchPartially: any, origFetchFully: any;
     let spyFetchPartially: boolean, spyFetchFully: boolean;
 
     const partialBuffer = new ArrayBuffer(25),
-        fullBuffer = new ArrayBuffer(50);
+        fullBuffer = new ArrayBuffer(50),
+        client = new SdtfHttpClient('');
 
-    const client = new SdtfHttpClient('');
+    const response = (status: number, headers: Record<string, string> = {}) => ({
+        status,
+        headers: { get: (name: string) => headers[name.toLowerCase()] ?? null },
+    }) as unknown as Response;
 
     beforeAll(() => {
+        originalFetch = globalThis.fetch;
+        fetchMock = jest.fn();
+        globalThis.fetch = fetchMock;
+
         origFetchPartially = SdtfHttpClient.prototype.fetchPartially;
         SdtfHttpClient.prototype.fetchPartially = jest.fn(async () => {
             spyFetchPartially = true;
@@ -134,32 +140,29 @@ describe('fetch', function () {
     });
 
     afterAll(() => {
+        globalThis.fetch = originalFetch;
         SdtfHttpClient.prototype.fetchPartially = origFetchPartially;
         SdtfHttpClient.prototype.fetchFully = origFetchFully;
-
-        axiosMock.restore(); // remove mocking from axios
     });
 
     beforeEach(() => {
         spyFetchPartially = false;
         spyFetchFully = false;
-
-        axiosMock.reset(); // remove all mock-handlers
+        fetchMock.mockReset();
     });
 
     test('status code not in 200 range; should throw', async () => {
-        axiosMock.onHead().reply(400);
-
+        fetchMock.mockResolvedValue(response(400));
         await expect(client.fetch('', 10, 25)).rejects.toThrow();
     });
 
     test('content not encoded, range supported; fetch partially', async () => {
-        axiosMock.onHead().reply(200, undefined, {
+        fetchMock.mockResolvedValue(response(200, {
             'accept-ranges': 'bytes',
             'access-control-allow-methods': 'HEAD, GET',
             'access-control-allow-origin': '*',
-            age: 77486,
-            'content-length': 59804,
+            age: '77486',
+            'content-length': '59804',
             'content-type': 'model/vnd.sdtf',
             date: 'Tue, 11 Apr 2023 10:32:1u GMT',
             etag: '0afb7dc559527f3ea30f5da16fde4173',
@@ -171,24 +174,23 @@ describe('fetch', function () {
             'x-amz-server-side-encryption': 'AES256',
             'x-amz-storage-class': 'REDUCED_REDUNDANCY',
             'x-cache': 'Hit from cloudfront',
-        });
+        }));
 
-        const { data, partial } = await client.fetch('', 10, 25);
+        const result = await client.fetch('', 10, 25);
 
         expect(spyFetchPartially).toBeTruthy();
         expect(spyFetchFully).toBeFalsy();
-
-        expect(data).toStrictEqual(partialBuffer);
-        expect(partial).toBeTruthy();
+        expect(result).toStrictEqual({ data: partialBuffer, partial: true });
+        expect(fetchMock).toHaveBeenCalledWith('', { method: 'HEAD', headers: {} });
     });
 
     test('content not encoded, range not supported; fetch fully', async () => {
-        axiosMock.onHead().reply(200, undefined, {
+        fetchMock.mockResolvedValue(response(200, {
             'accept-ranges': 'none',
             'access-control-allow-methods': 'HEAD, GET',
             'access-control-allow-origin': '*',
-            age: 77486,
-            'content-length': 59804,
+            age: '77486',
+            'content-length': '59804',
             'content-type': 'model/vnd.sdtf',
             date: 'Tue, 11 Apr 2023 10:32:1u GMT',
             etag: '0afb7dc559527f3ea30f5da16fde4173',
@@ -200,25 +202,23 @@ describe('fetch', function () {
             'x-amz-server-side-encryption': 'AES256',
             'x-amz-storage-class': 'REDUCED_REDUNDANCY',
             'x-cache': 'Hit from cloudfront',
-        });
+        }));
 
-        const { data, partial } = await client.fetch('', 10, 25);
+        const result = await client.fetch('', 10, 25);
 
         expect(spyFetchPartially).toBeFalsy();
         expect(spyFetchFully).toBeTruthy();
-
-        expect(data).toStrictEqual(fullBuffer);
-        expect(partial).toBeFalsy();
+        expect(result).toStrictEqual({ data: fullBuffer, partial: false });
     });
 
-    test('content encoded, range supported; fetch fully', async () => {
-        axiosMock.onHead().reply(200, undefined, {
+    test('content encoded; fetch fully', async () => {
+        fetchMock.mockResolvedValue(response(200, {
             'accept-ranges': 'bytes',
             'access-control-allow-methods': 'HEAD, GET',
             'access-control-allow-origin': '*',
-            age: 77486,
+            age: '77486',
             'content-encoding': 'gzip',
-            'content-length': 59804,
+            'content-length': '59804',
             'content-type': 'model/vnd.sdtf',
             date: 'Tue, 11 Apr 2023 10:32:1u GMT',
             etag: '0afb7dc559527f3ea30f5da16fde4173',
@@ -230,44 +230,47 @@ describe('fetch', function () {
             'x-amz-server-side-encryption': 'AES256',
             'x-amz-storage-class': 'REDUCED_REDUNDANCY',
             'x-cache': 'Hit from cloudfront',
-        });
+        }));
 
-        const { data, partial } = await client.fetch('', 10, 25);
+        const result = await client.fetch('', 10, 25);
 
         expect(spyFetchPartially).toBeFalsy();
         expect(spyFetchFully).toBeTruthy();
+        expect(result).toStrictEqual({ data: fullBuffer, partial: false });
+    });
+});
 
-        expect(data).toStrictEqual(fullBuffer);
-        expect(partial).toBeFalsy();
+describe('fetch body methods', function() {
+    const client = new SdtfHttpClient('');
+    let originalFetch: typeof globalThis.fetch;
+    let fetchMock: jest.MockedFunction<typeof globalThis.fetch>;
+
+    beforeEach(() => {
+        originalFetch = globalThis.fetch;
+        fetchMock = jest.fn();
+        globalThis.fetch = fetchMock;
     });
 
-    test('content encoded, range not supported; fetch fully', async () => {
-        axiosMock.onHead().reply(200, undefined, {
-            'accept-ranges': 'none',
-            'access-control-allow-methods': 'HEAD, GET',
-            'access-control-allow-origin': '*',
-            age: 77486,
-            'content-encoding': 'gzip',
-            'content-length': 59804,
-            'content-type': 'model/vnd.sdtf',
-            date: 'Tue, 11 Apr 2023 10:32:1u GMT',
-            etag: '0afb7dc559527f3ea30f5da16fde4173',
-            'last-modified': 'Thu, 09 Mar 2023 17:14:23 GMT',
-            server: 'AmazonS3',
-            via: '1.1 1c6954b6a2b349a78fb0daa669c3e984.cloudfront.net (CloudFront)',
-            'x-amz-cf-id': 'uI-GKODnjUurPSDAbIyeXUeIBXRTsOEELqOmO5mSjP9C_DCkKH_nZA==',
-            'x-amz-cf-pop': 'VIE50-P1',
-            'x-amz-server-side-encryption': 'AES256',
-            'x-amz-storage-class': 'REDUCED_REDUNDANCY',
-            'x-cache': 'Hit from cloudfront',
-        });
+    afterEach(() => {
+        globalThis.fetch = originalFetch;
+    });
 
-        const { data, partial } = await client.fetch('', 10, 25);
+    test('fetchPartially sends a range request and slices an unexpectedly full response', async () => {
+        const data = new Uint8Array([0, 1, 2, 3, 4, 5]).buffer;
+        fetchMock.mockResolvedValue({ status: 200, arrayBuffer: async () => data } as Response);
 
-        expect(spyFetchPartially).toBeFalsy();
-        expect(spyFetchFully).toBeTruthy();
+        await expect(client.fetchPartially('asset', 2, 2)).resolves.toStrictEqual(data.slice(2, 4));
+        expect(fetchMock).toHaveBeenCalledWith('asset', { headers: { range: 'bytes=2-3' } });
+    });
 
-        expect(data).toStrictEqual(fullBuffer);
-        expect(partial).toBeFalsy();
+    test('fetchPartially rejects invalid ranges', async () => {
+        fetchMock.mockResolvedValue({ status: 416 } as Response);
+        await expect(client.fetchPartially('asset', 0, 1)).rejects.toThrow('Invalid range requested.');
+    });
+
+    test('fetchFully reads an ArrayBuffer', async () => {
+        const data = new ArrayBuffer(4);
+        fetchMock.mockResolvedValue({ status: 200, arrayBuffer: async () => data } as Response);
+        await expect(client.fetchFully('asset')).resolves.toBe(data);
     });
 });

@@ -1,5 +1,4 @@
 import { SdtfError } from '@shapediver/sdk.sdtf-core';
-import axios from 'axios';
 import { ISdtfBinarySdtf } from '../binary_sdtf/ISdtfBinarySdtf';
 import { SdtfBinarySdtf } from '../binary_sdtf/SdtfBinarySdtf';
 import { ISdtfHttpClient } from './ISdtfHttpClient';
@@ -12,7 +11,7 @@ export class SdtfHttpClient implements ISdtfHttpClient {
     readonly jsonContentUrl: string;
 
     /** the minimum headers object that should be used for all HTTP calls.. */
-    private readonly basicHttpHeader: Record<string, string | number | boolean>;
+    private readonly basicHttpHeader: Record<string, string>;
 
     constructor(jsonContentUrl: string, authToken?: string) {
         this.binarySdtfParser = new SdtfBinarySdtf();
@@ -99,24 +98,24 @@ export class SdtfHttpClient implements ISdtfHttpClient {
         offset: number,
         length: number
     ): Promise<{ data: ArrayBuffer; partial: boolean }> {
-        let response;
+        let response: Response;
         try {
-            response = await axios.head(url, { headers: this.basicHttpHeader });
+            response = await globalThis.fetch(url, {
+                method: 'HEAD',
+                headers: this.basicHttpHeader,
+            });
         } catch (e) {
-            throw new SdtfError(e.message);
+            throw new SdtfError(e instanceof Error ? e.message : String(e));
         }
 
         // Validate response status
         if (response.status > 299) throw new SdtfError(`Received HTTP status ${response.status}.`);
 
         // Check if the content has been encoded (no range request possible)
-        const contentEncoding = !!(
-            response.headers['Content-Encoding'] ?? response.headers['content-encoding']
-        );
+        const contentEncoding = response.headers.get('content-encoding') !== null;
 
         // Check if HTTP range requests are supported
-        const acceptRanges =
-            response.headers['Accept-Ranges'] ?? response.headers['accept-ranges'];
+        const acceptRanges = response.headers.get('accept-ranges');
 
         // When the data has not been encoded and range requests are supported -> fetch partially.
         // Otherwise -> fetch all.
@@ -127,11 +126,8 @@ export class SdtfHttpClient implements ISdtfHttpClient {
             ? await this.fetchPartially(url, offset, length)
             : await this.fetchFully(url);
 
-        // This is required to support Node.js as well as Browsers
-        const buffer = data instanceof ArrayBuffer ? data : Uint8Array.from(data).buffer;
-
         return {
-            data: buffer,
+            data,
             partial: rangeRequestsSupported,
         };
     }
@@ -139,41 +135,38 @@ export class SdtfHttpClient implements ISdtfHttpClient {
     /**
      * Sends an HTTP range request to fetch only the requested part.
      * Assumes, that the server supports HTTP range requests and that the response is NOT compressed.
-     * Otherwise, Axios throws an `ERR_CONTENT_DECODING_FAILED` error in the browser.
+     * Otherwise, ranged requests may fail when the response is compressed.
      * @private
      * @param url
      * @param offset - Zero-based byte index at which to begin (inclusive).
      * @param length - Length of the buffer.
      * @throws {@link SdtfError} when the request was not successful.
      */
-    async fetchPartially(url: string, offset: number, length: number): Promise<any> {
-        let response;
+    async fetchPartially(url: string, offset: number, length: number): Promise<ArrayBuffer> {
+        let response: Response;
         try {
-            response = await axios.get(url, {
+            response = await globalThis.fetch(url, {
                 headers: {
                     ...this.basicHttpHeader,
                     range: `bytes=${offset}-${offset + length - 1}`,
                 },
-                responseType: 'arraybuffer',
             });
+
+            // Validate response status
+            if (response.status === 416) throw new SdtfError('Invalid range requested.');
+            if (response.status !== 200 && response.status !== 206)
+                throw new SdtfError(`Received HTTP status ${response.status}.`);
+
+            const buffer = await response.arrayBuffer();
+
+            // The browser might cache the full data of the response. When this happens, a consecutive
+            // partial-fetch request, will return the full data as well. Thus, we have to extract the
+            // requested part manually.
+            return buffer.byteLength > length ? buffer.slice(offset, offset + length) : buffer;
         } catch (e) {
-            throw new SdtfError(e.message);
+            if (e instanceof SdtfError) throw e;
+            throw new SdtfError(e instanceof Error ? e.message : String(e));
         }
-
-        // Validate response status
-        if (response.status === 416) throw new SdtfError('Invalid range requested.');
-        if (response.status !== 200 && response.status !== 206)
-            throw new SdtfError(`Received HTTP status ${response.status}.`);
-
-        const data = response.data;
-
-        // This is required to support Node.js as well as Browsers
-        const buffer = data instanceof ArrayBuffer ? data : Uint8Array.from(data).buffer;
-
-        // The browser might cache the full data of the response. When this happens, a consecutive
-        // partial-fetch request, will return the full data as well. Thus, we have to extract the
-        // requested part manually.
-        return buffer.byteLength > length ? buffer.slice(offset, offset + length) : buffer;
     }
 
     /**
@@ -183,22 +176,21 @@ export class SdtfHttpClient implements ISdtfHttpClient {
      * @param url
      * @throws {@link SdtfError} when the request was not successful.
      */
-    async fetchFully(url: string): Promise<any> {
-        let response;
+    async fetchFully(url: string): Promise<ArrayBuffer> {
+        let response: Response;
         try {
-            // NOTE: Axios automatically decodes the body (e.g. GZIP compression)
-            response = await axios.get(url, {
+            response = await globalThis.fetch(url, {
                 headers: this.basicHttpHeader,
-                responseType: 'arraybuffer',
             });
+
+            // Validate response status
+            if (response.status !== 200)
+                throw new SdtfError(`Received HTTP status ${response.status}.`);
+
+            return await response.arrayBuffer();
         } catch (e) {
-            throw new SdtfError(e.message);
+            if (e instanceof SdtfError) throw e;
+            throw new SdtfError(e instanceof Error ? e.message : String(e));
         }
-
-        // Validate response status
-        if (response.status !== 200)
-            throw new SdtfError(`Received HTTP status ${response.status}.`);
-
-        return response.data;
     }
 }

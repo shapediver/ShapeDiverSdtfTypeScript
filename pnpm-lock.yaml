@@ -144,16 +144,10 @@ importers:
       '@shapediver/sdk.sdtf-primitives':
         specifier: workspace:*
         version: link:../../libs/sdk.sdtf-primitives
-      axios:
-        specifier: 1.16.1
-        version: 1.16.1
       browser-or-node:
         specifier: 3.0.0
         version: 3.0.0
     devDependencies:
-      axios-mock-adapter:
-        specifier: 2.1.0
-        version: 2.1.0(axios@1.16.1)
       jest:
         specifier: 30.4.2
         version: 30.4.2(@types/node@24.12.4)
@@ -1329,16 +1323,8 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  axios-mock-adapter@2.1.0:
-    resolution: {integrity: sha512-AZUe4OjECGCNNssH8SOdtneiQELsqTsat3SQQCWLPjN436/H+L9AjWfV7bF+Zg/YL9cgbhrz5671hoh+Tbn98w==}
-    peerDependencies:
-      axios: '>= 0.17.0'
-
   axios@1.16.0:
     resolution: {integrity: sha512-6hp5CwvTPlN2A31g5dxnwAX0orzM7pmCRDLnZSX772mv8WDqICwFjowHuPs04Mc8deIld1+ejhtaMn5vp6b+1w==}
-
-  axios@1.16.1:
-    resolution: {integrity: sha512-caYkukvroVPO8KrzuJEb50Hm07KwfBZPEC3VeFHTsqWHvKTsy54hjJz9BS/cdaypROE2rH6xvm9mHX4fgWkr3A==}
 
   babel-jest@30.4.1:
     resolution: {integrity: sha512-fATAbM8piYxkiXQp3RBXmZHxZVNJZAVXXfyeyCN2Tida3+qJ8ea9UxhiJ2y4fLO90ZImKt6k9FlcH2+rLkJGhw==}
@@ -5433,12 +5419,6 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios-mock-adapter@2.1.0(axios@1.16.1):
-    dependencies:
-      axios: 1.16.1
-      fast-deep-equal: 3.1.3
-      is-buffer: 2.0.5
-
   axios@1.16.0:
     dependencies:
       follow-redirects: 1.16.0
@@ -5446,16 +5426,6 @@ snapshots:
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
-
-  axios@1.16.1:
-    dependencies:
-      follow-redirects: 1.16.0
-      form-data: 4.0.5
-      https-proxy-agent: 5.0.1
-      proxy-from-env: 2.1.0
-    transitivePeerDependencies:
-      - debug
-      - supports-color
 
   babel-jest@30.4.1(@babel/core@7.29.7):
     dependencies:
