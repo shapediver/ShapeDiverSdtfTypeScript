@@ -2,8 +2,13 @@ packages:
     - 'packages/*'
     - 'libs/*'
     - '!packages/sdk.tester/.*'
+
 allowBuilds:
     nx: true
     unrs-resolver: true
+
+# Minutes. Matches Aikido's 48-hour hold, so pnpm does not request a tarball Aikido rejects with 403.
+minimumReleaseAge: 2880
+
 minimumReleaseAgeExclude:
     - '@shapediver/*'
