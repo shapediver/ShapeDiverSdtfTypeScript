@@ -5,7 +5,7 @@ charset-normalizer==3.5.2
 click==8.5.0
 Deprecated==3.0.0
 gitdb==4.0.12
-GitPython==3.2.0
+GitPython==3.2.1
 idna==3.20
 jmespath==1.1.0
 oauthlib==4.0.0
