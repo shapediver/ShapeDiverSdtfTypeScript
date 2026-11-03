@@ -11,18 +11,14 @@ describe('calcUrl', function() {
 });
 
 describe('getJsonContent', function() {
-    let origFetch: any, origReadHeader: any, origParseBinarySdtf: any;
+    let origFetch: any, origParseBinarySdtf: any;
 
     const client = new SdtfHttpClient(''),
-        headerBuffer = new ArrayBuffer(20),
         jsonContentBuffer = new ArrayBuffer(30),
         binaryBuffer = new DataView(new ArrayBuffer(40));
 
     beforeAll(() => {
         origFetch = SdtfHttpClient.prototype.fetch;
-
-        origReadHeader = SdtfBinarySdtf.prototype.readHeader;
-        SdtfBinarySdtf.prototype.readHeader = jest.fn(() => [20, 10]);
 
         origParseBinarySdtf = SdtfBinarySdtf.prototype.parseBinarySdtf;
         SdtfBinarySdtf.prototype.parseBinarySdtf = jest.fn(() => [
@@ -33,24 +29,7 @@ describe('getJsonContent', function() {
 
     afterAll(() => {
         SdtfHttpClient.prototype.fetch = origFetch;
-        SdtfBinarySdtf.prototype.readHeader = origReadHeader;
         SdtfBinarySdtf.prototype.parseBinarySdtf = origParseBinarySdtf;
-    });
-
-    test('partial requests supported; should return only partial buffer', async () => {
-        // Mock
-        let fetchCounter = 0;
-        SdtfHttpClient.prototype.fetch = jest.fn(async () => {
-            fetchCounter++;
-            if (fetchCounter === 1) return { data: headerBuffer, partial: true };
-            if (fetchCounter === 2) return { data: jsonContentBuffer, partial: true };
-            throw new Error('tryFetchPartially was called too often!');
-        });
-
-        expect(await client.getJsonContent()).toStrictEqual([
-            new DataView(jsonContentBuffer),
-            undefined,
-        ]);
     });
 
     test('partial requests not supported; should return entire buffer as well', async () => {
@@ -63,6 +42,92 @@ describe('getJsonContent', function() {
             new DataView(jsonContentBuffer),
             binaryBuffer,
         ]);
+    });
+});
+
+describe('getJsonContent partial header', function() {
+    const parser = new SdtfBinarySdtf();
+    const jsonBytes = new TextEncoder().encode('{"asset":{}}');
+    const bodyBytes = new Uint8Array([1, 2, 3, 4]);
+    const headerBytes = new Uint8Array(
+        parser.createHeader(jsonBytes.byteLength, bodyBytes.byteLength)
+    );
+    const fileBytes = new Uint8Array(
+        headerBytes.byteLength + jsonBytes.byteLength + bodyBytes.byteLength
+    );
+    fileBytes.set(headerBytes, 0);
+    fileBytes.set(jsonBytes, headerBytes.byteLength);
+    fileBytes.set(bodyBytes, headerBytes.byteLength + jsonBytes.byteLength);
+    const headerRange = `bytes=0-${parser.binaryHeaderLength - 1}`;
+    const jsonRange = `bytes=${parser.binaryHeaderLength}-${parser.binaryHeaderLength + jsonBytes.byteLength - 1}`;
+
+    let originalFetch: typeof globalThis.fetch;
+
+    const httpResponse = (status: number, body: ArrayBuffer, headers: Record<string, string> = {}) =>
+        ({
+            status,
+            headers: { get: (name: string) => headers[name.toLowerCase()] ?? null },
+            arrayBuffer: async () => body,
+        }) as unknown as Response;
+
+    beforeAll(() => {
+        originalFetch = globalThis.fetch;
+    });
+
+    afterEach(() => {
+        globalThis.fetch = originalFetch;
+    });
+
+    function viewBytes(view: DataView): Uint8Array {
+        return new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
+    }
+
+    test('returns the JSON segment when a later HEAD would refuse ranges', async () => {
+        let headCount = 0;
+        globalThis.fetch = jest.fn(async (_url: string, init?: RequestInit) => {
+            if (init?.method === 'HEAD') {
+                headCount++;
+                if (headCount === 1)
+                    return httpResponse(200, new ArrayBuffer(0), { 'accept-ranges': 'bytes' });
+                return httpResponse(200, new ArrayBuffer(0));
+            }
+            const range = (init?.headers as Record<string, string> | undefined)?.range;
+            if (range === headerRange)
+                return httpResponse(206, fileBytes.buffer.slice(0, parser.binaryHeaderLength));
+            return httpResponse(200, fileBytes.buffer);
+        }) as typeof globalThis.fetch;
+
+        const client = new SdtfHttpClient('https://shapediver.com/api/v2/sdtf/foo.sdtf');
+        const [content, binary] = await client.getJsonContent();
+
+        expect(headCount).toBe(1);
+        expect(viewBytes(content)).toEqual(jsonBytes);
+        expect(binary).toBeUndefined();
+    });
+
+    test('returns the JSON bytes from a partial JSON response', async () => {
+        globalThis.fetch = jest.fn(async (_url: string, init?: RequestInit) => {
+            if (init?.method === 'HEAD')
+                return httpResponse(200, new ArrayBuffer(0), { 'accept-ranges': 'bytes' });
+            const range = (init?.headers as Record<string, string> | undefined)?.range;
+            if (range === headerRange)
+                return httpResponse(206, fileBytes.buffer.slice(0, parser.binaryHeaderLength));
+            if (range === jsonRange)
+                return httpResponse(
+                    206,
+                    fileBytes.buffer.slice(
+                        parser.binaryHeaderLength,
+                        parser.binaryHeaderLength + jsonBytes.byteLength
+                    )
+                );
+            throw new Error(`unexpected range ${range}`);
+        }) as typeof globalThis.fetch;
+
+        const client = new SdtfHttpClient('https://shapediver.com/api/v2/sdtf/foo.sdtf');
+        const [content, binary] = await client.getJsonContent();
+
+        expect(viewBytes(content)).toEqual(jsonBytes);
+        expect(binary).toBeUndefined();
     });
 });
 
