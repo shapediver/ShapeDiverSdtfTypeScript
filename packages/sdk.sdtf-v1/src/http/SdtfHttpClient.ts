@@ -50,13 +50,14 @@ export class SdtfHttpClient implements ISdtfHttpClient {
                 const [contentLength, _] = this.binarySdtfParser.readHeader(data);
                 const jsonContentBuffer = await this.fetch(this.jsonContentUrl, 20, contentLength);
 
-                // We have to check again if the response was really a partial one, since the
-                // browser might have returned the full file if it was cached.
+                // A later HEAD can refuse ranges after the first one allowed them.
+                // That body is the whole file. `data` here is still only the header.
                 if (jsonContentBuffer.partial)
                     return [new DataView(jsonContentBuffer.data), undefined];
+
+                return this.binarySdtfParser.parseBinarySdtf(jsonContentBuffer.data);
             }
 
-            // Whether partial or full content, parse and return the binary sdTF
             return this.binarySdtfParser.parseBinarySdtf(data);
         } catch (e) {
             throw new SdtfError(`Could not fetch sdTF JSON content: ${e.message}`);
