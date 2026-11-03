@@ -46,16 +46,14 @@ export class SdtfHttpClient implements ISdtfHttpClient {
             );
 
             if (partial) {
-                // Partial requests are supported by the server - fetch json content next
+                // The JSON segment reuses this HEAD. A second one can disagree.
                 const [contentLength, _] = this.binarySdtfParser.readHeader(data);
-                const jsonContentBuffer = await this.fetch(this.jsonContentUrl, 20, contentLength);
-
-                // A later HEAD can refuse ranges after the first one allowed them.
-                // That body is the whole file. `data` here is still only the header.
-                if (jsonContentBuffer.partial)
-                    return [new DataView(jsonContentBuffer.data), undefined];
-
-                return this.binarySdtfParser.parseBinarySdtf(jsonContentBuffer.data);
+                const jsonContent = await this.fetchPartially(
+                    this.jsonContentUrl,
+                    this.binarySdtfParser.binaryHeaderLength,
+                    contentLength
+                );
+                return [new DataView(jsonContent), undefined];
             }
 
             return this.binarySdtfParser.parseBinarySdtf(data);
