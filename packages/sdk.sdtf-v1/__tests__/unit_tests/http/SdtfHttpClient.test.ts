@@ -66,6 +66,54 @@ describe('getJsonContent', function() {
     });
 });
 
+describe('getJsonContent when a later fetch returns the whole file', function() {
+    const parser = new SdtfBinarySdtf();
+    const jsonBytes = new TextEncoder().encode('{"asset":{}}');
+    const bodyBytes = new Uint8Array([1, 2, 3, 4]);
+    const headerBytes = new Uint8Array(
+        parser.createHeader(jsonBytes.byteLength, bodyBytes.byteLength)
+    );
+    const fileBytes = new Uint8Array(
+        headerBytes.byteLength + jsonBytes.byteLength + bodyBytes.byteLength
+    );
+    fileBytes.set(headerBytes, 0);
+    fileBytes.set(jsonBytes, headerBytes.byteLength);
+    fileBytes.set(bodyBytes, headerBytes.byteLength + jsonBytes.byteLength);
+
+    let origFetch: any;
+
+    beforeAll(() => {
+        origFetch = SdtfHttpClient.prototype.fetch;
+    });
+
+    afterAll(() => {
+        SdtfHttpClient.prototype.fetch = origFetch;
+    });
+
+    test('returns the JSON and binary body from that file', async () => {
+        let fetchCounter = 0;
+        SdtfHttpClient.prototype.fetch = jest.fn(async () => {
+            fetchCounter++;
+            if (fetchCounter === 1)
+                return {
+                    data: fileBytes.buffer.slice(0, parser.binaryHeaderLength),
+                    partial: true,
+                };
+            if (fetchCounter === 2) return { data: fileBytes.buffer, partial: false };
+            throw new Error('fetch was called too often');
+        });
+
+        const client = new SdtfHttpClient('https://shapediver.com/api/v2/sdtf/foo.sdtf');
+        const [content, binary] = await client.getJsonContent();
+
+        expect(parser.readJsonContent(content)).toEqual({ asset: {} });
+        if (binary === undefined) throw new Error('expected the binary body from the full file');
+        expect(new Uint8Array(binary.buffer, binary.byteOffset, binary.byteLength)).toEqual(
+            bodyBytes
+        );
+    });
+});
+
 describe('getBinaryBuffer', function() {
     let origFetch: any;
 
